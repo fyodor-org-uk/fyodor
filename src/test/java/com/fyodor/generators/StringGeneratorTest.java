@@ -1,5 +1,9 @@
 package com.fyodor.generators;
 
+import com.fyodor.generators.characters.AllLettersAndNumbersFilter;
+import com.fyodor.generators.characters.CharacterFilter;
+import com.fyodor.generators.characters.LettersAndDigitsFilter;
+import com.fyodor.generators.characters.LettersOnlyFilter;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import org.junit.Before;
@@ -9,7 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class StringGeneratorTest {
 
-    Multiset<Character> chars;
+    private Multiset<Character> chars;
+    private static final int SIZE_OF_RANDOM_STRING = 50;
 
     @Before
     public void charSet(){
@@ -18,29 +23,38 @@ public class StringGeneratorTest {
 
     @Test
     public void lettersOnly(){
-        generateRandomStringsForCharSet(StringGenerator.CharSet.LettersOnly);
+        generateRandomStringsForCharSet(LettersOnlyFilter.getFilter());
     }
 
     @Test
     public void lettersAndNumbersOnly(){
-        generateRandomStringsForCharSet(StringGenerator.CharSet.LettersAndNumbers);
+        generateRandomStringsForCharSet(LettersAndDigitsFilter.getFilter());
     }
 
     @Test
     public void allCharsString() {
-        generateRandomStringsForCharSet(StringGenerator.CharSet.AllChars);
+        generateRandomStringsForCharSet(AllLettersAndNumbersFilter.getFilter());
     }
 
-    private void generateRandomStringsForCharSet(StringGenerator.CharSet charSet) {
-        Generator<String> generator = new StringGenerator(50, charSet);
+    @Test
+    public void cannotChangeCharset(){
+        StringGenerator generator = new StringGenerator(SIZE_OF_RANDOM_STRING);
+        Character[] chars = generator.getCharSet();
+        chars[RDG.random.nextInt(chars.length)] = null;
+        assertThat(chars).isNotEqualTo(generator.getCharSet());
+    }
+
+    private void generateRandomStringsForCharSet(CharacterFilter filter) {
+        StringGenerator generator = new StringGenerator(SIZE_OF_RANDOM_STRING, filter);
         for (int i = 0; i < 1000; i++){
             String val = generator.next();
+            assertThat(val).hasSize(SIZE_OF_RANDOM_STRING);
             for (char c : val.toCharArray()) {
                 chars.add(c);
             }
         }
-        assertThat(chars.elementSet()).hasSize(charSet.getCharset().length);
-        for (char c : charSet.getCharset()) {
+        assertThat(chars.elementSet()).hasSize(generator.getCharSet().length);
+        for (char c : generator.getCharSet()) {
             assertThat(chars.elementSet()).contains(c);
         }
     }

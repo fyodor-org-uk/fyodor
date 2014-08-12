@@ -1,5 +1,6 @@
 package com.fyodor.generators;
 
+import com.fyodor.generators.characters.CharacterFilter;
 import com.google.common.collect.Range;
 
 import java.util.Random;
@@ -15,8 +16,8 @@ public class RDG {
         return new StringGenerator(max);
     }
 
-    public static Generator<String> string(Integer max, StringGenerator.CharSet charSet) {
-        return new StringGenerator(max, charSet);
+    public static Generator<String> string(Integer max, CharacterFilter filter) {
+        return new StringGenerator(max, filter);
     }
 
     public static Generator<Integer> integer(Integer max) {
