@@ -2,6 +2,7 @@ package com.fyodor.generators;
 
 import com.fyodor.generators.characters.CharacterFilter;
 import com.google.common.collect.Range;
+import org.joda.time.LocalDate;
 
 import java.util.Random;
 
@@ -26,5 +27,9 @@ public class RDG {
 
     public static Generator<Integer> integer(Range<Integer> range) {
         return new IntegerGenerator(range);
+    }
+
+    public static Generator<LocalDate> localDate(final Range<LocalDate> range) {
+        return new LocalDateGenerator(new DefaultRandomValues(random), range);
     }
 }
