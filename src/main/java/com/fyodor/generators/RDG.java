@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class RDG {
 
-    static Random random = new Random();
+    static RandomValues random = new DefaultRandomValues(new Random());
 
     public static Generator<String> string = string(30);
     public static Generator<Integer> integer = integer(Integer.MAX_VALUE);
@@ -30,6 +30,6 @@ public class RDG {
     }
 
     public static Generator<LocalDate> localDate(final Range<LocalDate> range) {
-        return new LocalDateGenerator(new DefaultRandomValues(random), range);
+        return new LocalDateGenerator(random, range);
     }
 }

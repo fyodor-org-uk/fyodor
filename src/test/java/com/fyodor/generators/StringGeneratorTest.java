@@ -40,7 +40,7 @@ public class StringGeneratorTest {
     public void cannotChangeCharset(){
         StringGenerator generator = new StringGenerator(SIZE_OF_RANDOM_STRING);
         Character[] chars = generator.getCharSet();
-        chars[RDG.random.nextInt(chars.length)] = null;
+        chars[RDG.random.randomInteger(chars.length)] = null;
         assertThat(chars).isNotEqualTo(generator.getCharSet());
     }
 
