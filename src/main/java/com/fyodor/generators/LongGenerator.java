@@ -4,6 +4,6 @@ class LongGenerator implements Generator<Long> {
 
     @Override
     public Long next() {
-        return RDG.random.nextLong();
+        return RDG.random.randomLong();
     }
 }

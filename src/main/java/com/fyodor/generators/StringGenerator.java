@@ -40,7 +40,7 @@ public class StringGenerator implements Generator<String> {
     public String next() {
         char[] ret = new char[length];
         for (int i = 0; i < length; i++) {
-            ret[i] = charSet[RDG.random.nextInt(charSet.length)];
+            ret[i] = charSet[RDG.random.randomInteger(charSet.length)];
         }
         return String.valueOf(ret);
     }

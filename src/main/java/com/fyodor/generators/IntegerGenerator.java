@@ -14,17 +14,17 @@ class IntegerGenerator implements Generator<Integer> {
     }
 
     public IntegerGenerator(Range<Integer> range) {
-        this.min = range.lowerBoundType().equals(BoundType.OPEN) ?
-                range.lowerEndpoint() + 1 :
-                range.lowerEndpoint();
+        this.min = range.lowerBoundType().equals(BoundType.CLOSED) ?
+                range.lowerEndpoint() :
+                range.lowerEndpoint() + 1;
 
         this.max = range.upperBoundType().equals(BoundType.CLOSED) ?
-                range.upperEndpoint() + 1 :
-                range.upperEndpoint();
+                range.upperEndpoint() :
+                range.upperEndpoint() - 1;
     }
 
     @Override
     public Integer next() {
-        return RDG.random.nextInt(max - min) + min;
+        return RDG.random.randomInteger(min, max);
     }
 }

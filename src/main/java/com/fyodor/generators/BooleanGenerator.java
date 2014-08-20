@@ -4,6 +4,6 @@ public class BooleanGenerator implements Generator<Boolean> {
 
     @Override
     public Boolean next() {
-        return RDG.random.nextBoolean();
+        return RDG.random.randomBoolean();
     }
 }
