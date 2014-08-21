@@ -1,6 +1,6 @@
 package com.fyodor.generators;
 
-import com.fyodor.generators.characters.AllLettersAndNumbersFilter;
+import com.fyodor.generators.characters.AllCharactersFilter;
 import com.fyodor.generators.characters.CharacterFilter;
 import com.fyodor.generators.characters.LettersAndDigitsFilter;
 import com.fyodor.generators.characters.LettersOnlyFilter;
@@ -33,7 +33,7 @@ public class StringGeneratorTest {
 
     @Test
     public void allCharsString() {
-        generateRandomStringsForCharSet(AllLettersAndNumbersFilter.getFilter());
+        generateRandomStringsForCharSet(AllCharactersFilter.getFilter());
     }
 
     @Test

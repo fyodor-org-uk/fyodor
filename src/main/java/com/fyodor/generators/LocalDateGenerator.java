@@ -33,19 +33,17 @@ final class LocalDateGenerator implements Generator<LocalDate> {
         }
 
         private LocalDate lowerEndpoint() {
-            final LocalDate lowerEndpoint = range.lowerBoundType() == BoundType.CLOSED
+
+            return range.lowerBoundType() == BoundType.CLOSED
                     ? range.lowerEndpoint()
                     : range.lowerEndpoint().plusDays(1);
-
-            return lowerEndpoint;
         }
 
         private LocalDate upperEndpoint() {
-            final LocalDate upperEndpoint = range.upperBoundType() == BoundType.CLOSED
+
+            return range.upperBoundType() == BoundType.CLOSED
                     ? range.upperEndpoint()
                     : range.upperEndpoint().minusDays(1);
-
-            return upperEndpoint;
         }
     }
 }

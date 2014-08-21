@@ -20,7 +20,7 @@ final class Sampler<T> {
         for (int i = 0; i < sampleSize; i++) {
             samples.add(generatorOfT.next());
         }
-        return new Sample(samples);
+        return new Sample<T>(samples);
     }
 
     public static <T> Sampler<T> from(final Generator<? extends T> generatorOfT) {

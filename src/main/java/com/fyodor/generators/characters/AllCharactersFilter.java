@@ -1,10 +1,10 @@
 package com.fyodor.generators.characters;
 
-public class AllLettersAndNumbersFilter implements CharacterFilter {
+public class AllCharactersFilter implements CharacterFilter {
 
-    private static CharacterFilter filter = new AllLettersAndNumbersFilter();
+    private static CharacterFilter filter = new AllCharactersFilter();
 
-    private AllLettersAndNumbersFilter() {}
+    private AllCharactersFilter() {}
 
     public static CharacterFilter getFilter() {
         return filter;

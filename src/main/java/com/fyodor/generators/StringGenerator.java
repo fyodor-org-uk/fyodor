@@ -1,6 +1,6 @@
 package com.fyodor.generators;
 
-import com.fyodor.generators.characters.AllLettersAndNumbersFilter;
+import com.fyodor.generators.characters.AllCharactersFilter;
 import com.fyodor.generators.characters.CharacterFilter;
 import com.fyodor.generators.characters.CharacterSetGenerator;
 import com.google.common.collect.Range;
@@ -11,7 +11,7 @@ import java.util.Collection;
 public class StringGenerator implements Generator<String> {
 
     private static Range<Integer> defaultRange = Range.closed(33, 126);
-    private static CharacterFilter defaultFilter = AllLettersAndNumbersFilter.getFilter();
+    private static CharacterFilter defaultFilter = AllCharactersFilter.getFilter();
     private Integer length;
     private Character[] charSet;
 
@@ -21,6 +21,10 @@ public class StringGenerator implements Generator<String> {
 
     public StringGenerator(Integer length, CharacterFilter filter) {
         this(length, new CharacterSetGenerator(defaultRange, filter));
+    }
+
+    public StringGenerator(Integer length, Range<Integer> range) {
+        this(length, new CharacterSetGenerator(range, defaultFilter));
     }
 
     public StringGenerator(Integer length, CharacterSetGenerator characterSetGenerator) {
