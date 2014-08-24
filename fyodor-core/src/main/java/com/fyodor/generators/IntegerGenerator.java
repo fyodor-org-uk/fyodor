@@ -3,6 +3,8 @@ package com.fyodor.generators;
 import com.google.common.collect.BoundType;
 import com.google.common.collect.Range;
 
+import static com.fyodor.generators.RandomValuesProvider.randomValues;
+
 class IntegerGenerator implements Generator<Integer> {
 
     private final Integer min;
@@ -25,6 +27,6 @@ class IntegerGenerator implements Generator<Integer> {
 
     @Override
     public Integer next() {
-        return RDG.random.randomInteger(min, max);
+        return randomValues().randomInteger(min, max);
     }
 }

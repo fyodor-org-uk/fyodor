@@ -7,7 +7,7 @@ import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 
-final class Sampler<T> {
+public final class Sampler<T> {
 
     private final Generator<? extends T> generatorOfT;
 
@@ -27,15 +27,15 @@ final class Sampler<T> {
         return new Sampler<T>(generatorOfT);
     }
 
-    static final class Sample<T> implements Iterable<T> {
+    public static final class Sample<T> implements Iterable<T> {
 
         private final List<T> listOfT;
 
-        Sample(final List<T> listOfT) {
+        public Sample(final List<T> listOfT) {
             this.listOfT = listOfT;
         }
 
-        Set<T> unique() {
+        public Set<T> unique() {
             return newHashSet(listOfT);
         }
 

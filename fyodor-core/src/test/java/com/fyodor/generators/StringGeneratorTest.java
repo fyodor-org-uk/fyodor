@@ -9,6 +9,7 @@ import com.google.common.collect.Multiset;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.fyodor.generators.RandomValuesProvider.randomValues;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class StringGeneratorTest {
@@ -17,17 +18,17 @@ public class StringGeneratorTest {
     private static final int SIZE_OF_RANDOM_STRING = 50;
 
     @Before
-    public void charSet(){
+    public void charSet() {
         chars = HashMultiset.create();
     }
 
     @Test
-    public void lettersOnly(){
+    public void lettersOnly() {
         generateRandomStringsForCharSet(LettersOnlyFilter.getFilter());
     }
 
     @Test
-    public void lettersAndNumbersOnly(){
+    public void lettersAndNumbersOnly() {
         generateRandomStringsForCharSet(LettersAndDigitsFilter.getFilter());
     }
 
@@ -37,16 +38,16 @@ public class StringGeneratorTest {
     }
 
     @Test
-    public void cannotChangeCharset(){
+    public void cannotChangeCharset() {
         StringGenerator generator = new StringGenerator(SIZE_OF_RANDOM_STRING);
         Character[] chars = generator.getCharSet();
-        chars[RDG.random.randomInteger(chars.length)] = null;
+        chars[randomValues().randomInteger(chars.length)] = null;
         assertThat(chars).isNotEqualTo(generator.getCharSet());
     }
 
     private void generateRandomStringsForCharSet(CharacterFilter filter) {
         StringGenerator generator = new StringGenerator(SIZE_OF_RANDOM_STRING, filter);
-        for (int i = 0; i < 1000; i++){
+        for (int i = 0; i < 1000; i++) {
             String val = generator.next();
             assertThat(val).hasSize(SIZE_OF_RANDOM_STRING);
             for (char c : val.toCharArray()) {

@@ -1,6 +1,6 @@
 package com.fyodor.generators;
 
-interface RandomValues {
+public interface RandomValues {
 
     long randomLong();
 

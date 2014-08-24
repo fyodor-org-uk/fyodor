@@ -1,5 +1,7 @@
-package com.fyodor.generators;
+package com.fyodor.jodatime.generators;
 
+import com.fyodor.generators.Generator;
+import com.fyodor.generators.RandomValues;
 import com.google.common.collect.BoundType;
 import com.google.common.collect.Range;
 import org.joda.time.LocalDate;

@@ -8,7 +8,9 @@ import com.google.common.collect.Range;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class StringGenerator implements Generator<String> {
+import static com.fyodor.generators.RandomValuesProvider.randomValues;
+
+class StringGenerator implements Generator<String> {
 
     private static Range<Integer> defaultRange = Range.closed(33, 126);
     private static CharacterFilter defaultFilter = AllCharactersFilter.getFilter();
@@ -44,7 +46,7 @@ public class StringGenerator implements Generator<String> {
     public String next() {
         char[] ret = new char[length];
         for (int i = 0; i < length; i++) {
-            ret[i] = charSet[RDG.random.randomInteger(charSet.length)];
+            ret[i] = charSet[randomValues().randomInteger(charSet.length)];
         }
         return String.valueOf(ret);
     }
