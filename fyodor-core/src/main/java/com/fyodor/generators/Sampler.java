@@ -1,11 +1,6 @@
 package com.fyodor.generators;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import static com.google.common.collect.Sets.newHashSet;
+import java.util.*;
 
 public final class Sampler<T> {
 
@@ -36,7 +31,7 @@ public final class Sampler<T> {
         }
 
         public Set<T> unique() {
-            return newHashSet(listOfT);
+            return new HashSet<T>(listOfT);
         }
 
         @Override

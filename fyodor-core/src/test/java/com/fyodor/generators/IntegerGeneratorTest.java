@@ -2,13 +2,13 @@ package com.fyodor.generators;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
-import com.google.common.collect.Range;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
 import java.util.List;
 
+import static com.fyodor.range.Range.closed;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,21 +19,13 @@ public class IntegerGeneratorTest {
     private Multiset<Integer> randomValues;
 
     @Before
-    public void randomValues(){
+    public void randomValues() {
         randomValues = HashMultiset.create();
     }
 
     @Test
-    public void openRangeCheck() {
-        Generator<Integer> generator = RDG.integer(Range.open(LOWER_BOUND, UPPER_BOUND));
-        generateRandomData(generator);
-        assertThat(randomValues).doesNotContain(LOWER_BOUND);
-        assertThat(randomValues).doesNotContain(UPPER_BOUND);
-    }
-
-    @Test
     public void closedRangeCheck() {
-        Generator<Integer> generator = RDG.integer(Range.closed(LOWER_BOUND, UPPER_BOUND));
+        Generator<Integer> generator = RDG.integer(closed(LOWER_BOUND, UPPER_BOUND));
         generateRandomData(generator);
         assertThat(randomValues).contains(LOWER_BOUND);
         assertThat(randomValues).contains(UPPER_BOUND);

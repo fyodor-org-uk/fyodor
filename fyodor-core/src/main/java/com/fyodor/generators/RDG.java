@@ -2,7 +2,7 @@ package com.fyodor.generators;
 
 import com.fyodor.generators.characters.CharacterFilter;
 import com.fyodor.generators.characters.CharacterSetGenerator;
-import com.google.common.collect.Range;
+import com.fyodor.range.Range;
 
 import java.util.Collection;
 

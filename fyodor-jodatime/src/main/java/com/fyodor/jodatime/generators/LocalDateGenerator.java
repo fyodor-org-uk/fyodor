@@ -2,8 +2,7 @@ package com.fyodor.jodatime.generators;
 
 import com.fyodor.generators.Generator;
 import com.fyodor.generators.RandomValues;
-import com.google.common.collect.BoundType;
-import com.google.common.collect.Range;
+import com.fyodor.range.Range;
 import org.joda.time.LocalDate;
 
 final class LocalDateGenerator implements Generator<LocalDate> {
@@ -12,40 +11,22 @@ final class LocalDateGenerator implements Generator<LocalDate> {
     private static final LocalDate UPPER_BOUND = new LocalDate(2999, 12, 31);
 
     private final RandomValues randomValues;
-    private final LocalDateRange range;
+    private final Range<LocalDate> range;
 
     LocalDateGenerator(final RandomValues randomValues, final Range<LocalDate> range) {
         this.randomValues = randomValues;
-        this.range = new LocalDateRange(range.intersection(Range.closed(LOWER_BOUND, UPPER_BOUND)));
+        this.range = saneRange(range);
     }
 
     @Override
     public LocalDate next() {
-        final long lowerBound = range.lowerEndpoint().toDateTimeAtStartOfDay().toInstant().getMillis();
-        final long upperBound = range.upperEndpoint().plusDays(1).toDateTimeAtStartOfDay().toInstant().getMillis();
+        final long lowerBound = range.lowerBound().toDateTimeAtStartOfDay().toInstant().getMillis();
+        final long upperBound = range.upperBound().plusDays(1).toDateTimeAtStartOfDay().toInstant().getMillis();
         return new LocalDate(randomValues.randomLong(lowerBound, upperBound));
     }
 
-    private static final class LocalDateRange {
-
-        private final Range<LocalDate> range;
-
-        private LocalDateRange(final Range<LocalDate> range) {
-            this.range = range;
-        }
-
-        private LocalDate lowerEndpoint() {
-
-            return range.lowerBoundType() == BoundType.CLOSED
-                    ? range.lowerEndpoint()
-                    : range.lowerEndpoint().plusDays(1);
-        }
-
-        private LocalDate upperEndpoint() {
-
-            return range.upperBoundType() == BoundType.CLOSED
-                    ? range.upperEndpoint()
-                    : range.upperEndpoint().minusDays(1);
-        }
+    private Range<LocalDate> saneRange(Range<LocalDate> range) {
+        return Range.closed(range.lowerBound().isBefore(LOWER_BOUND) ? LOWER_BOUND : range.lowerBound(),
+                range.upperBound().isAfter(UPPER_BOUND) ? UPPER_BOUND : range.upperBound());
     }
 }

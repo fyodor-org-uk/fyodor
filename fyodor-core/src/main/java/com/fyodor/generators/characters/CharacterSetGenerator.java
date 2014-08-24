@@ -1,7 +1,6 @@
 package com.fyodor.generators.characters;
 
-import com.google.common.collect.BoundType;
-import com.google.common.collect.Range;
+import com.fyodor.range.Range;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -14,13 +13,7 @@ public class CharacterSetGenerator {
     public CharacterSetGenerator(Range<Integer> range, CharacterFilter filter) {
         List<Character> chars = new LinkedList<Character>();
 
-        for (int i = (range.lowerBoundType() == BoundType.CLOSED ?
-                range.lowerEndpoint() :
-                range.lowerEndpoint() + 1);
-             i <= (range.upperBoundType() == BoundType.CLOSED ?
-                     range.upperEndpoint() :
-                     range.upperEndpoint() - 1);
-             i++) {
+        for (int i = range.lowerBound(); i < range.upperBound(); i++) {
             if (filter.includeCharacter(i)) {
                 chars.add((char) i);
             }

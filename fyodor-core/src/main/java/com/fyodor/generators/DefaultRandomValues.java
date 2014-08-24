@@ -2,8 +2,6 @@ package com.fyodor.generators;
 
 import java.util.Random;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 final class DefaultRandomValues implements RandomValues {
 
     private final Random random;
@@ -19,7 +17,9 @@ final class DefaultRandomValues implements RandomValues {
 
     @Override
     public long randomLong(final long lower, final long upper) {
-        checkArgument(lower <= upper, "the upper bound must be equal to or greater than the lower bound");
+        if (lower > upper) {
+            throw new IllegalArgumentException("the upper bound must be equal to or greater than the lower bound");
+        }
 
         if (lower == upper) {
             return lower;
@@ -30,14 +30,18 @@ final class DefaultRandomValues implements RandomValues {
 
     @Override
     public int randomInteger(final int max) {
-        checkArgument(max >= 0, "max cannot be negative");
+        if (max < 0) {
+            throw new IllegalArgumentException("max cannot be negative");
+        }
 
         return random.nextInt(max);
     }
 
     @Override
     public int randomInteger(final int lower, final int upper) {
-        checkArgument(lower <= upper, "the upper bound must be equal to or greater than the lower bound");
+        if (lower > upper) {
+            throw new IllegalArgumentException("the upper bound must be equal to or greater than the lower bound");
+        }
 
         if (lower == upper) {
             return lower;
