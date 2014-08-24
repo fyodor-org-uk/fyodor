@@ -11,3 +11,6 @@ Fyodor is a Java library for generating random data for your tests.  Check out t
 
 > “Much unhappiness has come into the world because of bewilderment and things left unsaid.”   
 > ― Fyodor Dostoyevsky
+
+[ ![Codeship Status](https://codeship.io/projects/32314)
+[ ![Travis Status]](https://travis-ci.org/IanEsling/fyodor.svg?branch=master)
