@@ -9,6 +9,10 @@ import static com.fyodor.generators.RandomValuesProvider.randomValues;
 public final class RDG {
 
     public static Generator<LocalDate> localDate(final Range<LocalDate> range) {
+        if (range == null) {
+            throw new IllegalArgumentException("range cannot be null");
+        }
+
         return new LocalDateGenerator(randomValues(), range);
     }
 

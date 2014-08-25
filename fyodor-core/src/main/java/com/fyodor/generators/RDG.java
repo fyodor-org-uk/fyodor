@@ -4,7 +4,12 @@ import com.fyodor.generators.characters.CharacterFilter;
 import com.fyodor.generators.characters.CharacterSetGenerator;
 import com.fyodor.range.Range;
 
-import java.util.Collection;
+import java.util.*;
+
+import static com.fyodor.internal.Preconditions.checkArgument;
+import static com.fyodor.internal.Preconditions.checkArgumentIsNotNull;
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
 
 public class RDG {
 
@@ -42,5 +47,36 @@ public class RDG {
 
     public static Generator<String> string(Integer max, Character[] chars) {
         return new StringGenerator(max, chars);
+    }
+
+    public static <T extends Enum<T>> Generator<T> value(final Class<T> classOfEnumT) {
+        checkArgumentIsNotNull(classOfEnumT, "enum class cannot be null");
+
+        final T[] enumConstants = classOfEnumT.getEnumConstants();
+        checkArgument(enumConstants.length > 0, format("enum %s does not have any constants", classOfEnumT));
+
+        return value(enumConstants);
+    }
+
+    public static <T> Generator<T> value(final T first, T... arrayOfTs) {
+        checkArgumentIsNotNull(arrayOfTs, "varargs array of values cannot be null");
+
+        final List<T> listOfTs = new ArrayList<T>(asList(arrayOfTs));
+        listOfTs.add(0, first);
+        return value(listOfTs);
+    }
+
+    public static <T> Generator<T> value(final T[] arrayOfTs) {
+        checkArgumentIsNotNull(arrayOfTs, "array of values cannot be null");
+        checkArgument(arrayOfTs.length > 0, "array of values cannot be empty");
+
+        return value(asList(arrayOfTs));
+    }
+
+    public static <T> Generator<T> value(final Iterable<T> iterableOfT) {
+        checkArgumentIsNotNull(iterableOfT, "values cannot be null");
+        checkArgument(iterableOfT.iterator().hasNext(), "there must be at-least one value");
+
+        return new ValueGenerator<T>(iterableOfT);
     }
 }

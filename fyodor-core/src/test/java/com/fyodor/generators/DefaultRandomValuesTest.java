@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static com.fyodor.generators.Sampler.from;
+import static com.fyodor.internal.Sampler.from;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public final class DefaultRandomValuesTest {

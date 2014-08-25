@@ -4,7 +4,7 @@ import com.fyodor.generators.Generator;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import static com.fyodor.generators.Sampler.from;
+import static com.fyodor.internal.Sampler.from;
 import static com.fyodor.jodatime.generators.RDG.localDate;
 import static com.fyodor.range.Range.closed;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,6 +16,11 @@ public final class LocalDateGeneratorTest {
     private static final LocalDate MAX = new LocalDate(2999, 12, 31);
 
     private final int sampleSize = 1000;
+
+    @Test(expected = IllegalArgumentException.class)
+    public void cannotGenerateLocalDateForNullRange() {
+        localDate(null);
+    }
 
     @Test
     public void neverReturnsNull() {

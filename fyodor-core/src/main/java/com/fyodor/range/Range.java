@@ -1,11 +1,16 @@
 package com.fyodor.range;
 
-public final class Range<T extends Comparable> {
+public final class Range<T extends Comparable<? super T>> {
 
     private final T lowerBound;
     private final T upperBound;
 
     private Range(final T lowerBound, final T upperBound) {
+        this.lowerBound = lowerBound;
+        this.upperBound = upperBound;
+    }
+
+    public static <T extends Comparable<? super T>> Range<T> closed(final T lowerBound, final T upperBound) {
         if (lowerBound == null) {
             throw new IllegalArgumentException("lower bound cannot be null");
         }
@@ -15,16 +20,31 @@ public final class Range<T extends Comparable> {
         if (lowerBound.compareTo(upperBound) > 0) {
             throw new IllegalArgumentException("lower bound should be less-than-or-equal-to the upper bound");
         }
-        this.lowerBound = lowerBound;
-        this.upperBound = upperBound;
-    }
 
-    public static <T extends Comparable<?>> Range<T> closed(final T lowerBound, final T upperBound) {
         return new Range<T>(lowerBound, upperBound);
     }
 
-    public static <T extends Comparable<?>> Range<T> fixed(final T fixed) {
+    public static <T extends Comparable<? super T>> Range<T> fixed(final T fixed) {
+        if (fixed == null) {
+            throw new IllegalArgumentException("fixed bound cannot be null");
+        }
         return closed(fixed, fixed);
+    }
+
+    public Range<T> limit(final Range<T> limit) {
+        if (limit == null) {
+            throw new IllegalArgumentException("cannot limit range to a null limit");
+        }
+
+        final T lower = lowerBound.compareTo(limit.lowerBound) < 0
+                ? limit.lowerBound
+                : (lowerBound.compareTo(limit.upperBound) > 0 ? limit.upperBound : lowerBound);
+
+        final T upper = upperBound.compareTo(limit.upperBound) > 0
+                ? limit.upperBound
+                : (upperBound.compareTo(limit.lowerBound) < 0 ? limit.lowerBound : upperBound);
+
+        return new Range<T>(lower, upper);
     }
 
     public T lowerBound() {

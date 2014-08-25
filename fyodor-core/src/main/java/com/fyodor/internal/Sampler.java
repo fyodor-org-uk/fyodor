@@ -1,4 +1,6 @@
-package com.fyodor.generators;
+package com.fyodor.internal;
+
+import com.fyodor.generators.Generator;
 
 import java.util.*;
 
@@ -37,6 +39,26 @@ public final class Sampler<T> {
         @Override
         public Iterator<T> iterator() {
             return listOfT.iterator();
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            final Sample sample = (Sample) o;
+
+            return !(listOfT != null ? !listOfT.equals(sample.listOfT) : sample.listOfT != null);
+        }
+
+        @Override
+        public int hashCode() {
+            return listOfT != null ? listOfT.hashCode() : 0;
+        }
+
+        @Override
+        public String toString() {
+            return "Sample {" + listOfT + "}";
         }
     }
 }

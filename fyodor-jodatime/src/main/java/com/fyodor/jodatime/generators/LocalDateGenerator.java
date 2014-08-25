@@ -5,6 +5,8 @@ import com.fyodor.generators.RandomValues;
 import com.fyodor.range.Range;
 import org.joda.time.LocalDate;
 
+import static com.fyodor.range.Range.closed;
+
 final class LocalDateGenerator implements Generator<LocalDate> {
 
     private static final LocalDate LOWER_BOUND = new LocalDate(0, 1, 1);
@@ -15,7 +17,7 @@ final class LocalDateGenerator implements Generator<LocalDate> {
 
     LocalDateGenerator(final RandomValues randomValues, final Range<LocalDate> range) {
         this.randomValues = randomValues;
-        this.range = saneRange(range);
+        this.range = range.limit(closed(LOWER_BOUND, UPPER_BOUND));
     }
 
     @Override
@@ -23,10 +25,5 @@ final class LocalDateGenerator implements Generator<LocalDate> {
         final long lowerBound = range.lowerBound().toDateTimeAtStartOfDay().toInstant().getMillis();
         final long upperBound = range.upperBound().plusDays(1).toDateTimeAtStartOfDay().toInstant().getMillis();
         return new LocalDate(randomValues.randomLong(lowerBound, upperBound));
-    }
-
-    private Range<LocalDate> saneRange(Range<LocalDate> range) {
-        return Range.closed(range.lowerBound().isBefore(LOWER_BOUND) ? LOWER_BOUND : range.lowerBound(),
-                range.upperBound().isAfter(UPPER_BOUND) ? UPPER_BOUND : range.upperBound());
     }
 }
