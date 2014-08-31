@@ -1,7 +1,7 @@
 package com.fyodor.collect.generators;
 
 import com.fyodor.generators.Generator;
-import com.fyodor.generators.RandomValues;
+import com.fyodor.random.RandomValues;
 import com.fyodor.range.Range;
 
 import java.util.LinkedList;

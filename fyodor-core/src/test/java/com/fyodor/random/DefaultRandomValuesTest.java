@@ -1,5 +1,6 @@
-package com.fyodor.generators;
+package com.fyodor.random;
 
+import com.fyodor.generators.Generator;
 import org.junit.Test;
 
 import java.util.Random;

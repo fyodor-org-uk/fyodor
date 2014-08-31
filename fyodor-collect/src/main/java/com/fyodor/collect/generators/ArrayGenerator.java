@@ -5,7 +5,7 @@ import com.fyodor.range.Range;
 
 import java.lang.reflect.Array;
 
-import static com.fyodor.generators.RandomValuesProvider.randomValues;
+import static com.fyodor.random.RandomValuesProvider.randomValues;
 
 final class ArrayGenerator<T> implements Generator<T[]> {
 

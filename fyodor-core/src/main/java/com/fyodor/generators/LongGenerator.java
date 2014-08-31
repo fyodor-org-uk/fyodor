@@ -1,6 +1,6 @@
 package com.fyodor.generators;
 
-import static com.fyodor.generators.RandomValuesProvider.randomValues;
+import static com.fyodor.random.RandomValuesProvider.randomValues;
 
 class LongGenerator implements Generator<Long> {
 

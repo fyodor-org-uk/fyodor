@@ -1,4 +1,4 @@
-package com.fyodor.generators;
+package com.fyodor.random;
 
 public interface RandomValues {
 

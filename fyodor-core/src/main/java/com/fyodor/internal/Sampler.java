@@ -36,6 +36,10 @@ public final class Sampler<T> {
             return new HashSet<T>(listOfT);
         }
 
+        public List<T> asList() {
+            return listOfT;
+        }
+
         @Override
         public Iterator<T> iterator() {
             return listOfT.iterator();

@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.fyodor.generators.RandomValuesProvider.randomValues;
 import static com.fyodor.internal.Preconditions.checkArgumentIsNotNull;
+import static com.fyodor.random.RandomValuesProvider.randomValues;
 import static com.fyodor.range.Range.fixed;
 
 public final class RDG {

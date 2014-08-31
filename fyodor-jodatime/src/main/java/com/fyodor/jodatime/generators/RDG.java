@@ -4,7 +4,7 @@ import com.fyodor.generators.Generator;
 import com.fyodor.range.Range;
 import org.joda.time.LocalDate;
 
-import static com.fyodor.generators.RandomValuesProvider.randomValues;
+import static com.fyodor.random.RandomValuesProvider.randomValues;
 
 public final class RDG {
 

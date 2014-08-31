@@ -9,7 +9,7 @@ import com.google.common.collect.Multiset;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.fyodor.generators.RandomValuesProvider.randomValues;
+import static com.fyodor.random.RandomValuesProvider.randomValues;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class StringGeneratorTest {

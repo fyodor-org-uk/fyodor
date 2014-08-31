@@ -6,7 +6,7 @@ import com.fyodor.range.Range;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.fyodor.generators.RandomValuesProvider.randomValues;
+import static com.fyodor.random.RandomValuesProvider.randomValues;
 import static com.fyodor.range.Range.closed;
 import static java.lang.String.format;
 

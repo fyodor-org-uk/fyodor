@@ -8,7 +8,7 @@ import com.fyodor.range.Range;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static com.fyodor.generators.RandomValuesProvider.randomValues;
+import static com.fyodor.random.RandomValuesProvider.randomValues;
 
 class StringGenerator implements Generator<String> {
 

@@ -2,7 +2,7 @@ package com.fyodor.generators;
 
 import com.fyodor.range.Range;
 
-import static com.fyodor.generators.RandomValuesProvider.randomValues;
+import static com.fyodor.random.RandomValuesProvider.randomValues;
 
 class IntegerGenerator implements Generator<Integer> {
 

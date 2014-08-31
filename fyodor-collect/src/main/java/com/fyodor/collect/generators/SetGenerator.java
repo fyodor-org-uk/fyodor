@@ -6,7 +6,7 @@ import com.fyodor.range.Range;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.fyodor.generators.RandomValuesProvider.randomValues;
+import static com.fyodor.random.RandomValuesProvider.randomValues;
 import static com.fyodor.range.Range.closed;
 
 final class SetGenerator<T> implements Generator<Set<T>> {

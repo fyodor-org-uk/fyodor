@@ -13,6 +13,7 @@
         <module>fyodor-core</module>
         <module>fyodor-jodatime</module>
         <module>fyodor-collect</module>
+        <module>fyodor-junit</module>
     </modules>
 
     <dependencyManagement>
