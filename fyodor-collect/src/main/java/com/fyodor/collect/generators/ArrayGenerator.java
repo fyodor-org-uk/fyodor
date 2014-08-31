@@ -1,19 +1,20 @@
 package com.fyodor.collect.generators;
 
 import com.fyodor.generators.Generator;
+import com.fyodor.random.RandomValues;
 import com.fyodor.range.Range;
 
 import java.lang.reflect.Array;
 
-import static com.fyodor.random.RandomValuesProvider.randomValues;
-
 final class ArrayGenerator<T> implements Generator<T[]> {
 
+    private final RandomValues randomValues;
     private final Class<? extends T> classOfT;
     private final Generator<? extends T> generatorOfT;
     private final Range<Integer> sizeRange;
 
-    ArrayGenerator(final Class<? extends T> classOfT, final Generator<? extends T> generatorOfT, final Range<Integer> sizeRange) {
+    ArrayGenerator(final RandomValues randomValues, final Class<? extends T> classOfT, final Generator<? extends T> generatorOfT, final Range<Integer> sizeRange) {
+        this.randomValues = randomValues;
         this.classOfT = classOfT;
         this.generatorOfT = generatorOfT;
         this.sizeRange = sizeRange.limit(Range.closed(0, 1000));
@@ -21,7 +22,7 @@ final class ArrayGenerator<T> implements Generator<T[]> {
 
     @Override
     public T[] next() {
-        final int size = randomValues().randomInteger(sizeRange.lowerBound(), sizeRange.upperBound());
+        final int size = randomValues.randomInteger(sizeRange.lowerBound(), sizeRange.upperBound());
         final T[] arrayOfT = newArray(classOfT, size);
 
         for (int i = 0; i < size; i++) {
