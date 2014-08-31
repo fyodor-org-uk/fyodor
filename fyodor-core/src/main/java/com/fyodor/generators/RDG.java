@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static com.fyodor.internal.Preconditions.checkArgument;
-import static com.fyodor.internal.Preconditions.checkArgumentIsNotNull;
 import static com.fyodor.random.RandomValuesProvider.randomValues;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -53,16 +51,16 @@ public class RDG {
     }
 
     public static <T extends Enum<T>> Generator<T> value(final Class<T> classOfEnumT) {
-        checkArgumentIsNotNull(classOfEnumT, "enum class cannot be null");
+        cannotBeNull(classOfEnumT, "enum class cannot be null");
 
         final T[] enumConstants = classOfEnumT.getEnumConstants();
-        checkArgument(enumConstants.length > 0, format("enum %s does not have any constants", classOfEnumT));
+        satisfies(enumConstants.length > 0, format("enum %s does not have any constants", classOfEnumT));
 
         return value(enumConstants);
     }
 
     public static <T> Generator<T> value(final T first, T... arrayOfTs) {
-        checkArgumentIsNotNull(arrayOfTs, "varargs array of values cannot be null");
+        cannotBeNull(arrayOfTs, "varargs array of values cannot be null");
 
         final List<T> listOfTs = new ArrayList<T>(asList(arrayOfTs));
         listOfTs.add(0, first);
@@ -70,16 +68,28 @@ public class RDG {
     }
 
     public static <T> Generator<T> value(final T[] arrayOfTs) {
-        checkArgumentIsNotNull(arrayOfTs, "array of values cannot be null");
-        checkArgument(arrayOfTs.length > 0, "array of values cannot be empty");
+        cannotBeNull(arrayOfTs, "array of values cannot be null");
+        satisfies(arrayOfTs.length > 0, "array of values cannot be empty");
 
         return value(asList(arrayOfTs));
     }
 
     public static <T> Generator<T> value(final Iterable<T> iterableOfT) {
-        checkArgumentIsNotNull(iterableOfT, "values cannot be null");
-        checkArgument(iterableOfT.iterator().hasNext(), "there must be at-least one value");
+        cannotBeNull(iterableOfT, "values cannot be null");
+        satisfies(iterableOfT.iterator().hasNext(), "there must be at-least one value");
 
         return new ValueGenerator<T>(randomValues(), iterableOfT);
+    }
+
+    private static void cannotBeNull(final Object argument, final String message) {
+        if (argument == null) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    private static void satisfies(final boolean check, final String message) {
+        if (!check) {
+            throw new IllegalArgumentException(message);
+        }
     }
 }

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.fyodor.internal.Preconditions.checkArgumentIsNotNull;
 import static com.fyodor.random.RandomValuesProvider.randomValues;
 import static com.fyodor.range.Range.fixed;
 
@@ -23,8 +22,8 @@ public final class RDG {
 
     public static <T> Generator<List<T>> list(final Generator<? extends T> generatorOfT,
                                               final Range<Integer> sizeRange) {
-        checkArgumentIsNotNull(generatorOfT, "generator cannot be null");
-        checkArgumentIsNotNull(sizeRange, "size range cannot be null");
+        cannotBeNull(generatorOfT, "generator cannot be null");
+        cannotBeNull(sizeRange, "size range cannot be null");
 
         return new ListGenerator<T>(randomValues(), generatorOfT, sizeRange);
     }
@@ -43,9 +42,9 @@ public final class RDG {
     public static <T> Generator<T[]> array(final Class<? extends T> classOfT,
                                            final Generator<? extends T> generatorOfT,
                                            final Range<Integer> sizeRange) {
-        checkArgumentIsNotNull(classOfT, "type of array elements cannot be null");
-        checkArgumentIsNotNull(generatorOfT, "generator cannot be null");
-        checkArgumentIsNotNull(sizeRange, "size range cannot be null");
+        cannotBeNull(classOfT, "type of array elements cannot be null");
+        cannotBeNull(generatorOfT, "generator cannot be null");
+        cannotBeNull(sizeRange, "size range cannot be null");
 
         return new ArrayGenerator<T>(randomValues(), classOfT, generatorOfT, sizeRange);
     }
@@ -60,8 +59,8 @@ public final class RDG {
 
     public static <T> Generator<Set<T>> set(final Generator<? extends T> generatorOfT,
                                             final Range<Integer> sizeRange) {
-        checkArgumentIsNotNull(generatorOfT, "generator cannot be null");
-        checkArgumentIsNotNull(sizeRange, "size range cannot be null");
+        cannotBeNull(generatorOfT, "generator cannot be null");
+        cannotBeNull(sizeRange, "size range cannot be null");
 
         return new SetGenerator<T>(randomValues(), generatorOfT, sizeRange);
     }
@@ -80,13 +79,19 @@ public final class RDG {
     public static <K, V> Generator<Map<K, V>> map(final Generator<? extends K> generatorOfK,
                                                   final Generator<? extends V> generatorOfV,
                                                   final Range<Integer> sizeRange) {
-        checkArgumentIsNotNull(generatorOfK, "key generator cannot be null");
-        checkArgumentIsNotNull(generatorOfV, "value generator cannot be null");
-        checkArgumentIsNotNull(sizeRange, "size range cannot be null");
+        cannotBeNull(generatorOfK, "key generator cannot be null");
+        cannotBeNull(generatorOfV, "value generator cannot be null");
+        cannotBeNull(sizeRange, "size range cannot be null");
 
         return new MapGenerator<K, V>(randomValues(), generatorOfK, generatorOfV, sizeRange);
     }
 
     private RDG() {
+    }
+
+    private static void cannotBeNull(final Object argument, final String message) {
+        if (argument == null) {
+            throw new IllegalArgumentException(message);
+        }
     }
 }
