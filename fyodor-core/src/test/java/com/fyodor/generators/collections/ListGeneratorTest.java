@@ -1,4 +1,4 @@
-package com.fyodor.collect.generators;
+package com.fyodor.generators.collections;
 
 import com.fyodor.generators.Generator;
 import com.fyodor.internal.Sampler;
@@ -9,8 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.fyodor.collect.generators.GeneratorUtils.generator;
-import static com.fyodor.collect.generators.GeneratorUtils.randomIntegers;
+import static com.fyodor.generators.collections.GeneratorUtils.generator;
+import static com.fyodor.generators.collections.GeneratorUtils.randomIntegers;
 import static com.fyodor.internal.Sampler.from;
 import static com.fyodor.range.Range.closed;
 import static com.fyodor.range.Range.fixed;

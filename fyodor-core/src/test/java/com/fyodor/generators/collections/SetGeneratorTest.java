@@ -1,12 +1,12 @@
-package com.fyodor.collect.generators;
+package com.fyodor.generators.collections;
 
 import com.fyodor.generators.Generator;
 import org.junit.Test;
 
 import java.util.Set;
 
-import static com.fyodor.collect.generators.GeneratorUtils.generator;
-import static com.fyodor.collect.generators.GeneratorUtils.randomIntegers;
+import static com.fyodor.generators.collections.GeneratorUtils.generator;
+import static com.fyodor.generators.collections.GeneratorUtils.randomIntegers;
 import static com.fyodor.internal.Sampler.from;
 import static com.fyodor.range.Range.closed;
 import static com.fyodor.range.Range.fixed;
@@ -41,7 +41,7 @@ public final class SetGeneratorTest {
     }
 
     @Test
-    public void generatesSetWithClosed¢SizeRange() {
+    public void generatesSetWithClosedSizeRange() {
         final Generator<Set<Integer>> generator = RDG.set(randomIntegers(), closed(1, 5));
         for (final Set<Integer> sample : from(generator).sample(100)) {
             assertThat(sample.size()).isBetween(1, 5);

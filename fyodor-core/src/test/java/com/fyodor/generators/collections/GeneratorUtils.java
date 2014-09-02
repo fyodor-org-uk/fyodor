@@ -1,4 +1,4 @@
-package com.fyodor.collect.generators;
+package com.fyodor.generators.collections;
 
 import com.fyodor.generators.Generator;
 
