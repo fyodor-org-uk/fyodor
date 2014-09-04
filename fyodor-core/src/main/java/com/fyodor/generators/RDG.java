@@ -81,6 +81,14 @@ public class RDG {
         return new ValueGenerator<T>(randomValues(), iterableOfT);
     }
 
+    public static Generator<String> domainSuffix() {
+        return new SuffixGenerator();
+    }
+
+    public static Generator<String> emailAddress() {
+        return new EmailAddressGenerator();
+    }
+    
     private static void cannotBeNull(final Object argument, final String message) {
         if (argument == null) {
             throw new IllegalArgumentException(message);
