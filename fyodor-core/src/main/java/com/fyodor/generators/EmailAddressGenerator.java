@@ -1,9 +1,7 @@
 package com.fyodor.generators;
 
-import com.fyodor.generators.characters.CharacterSetGenerator;
+import com.fyodor.generators.characters.EmailLocalPartFilter;
 import com.fyodor.generators.characters.LettersAndDigitsFilter;
-
-import java.util.Arrays;
 
 import static java.lang.String.format;
 /*
@@ -15,15 +13,8 @@ public class EmailAddressGenerator implements Generator<String> {
     Generator<String> localPartGenerator;
 
     public EmailAddressGenerator() {
-        Character[] lettersAndDigits = new CharacterSetGenerator(LettersAndDigitsFilter.getFilter()).getCharset();
-        Character[] nonLetterLocalPartChars = new Character[]{'!', '#', '$', '%', '&', '\'', '*', '+', '-', '/', '=', '?', '^', '_', '`', '{', '|', '}', '~', '.', ',', '}'};
-        Character[] localPartCharset = new Character[lettersAndDigits.length + nonLetterLocalPartChars.length];
-        System.arraycopy(lettersAndDigits, 0, localPartCharset, 0, lettersAndDigits.length);
-        System.arraycopy(nonLetterLocalPartChars, 0, localPartCharset, lettersAndDigits.length, nonLetterLocalPartChars.length);
-        localPartGenerator = RDG.string(20, localPartCharset);
+        localPartGenerator = RDG.string(20, EmailLocalPartFilter.getFilter());
     }
-
-
 
     @Override
     public String next() {

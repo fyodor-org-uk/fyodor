@@ -1,24 +1,20 @@
 package com.fyodor.generators.characters;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-
 public class EmailLocalPartFilter implements CharacterFilter {
 
     private static EmailLocalPartFilter filter = new EmailLocalPartFilter();
-    private final CharacterFilter lettersAndDigitsFilter;
-    Character[] nonLetters = new Character[]{'!', '#', '$', '%', '&', '\'', '*', '+', '-', '/', '=', '?', '^', '_', '`', '{', '|', '}', '~', '.', ',', '}'}
-    private EmailLocalPartFilter(){
+    private CharacterFilter lettersAndDigitsFilter;
+
+    private EmailLocalPartFilter() {
         lettersAndDigitsFilter = LettersAndDigitsFilter.getFilter();
     }
 
-    public CharacterFilter getFilter(){
+    public static CharacterFilter getFilter() {
         return filter;
     }
 
     @Override
     public boolean includeCharacter(int i) {
-        return lettersAndDigitsFilter.includeCharacter(i) || Arrays.binarySearch(nonLetters, i)
-                ;
+        return lettersAndDigitsFilter.includeCharacter(i) || ".".charAt(0) == i;
     }
 }
