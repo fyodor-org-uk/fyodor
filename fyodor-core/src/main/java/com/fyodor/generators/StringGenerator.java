@@ -1,6 +1,5 @@
 package com.fyodor.generators;
 
-import com.fyodor.generators.characters.AllCharactersFilter;
 import com.fyodor.generators.characters.CharacterFilter;
 import com.fyodor.generators.characters.CharacterSetGenerator;
 import com.fyodor.range.Range;
@@ -8,12 +7,12 @@ import com.fyodor.range.Range;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static com.fyodor.generators.characters.CharacterSetGenerator.defaultFilter;
+import static com.fyodor.generators.characters.CharacterSetGenerator.defaultRange;
 import static com.fyodor.random.RandomValuesProvider.randomValues;
 
 class StringGenerator implements Generator<String> {
 
-    private static Range<Integer> defaultRange = Range.closed(33, 126);
-    private static CharacterFilter defaultFilter = AllCharactersFilter.getFilter();
     private Integer length;
     private Character[] charSet;
 

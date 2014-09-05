@@ -8,7 +8,21 @@ import java.util.List;
 
 public class CharacterSetGenerator {
 
+    public static final Range<Integer> defaultRange = Range.closed(33, 126);
+    public static final CharacterFilter defaultFilter = AllCharactersFilter.getFilter();
     private final Character[] charset;
+
+    public CharacterSetGenerator(){
+        this(defaultRange, defaultFilter);
+    }
+
+    public CharacterSetGenerator(Range<Integer> range) {
+        this(range, defaultFilter);
+    }
+
+    public CharacterSetGenerator(CharacterFilter filter) {
+        this(defaultRange, filter);
+    }
 
     public CharacterSetGenerator(Range<Integer> range, CharacterFilter filter) {
         List<Character> chars = new LinkedList<Character>();
