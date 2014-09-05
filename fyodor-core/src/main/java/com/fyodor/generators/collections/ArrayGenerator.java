@@ -6,14 +6,14 @@ import com.fyodor.range.Range;
 
 import java.lang.reflect.Array;
 
-final class ArrayGenerator<T> implements Generator<T[]> {
+public final class ArrayGenerator<T> implements Generator<T[]> {
 
     private final RandomValues randomValues;
     private final Class<? extends T> classOfT;
     private final Generator<? extends T> generatorOfT;
     private final Range<Integer> sizeRange;
 
-    ArrayGenerator(final RandomValues randomValues, final Class<? extends T> classOfT, final Generator<? extends T> generatorOfT, final Range<Integer> sizeRange) {
+    public ArrayGenerator(final RandomValues randomValues, final Class<? extends T> classOfT, final Generator<? extends T> generatorOfT, final Range<Integer> sizeRange) {
         this.randomValues = randomValues;
         this.classOfT = classOfT;
         this.generatorOfT = generatorOfT;

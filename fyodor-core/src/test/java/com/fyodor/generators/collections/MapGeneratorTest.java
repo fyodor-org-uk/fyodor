@@ -1,6 +1,7 @@
 package com.fyodor.generators.collections;
 
 import com.fyodor.generators.Generator;
+import com.fyodor.generators.RDG;
 import org.junit.Test;
 
 import java.util.HashSet;

@@ -10,13 +10,13 @@ import java.util.Set;
 import static com.fyodor.range.Range.closed;
 import static java.lang.String.format;
 
-final class SetGenerator<T> implements Generator<Set<T>> {
+public final class SetGenerator<T> implements Generator<Set<T>> {
 
     private final RandomValues randomValues;
     private final Generator<? extends T> generatorOfT;
     private final Range<Integer> sizeRange;
 
-    SetGenerator(final RandomValues randomValues, final Generator<? extends T> generatorOfT, final Range<Integer> sizeRange) {
+    public SetGenerator(final RandomValues randomValues, final Generator<? extends T> generatorOfT, final Range<Integer> sizeRange) {
         this.randomValues = randomValues;
         this.generatorOfT = generatorOfT;
         this.sizeRange = sizeRange.limit(closed(0, 1000));

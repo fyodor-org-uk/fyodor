@@ -1,6 +1,7 @@
 package com.fyodor.generators.collections;
 
 import com.fyodor.generators.Generator;
+import com.fyodor.generators.RDG;
 import com.fyodor.internal.Sampler;
 import com.fyodor.range.Range;
 import org.junit.Test;

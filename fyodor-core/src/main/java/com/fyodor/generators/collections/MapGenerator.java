@@ -10,17 +10,17 @@ import java.util.Map;
 import static com.fyodor.range.Range.closed;
 import static java.lang.String.format;
 
-final class MapGenerator<K, V> implements Generator<Map<K, V>> {
+public final class MapGenerator<K, V> implements Generator<Map<K, V>> {
 
     private final RandomValues randomValues;
     private final Generator<? extends K> generatorOfK;
     private final Generator<? extends V> generatorOfV;
     private final Range<Integer> sizeRange;
 
-    MapGenerator(final RandomValues randomValues,
-                 final Generator<? extends K> generatorOfK,
-                 final Generator<? extends V> generatorOfV,
-                 final Range<Integer> sizeRange) {
+    public MapGenerator(final RandomValues randomValues,
+                        final Generator<? extends K> generatorOfK,
+                        final Generator<? extends V> generatorOfV,
+                        final Range<Integer> sizeRange) {
         this.randomValues = randomValues;
         this.generatorOfK = generatorOfK;
         this.generatorOfV = generatorOfV;

@@ -9,13 +9,13 @@ import java.util.List;
 
 import static com.fyodor.range.Range.closed;
 
-final class ListGenerator<T> implements Generator<List<T>> {
+public final class ListGenerator<T> implements Generator<List<T>> {
 
     private final RandomValues randomValues;
     private final Generator<? extends T> generatorOfT;
     private final Range<Integer> sizeRange;
 
-    ListGenerator(final RandomValues randomValues, final Generator<? extends T> generatorOfT, final Range<Integer> sizeRange) {
+    public ListGenerator(final RandomValues randomValues, final Generator<? extends T> generatorOfT, final Range<Integer> sizeRange) {
         this.randomValues = randomValues;
         this.generatorOfT = generatorOfT;
         this.sizeRange = sizeRange.limit(closed(0, 1000));
