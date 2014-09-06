@@ -43,5 +43,17 @@ public class EmailLocalPartFilterTest {
         assertThat(filter).includes("}");
         assertThat(filter).includes("~");
         assertThat(filter).includes(".");
+        assertThat(filter).doesNotInclude("\"");
+        assertThat(filter).doesNotInclude("(");
+        assertThat(filter).doesNotInclude(")");
+        assertThat(filter).doesNotInclude(",");
+        assertThat(filter).doesNotInclude(":");
+        assertThat(filter).doesNotInclude(";");
+        assertThat(filter).doesNotInclude("<");
+        assertThat(filter).doesNotInclude(">");
+        assertThat(filter).doesNotInclude("@");
+        assertThat(filter).doesNotInclude("[");
+        assertThat(filter).doesNotInclude("\\");
+        assertThat(filter).doesNotInclude("]");
     }
 }

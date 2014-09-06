@@ -92,6 +92,10 @@ public class RDG {
         return new EmailAddressGenerator();
     }
 
+    public static Generator<String> domain() {
+        return new DomainGenerator();
+    }
+
     private static void cannotBeNull(final Object argument, final String message) {
         if (argument == null) {
             throw new IllegalArgumentException(message);
