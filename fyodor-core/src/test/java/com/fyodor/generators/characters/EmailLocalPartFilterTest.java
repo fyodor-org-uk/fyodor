@@ -2,7 +2,7 @@ package com.fyodor.generators.characters;
 
 import org.junit.Test;
 
-import static com.fyodor.FyodorAsserts.assertThat;
+import static com.fyodor.FyodorAssertions.assertThat;
 
 
 public class EmailLocalPartFilterTest {
@@ -23,25 +23,25 @@ public class EmailLocalPartFilterTest {
         assertThat(filter).includes("3");
         assertThat(filter).includes("6");
         assertThat(filter).includes("9");
-        assertThat(filter).doesNotInclude("!");
-        assertThat(filter).doesNotInclude("#");
-        assertThat(filter).doesNotInclude("$");
-        assertThat(filter).doesNotInclude("%");
-        assertThat(filter).doesNotInclude("&");
-        assertThat(filter).doesNotInclude("'");
-        assertThat(filter).doesNotInclude("*");
-        assertThat(filter).doesNotInclude("+");
-        assertThat(filter).doesNotInclude("-");
-        assertThat(filter).doesNotInclude("/");
-        assertThat(filter).doesNotInclude("=");
-        assertThat(filter).doesNotInclude("?");
-        assertThat(filter).doesNotInclude("^");
-        assertThat(filter).doesNotInclude("_");
-        assertThat(filter).doesNotInclude("`");
-        assertThat(filter).doesNotInclude("{");
-        assertThat(filter).doesNotInclude("|");
-        assertThat(filter).doesNotInclude("}");
-        assertThat(filter).doesNotInclude("~");
+        assertThat(filter).includes("!");
+        assertThat(filter).includes("#");
+        assertThat(filter).includes("$");
+        assertThat(filter).includes("%");
+        assertThat(filter).includes("&");
+        assertThat(filter).includes("'");
+        assertThat(filter).includes("*");
+        assertThat(filter).includes("+");
+        assertThat(filter).includes("-");
+        assertThat(filter).includes("/");
+        assertThat(filter).includes("=");
+        assertThat(filter).includes("?");
+        assertThat(filter).includes("^");
+        assertThat(filter).includes("_");
+        assertThat(filter).includes("`");
+        assertThat(filter).includes("{");
+        assertThat(filter).includes("|");
+        assertThat(filter).includes("}");
+        assertThat(filter).includes("~");
         assertThat(filter).includes(".");
     }
 }

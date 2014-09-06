@@ -1,20 +1,15 @@
 package com.fyodor.generators.characters;
 
-public class EmailLocalPartFilter implements CharacterFilter {
+public class EmailLocalPartFilter extends RegExCharacterFilter {
 
     private static EmailLocalPartFilter filter = new EmailLocalPartFilter();
-    private CharacterFilter lettersAndDigitsFilter;
 
-    private EmailLocalPartFilter() {
-        lettersAndDigitsFilter = LettersAndDigitsFilter.getFilter();
+    private EmailLocalPartFilter(){
+        super("[a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]");
     }
 
     public static CharacterFilter getFilter() {
         return filter;
     }
 
-    @Override
-    public boolean includeCharacter(int i) {
-        return lettersAndDigitsFilter.includeCharacter(i) || ".".charAt(0) == i;
-    }
 }
