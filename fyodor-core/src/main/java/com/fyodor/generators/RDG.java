@@ -96,6 +96,10 @@ public class RDG {
         return new DomainGenerator();
     }
 
+    public static Generator<String> domain(Range<Integer> range) {
+        return new DomainGenerator(range);
+    }
+
     private static void cannotBeNull(final Object argument, final String message) {
         if (argument == null) {
             throw new IllegalArgumentException(message);

@@ -1,10 +1,19 @@
 package com.fyodor.generators;
 
 import com.fyodor.generators.characters.DomainNameFilter;
+import com.fyodor.range.Range;
 
 public class DomainGenerator implements Generator<String> {
 
-    Generator<String> domainGenerator = new StringGenerator(20, DomainNameFilter.getFilter());
+    Generator<String> domainGenerator;
+
+    public DomainGenerator(){
+        this(Range.closed(5, 40));
+    }
+
+    public DomainGenerator(Range<Integer> range) {
+        domainGenerator = new StringGenerator(range, DomainNameFilter.getFilter());
+    }
 
     @Override
     public String next() {

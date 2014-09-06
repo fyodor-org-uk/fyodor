@@ -1,7 +1,6 @@
 package com.fyodor.generators;
 
-import com.fyodor.generators.characters.EmailLocalPartFilter;
-import com.fyodor.generators.characters.LettersAndDigitsFilter;
+import com.fyodor.range.Range;
 
 import static java.lang.String.format;
 /*
@@ -11,13 +10,15 @@ allowed in an email address.
 public class EmailAddressGenerator implements Generator<String> {
 
     Generator<String> localPartGenerator;
+    Generator<String> domainPartGenerator;
 
     public EmailAddressGenerator() {
-        localPartGenerator = RDG.string(20, EmailLocalPartFilter.getFilter());
+        localPartGenerator = new EmailLocalPartGenerator(Range.closed(3, 50));
+        domainPartGenerator = RDG.domain();
     }
 
     @Override
     public String next() {
-        return format("%s@%s.%s", localPartGenerator.next(), RDG.string(20, LettersAndDigitsFilter.getFilter()).next(), RDG.domainSuffix().next());
+        return format("%s@%s.%s", localPartGenerator.next(), domainPartGenerator.next(), RDG.domainSuffix().next());
     }
 }

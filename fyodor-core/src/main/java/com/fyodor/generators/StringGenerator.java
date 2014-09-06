@@ -13,7 +13,7 @@ import static com.fyodor.random.RandomValuesProvider.randomValues;
 
 class StringGenerator implements Generator<String> {
 
-    private Integer length;
+    private Range<Integer> range;
     private Character[] charSet;
 
     StringGenerator(Integer length) {
@@ -37,12 +37,37 @@ class StringGenerator implements Generator<String> {
     }
 
     StringGenerator(Integer length, Character[] charset) {
-        this.length = length;
+        this(Range.fixed(length), charset);
+    }
+
+    StringGenerator(Range<Integer> range) {
+        this(range, new CharacterSetGenerator(defaultRange, defaultFilter));
+    }
+
+    StringGenerator(Range<Integer> range, CharacterFilter filter) {
+        this(range, new CharacterSetGenerator(defaultRange, filter));
+    }
+
+    StringGenerator(Range<Integer> stringRange, Range<Integer> charsetRange) {
+        this(stringRange, new CharacterSetGenerator(charsetRange, defaultFilter));
+    }
+
+    StringGenerator(Range<Integer> range, CharacterSetGenerator characterSetGenerator) {
+        this(range, characterSetGenerator.getCharset());
+    }
+
+    StringGenerator(Range<Integer> range, Collection<Character> charset) {
+        this(range, charset.toArray(new Character[charset.size()]));
+    }
+
+    StringGenerator(Range<Integer> range, Character[] charset) {
+        this.range = range;
         this.charSet = charset;
     }
 
     @Override
     public String next() {
+        Integer length = RDG.integer(range).next();
         char[] ret = new char[length];
         for (int i = 0; i < length; i++) {
             ret[i] = charSet[randomValues().randomInteger(charSet.length)];

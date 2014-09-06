@@ -12,6 +12,6 @@ public class AllCharactersFilter implements CharacterFilter {
 
     @Override
     public boolean includeCharacter(int i) {
-        return true;
+        return !"\"".equals(String.valueOf((char)i));
     }
 }
