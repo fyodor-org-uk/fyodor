@@ -10,8 +10,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.fyodor.internal.Sampler.Sample;
-import static com.fyodor.internal.Sampler.from;
+import static com.fyodor.Sampler.Sample;
+import static com.fyodor.Sampler.from;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public final class RandomValuesProviderTest {

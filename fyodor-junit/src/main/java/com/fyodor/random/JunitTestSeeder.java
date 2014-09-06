@@ -1,29 +1,21 @@
 package com.fyodor.random;
 
-import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
 import static com.fyodor.random.RandomValuesProvider.seed;
 
-public final class SeedRule extends TestWatcher {
+final class JunitTestSeeder {
 
-    @Override
-    protected void starting(final Description description) {
-        final Seed seed = seedFrom(description);
+    private final Seed seed;
 
+    JunitTestSeeder(final Description description) {
+        this.seed = seedFrom(description);
+    }
+
+    void nextSeed() {
         if (seed != null) {
             seed().next(seed.value());
         }
-    }
-
-    @Override
-    protected void finished(final Description description) {
-        seed().previous();
-    }
-
-    @Override
-    protected void failed(final Throwable e, final Description description) {
-        throw new FailedWithSeedException(seed().current());
     }
 
     private static Seed seedFrom(final Description description) {

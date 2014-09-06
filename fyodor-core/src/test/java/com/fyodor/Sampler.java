@@ -1,4 +1,4 @@
-package com.fyodor.internal;
+package com.fyodor;
 
 import com.fyodor.generators.Generator;
 
@@ -29,6 +29,9 @@ public final class Sampler<T> {
         private final List<T> listOfT;
 
         public Sample(final List<T> listOfT) {
+            if (listOfT == null) {
+                throw new IllegalArgumentException("sample list cannot be null");
+            }
             this.listOfT = listOfT;
         }
 
@@ -52,12 +55,12 @@ public final class Sampler<T> {
 
             final Sample sample = (Sample) o;
 
-            return !(listOfT != null ? !listOfT.equals(sample.listOfT) : sample.listOfT != null);
+            return listOfT.equals(sample.listOfT);
         }
 
         @Override
         public int hashCode() {
-            return listOfT != null ? listOfT.hashCode() : 0;
+            return listOfT.hashCode();
         }
 
         @Override

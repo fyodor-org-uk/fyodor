@@ -4,8 +4,8 @@ import com.fyodor.generators.Generator;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import static com.fyodor.internal.Sampler.from;
 import static com.fyodor.jodatime.generators.RDG.localDate;
+import static com.fyodor.jodatime.generators.Sampler.from;
 import static com.fyodor.range.Range.closed;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.joda.time.LocalDate.now;

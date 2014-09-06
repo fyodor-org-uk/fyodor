@@ -5,7 +5,7 @@ import com.fyodor.generators.RDG;
 import com.fyodor.range.Range;
 import org.junit.Test;
 
-import static com.fyodor.internal.Sampler.from;
+import static com.fyodor.Sampler.from;
 import static com.fyodor.range.Range.closed;
 import static com.fyodor.range.Range.fixed;
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,5 +1,6 @@
 package com.fyodor.random;
 
+import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.JUnit4;
 import org.junit.runners.model.InitializationError;
@@ -12,13 +13,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.Arrays.asList;
+
 final class TestRunner {
 
-    private final RunNotifier runNotifier;
+    private final List<RunListener> runListeners;
     private final Map<Class<?>, Long> startingSeedByTestClass = new HashMap<Class<?>, Long>();
 
-    private TestRunner(final RunNotifier runNotifier) {
-        this.runNotifier = runNotifier;
+    TestRunner(final RunListener... runListeners) {
+        this.runListeners = asList(runListeners);
     }
 
     TestRunner scheduleTestWithInitialSeed(final Class<?> testClass, final long startingSeed) {
@@ -26,7 +29,7 @@ final class TestRunner {
         return this;
     }
 
-    public TestRunner scheduleTest(final Class<?> testClass) {
+    TestRunner scheduleTest(final Class<?> testClass) {
         startingSeedByTestClass.put(testClass, null);
         return this;
     }
@@ -66,14 +69,18 @@ final class TestRunner {
 
     private void executeJunitTest(final Class<?> testClass) {
         try {
-            new JUnit4(testClass).run(runNotifier);
+            new JUnit4(testClass).run(runNotifierWith(runListeners));
         } catch (final InitializationError initializationError) {
             throw new RuntimeException(initializationError);
         }
     }
 
-    static TestRunner testRunner(final RunNotifier runNotifier) {
-        return new TestRunner(runNotifier);
+    private static RunNotifier runNotifierWith(final List<RunListener> runListeners) {
+        final RunNotifier runNotifier = new RunNotifier();
+        for (final RunListener listener : runListeners) {
+            runNotifier.addListener(listener);
+        }
+        return runNotifier;
     }
 
     private static void executeTestsAndWaitForThemToFinish(final List<Runnable> listOfRunnables) {

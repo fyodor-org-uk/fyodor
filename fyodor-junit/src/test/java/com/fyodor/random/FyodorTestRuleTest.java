@@ -11,15 +11,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.runner.Description.EMPTY;
 import static org.junit.runner.Description.createTestDescription;
 
-public final class SeedRuleTest {
+public final class FyodorTestRuleTest {
 
-    private final SeedRule seedRule = new SeedRule();
+    private final FyodorTestRule fyodorTestRule = new FyodorTestRule();
 
     @Test
     public void doesNotSetNextSeedWhenTheTestDoesNotHaveAnAnnotatedSeedValue() {
         final long initialSeed = seed().current();
 
-        seedRule.starting(test(StandardTestClass.class));
+        fyodorTestRule.starting(test(StandardTestClass.class));
 
         assertThat(seed().current()).isEqualTo(initialSeed);
     }
@@ -28,14 +28,14 @@ public final class SeedRuleTest {
     public void setsNextSeedFromTestMethodAnnotation() {
         final long seedForTestMethod = new Random().nextLong();
 
-        seedRule.starting(test(SeedRuleTest.class, seedForTestMethod));
+        fyodorTestRule.starting(test(FyodorTestRuleTest.class, seedForTestMethod));
 
         assertThat(seed().current()).isEqualTo(seedForTestMethod);
     }
 
     @Test
     public void setsNextSeedFromTestClassAnnotation() {
-        seedRule.starting(test(SeededTestClass.class));
+        fyodorTestRule.starting(test(SeededTestClass.class));
 
         assertThat(seed().current()).isEqualTo(1234567890);
     }
@@ -44,32 +44,44 @@ public final class SeedRuleTest {
     public void seedFromTestMethodAnnotationTakesPrecedenceOverTestClassAnnotation() {
         final long seedForTestMethod = new Random().nextLong();
 
-        seedRule.starting(test(StandardTestClass.class, seedForTestMethod));
+        fyodorTestRule.starting(test(StandardTestClass.class, seedForTestMethod));
 
         assertThat(seed().current()).isEqualTo(seedForTestMethod);
     }
 
     @Test
-    public void failingTestThrowsAnotherExceptionReportingTheCurrentSeed() {
+    public void setsCauseOfFailingTestToExceptionWithSeed() {
+        final long currentSeed = seed().current();
+        final Throwable causeOfFailingTest = new AssertionError();
+
+        fyodorTestRule.failed(causeOfFailingTest, Description.EMPTY);
+
+        final FailedWithSeedException cause = (FailedWithSeedException) causeOfFailingTest.getCause();
+        assertThat(cause.seed()).isEqualTo(currentSeed);
+    }
+
+    @Test
+    public void setsRootCauseOfFailingTestToExceptionWithSeed() {
         final long currentSeed = seed().current();
 
-        long failingSeed = 0;
+        final Throwable causeOfFailingTest = new AssertionError();
+        final Throwable cause1 = new Throwable();
+        causeOfFailingTest.initCause(cause1);
+        final Throwable cause2 = new Throwable();
+        cause1.initCause(cause2);
 
-        try {
-            seedRule.failed(new Throwable(), Description.EMPTY);
-        } catch (final FailedWithSeedException fwse) {
-            failingSeed = fwse.seed();
-        }
+        fyodorTestRule.failed(causeOfFailingTest, Description.EMPTY);
 
-        assertThat(failingSeed).isEqualTo(currentSeed);
+        final FailedWithSeedException cause = (FailedWithSeedException) cause2.getCause();
+        assertThat(cause.seed()).isEqualTo(currentSeed);
     }
 
     @Test
     public void revertsToPreviousSeedWhenTestFinishes() {
         final long initialSeed = seed().current();
 
-        seedRule.starting(test(SeededTestClass.class, new Random().nextLong()));
-        seedRule.finished(EMPTY);
+        fyodorTestRule.starting(test(SeededTestClass.class, new Random().nextLong()));
+        fyodorTestRule.finished(EMPTY);
 
         assertThat(seed().current()).isEqualTo(initialSeed);
     }

@@ -5,8 +5,8 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Set;
 
-import static com.fyodor.internal.Sampler.Sample;
-import static com.fyodor.internal.Sampler.from;
+import static com.fyodor.Sampler.Sample;
+import static com.fyodor.Sampler.from;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;

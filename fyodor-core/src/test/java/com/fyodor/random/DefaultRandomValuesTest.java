@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static com.fyodor.internal.Sampler.from;
+import static com.fyodor.Sampler.from;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public final class DefaultRandomValuesTest {
@@ -42,13 +42,13 @@ public final class DefaultRandomValuesTest {
 
     @Test
     public void upperAndLowerBoundsAreInclusiveOfTheReturnedLongValue() {
-        assertThat(from(randomLongs(randomValues, 0, 1)).sample(10).unique())
+        assertThat(from(randomLongs(randomValues, 0, 1)).sample(100).unique())
                 .containsOnly(0L, 1L);
 
-        assertThat(from(randomLongs(randomValues, Long.MAX_VALUE - 1, Long.MAX_VALUE)).sample(10).unique())
+        assertThat(from(randomLongs(randomValues, Long.MAX_VALUE - 1, Long.MAX_VALUE)).sample(100).unique())
                 .containsOnly(Long.MAX_VALUE - 1, Long.MAX_VALUE);
 
-        assertThat(from(randomLongs(randomValues, Long.MIN_VALUE, Long.MIN_VALUE + 1)).sample(10).unique())
+        assertThat(from(randomLongs(randomValues, Long.MIN_VALUE, Long.MIN_VALUE + 1)).sample(100).unique())
                 .containsOnly(Long.MIN_VALUE, Long.MIN_VALUE + 1);
     }
 
@@ -74,14 +74,15 @@ public final class DefaultRandomValuesTest {
 
     @Test
     public void upperAndLowerBoundsAreInclusiveOfTheReturnedIntegerValue() {
-        assertThat(from(randomIntegers(randomValues, 0, 1)).sample(10).unique())
+        assertThat(from(randomIntegers(randomValues, 0, 1)).sample(100).unique())
                 .containsOnly(0, 1);
 
-        assertThat(from(randomIntegers(randomValues, Integer.MAX_VALUE - 1, Integer.MAX_VALUE)).sample(10).unique())
+        assertThat(from(randomIntegers(randomValues, Integer.MAX_VALUE - 1, Integer.MAX_VALUE)).sample(100).unique())
                 .containsOnly(Integer.MAX_VALUE - 1, Integer.MAX_VALUE);
 
-        assertThat(from(randomIntegers(randomValues, Integer.MIN_VALUE, Integer.MIN_VALUE + 1)).sample(10).unique())
+        assertThat(from(randomIntegers(randomValues, Integer.MIN_VALUE, Integer.MIN_VALUE + 1)).sample(100).unique())
                 .containsOnly(Integer.MIN_VALUE, Integer.MIN_VALUE + 1);
+
     }
 
     @Test(expected = IllegalArgumentException.class)
