@@ -4,7 +4,6 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
 import static com.fyodor.random.RandomValuesProvider.seed;
-import static com.fyodor.random.ThrowableCauseSetter.setRootCause;
 
 public final class FyodorTestRule extends TestWatcher {
 
@@ -21,5 +20,13 @@ public final class FyodorTestRule extends TestWatcher {
     @Override
     protected void failed(final Throwable t, final Description description) {
         setRootCause(t, new FailedWithSeedException(seed().current()));
+    }
+
+    private static void setRootCause(final Throwable t, final Throwable cause) {
+        if (t.getCause() == null) {
+            t.initCause(cause);
+        } else {
+            setRootCause(t.getCause(), cause);
+        }
     }
 }
