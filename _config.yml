@@ -1,0 +1,22 @@
+# Dependencies
+markdown:         redcarpet
+highlighter:      pygments
+
+# Permalinks
+permalink:        pretty
+
+# Setup
+title:            Fyodor
+tagline:          Right or wrong, it's very pleasant to break something from time to time - Fyodor Dostoyevsky
+url:              http://ianesling.github.io/fyodor
+paginate:         1
+baseurl:          /
+author:
+  name:           Ian Esling
+  url:            https://twitter.com/IanEs
+  email:          ian.esling@gmail.com
+
+# Custom vars
+version:          0.0.1
+github:
+  repo:           https://github.com/IanEsling/fyodor
