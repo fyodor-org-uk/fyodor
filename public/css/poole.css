@@ -142,8 +142,10 @@ strong {
 
 .content {
     width: 75%;
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
     height: 100%;
+    overflow: hidden;
 }
 
 .main {
@@ -156,6 +158,10 @@ strong {
 .nav {
     float: left;
     width: 25%;
+}
+
+.footer {
+    text-align: center;
 }
 /* Lists */
 ul, ol, dl {
