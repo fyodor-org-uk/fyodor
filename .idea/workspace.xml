@@ -2,21 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="eed33f63-abc9-49d2-9b21-29abf2d1b725" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/images/bkg.png" afterPath="$PROJECT_DIR$/public/images/bkg.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/images/blacktocat.png" afterPath="$PROJECT_DIR$/public/images/blacktocat.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/images/body-bg.jpg" afterPath="$PROJECT_DIR$/public/images/body-bg.jpg" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/images/dice-crop.png" afterPath="$PROJECT_DIR$/public/images/dice-crop.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/images/dice-crop2.png" afterPath="$PROJECT_DIR$/public/images/dice-crop2.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/images/dice-splash20.jpg" afterPath="$PROJECT_DIR$/public/images/dice-splash20.jpg" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/images/dice.jpg" afterPath="$PROJECT_DIR$/public/images/dice.jpg" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/images/dicestack.jpeg" afterPath="$PROJECT_DIR$/public/images/dicestack.jpeg" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/images/download-button.png" afterPath="$PROJECT_DIR$/public/images/download-button.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/images/github-button.png" afterPath="$PROJECT_DIR$/public/images/github-button.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/images/header-bg.jpg" afterPath="$PROJECT_DIR$/public/images/header-bg.jpg" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/images/highlight-bg.jpg" afterPath="$PROJECT_DIR$/public/images/highlight-bg.jpg" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/images/sidebar-bg.jpg" afterPath="$PROJECT_DIR$/public/images/sidebar-bg.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/stylesheets/stylesheet.css" afterPath="$PROJECT_DIR$/stylesheets/stylesheet.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_config.yml" afterPath="$PROJECT_DIR$/_config.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_site/atom.xml" afterPath="$PROJECT_DIR$/_site/atom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_includes/head.html" afterPath="$PROJECT_DIR$/_includes/head.html" />
     </list>
     <ignored path="fyodor-pages.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -39,11 +27,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/index.html">
+      <file leaf-file-name="head.html" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/_includes/head.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.15074024" vertical-offset="0" max-vertical-offset="743">
-              <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.54777926" vertical-offset="153" max-vertical-offset="896">
+              <caret line="20" column="84" selection-start-line="20" selection-start-column="84" selection-end-line="20" selection-end-column="84" />
               <folding />
             </state>
           </provider>
@@ -65,12 +53,13 @@
         <option value="$PROJECT_DIR$/_posts/2013-12-09-example-post.md" />
         <option value="$PROJECT_DIR$/stylesheets/reset-min.css" />
         <option value="$PROJECT_DIR$/stylesheets/stylesheet.css" />
-        <option value="$PROJECT_DIR$/_config.yml" />
         <option value="$PROJECT_DIR$/_includes/header.html" />
         <option value="$PROJECT_DIR$/_includes/nav.html" />
         <option value="$PROJECT_DIR$/public/css/poole.css" />
         <option value="$PROJECT_DIR$/_layouts/default.html" />
         <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/_config.yml" />
+        <option value="$PROJECT_DIR$/_includes/head.html" />
       </list>
     </option>
   </component>
@@ -148,6 +137,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fyodor-pages" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fyodor-pages" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="images" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -326,12 +333,12 @@
       <updated>1409413845625</updated>
       <workItem from="1409413846048" duration="2493000" />
       <workItem from="1410032566238" duration="12442000" />
-      <workItem from="1410123475525" duration="808000" />
+      <workItem from="1410123475525" duration="1219000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15743000" />
+    <option name="totallyTimeSpent" value="16154000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1436" height="878" extended-state="6" />
@@ -452,24 +459,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/_config.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.072632946" vertical-offset="0" max-vertical-offset="784">
-          <caret line="2" column="26" selection-start-line="2" selection-start-column="26" selection-end-line="2" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/poole-index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.15074024" vertical-offset="0" max-vertical-offset="1204">
           <caret line="4" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/_includes/head.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.07537012" vertical-offset="0" max-vertical-offset="896">
-          <caret line="2" column="36" selection-start-line="2" selection-start-column="36" selection-end-line="2" selection-end-column="36" />
         </state>
       </provider>
     </entry>
@@ -502,14 +495,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/css/poole.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4642857" vertical-offset="4480" max-vertical-offset="13916">
-          <caret line="173" column="20" selection-start-line="173" selection-start-column="20" selection-end-line="173" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/_layouts/post.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="868">
@@ -526,18 +511,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.15074024" vertical-offset="0" max-vertical-offset="743">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.41893643" vertical-offset="13" max-vertical-offset="784">
+          <caret line="12" column="25" selection-start-line="12" selection-start-column="25" selection-end-line="12" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/css/poole.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="4.571429" vertical-offset="1260" max-vertical-offset="13916">
+          <caret line="173" column="20" selection-start-line="173" selection-start-column="20" selection-end-line="173" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/_layouts/default.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.09391534" vertical-offset="97" max-vertical-offset="868">
+        <state vertical-scroll-proportion="0.22222222" vertical-offset="0" max-vertical-offset="868">
           <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
+    <entry file="file://$PROJECT_DIR$/_includes/head.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.15074024" vertical-offset="0" max-vertical-offset="743">
-          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.54777926" vertical-offset="153" max-vertical-offset="896">
+          <caret line="20" column="84" selection-start-line="20" selection-start-column="84" selection-end-line="20" selection-end-column="84" />
           <folding />
         </state>
       </provider>
