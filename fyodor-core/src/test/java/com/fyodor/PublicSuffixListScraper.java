@@ -14,6 +14,7 @@ public class PublicSuffixListScraper {
     }
 
     public void getList() throws IOException {
+        //resource is taken from https://publicsuffix.org/list/effective_tld_names.dat
         URL url = getClass().getResource("/effective_tld_names.dat.txt");
         if (url == null) {
             throw new FileNotFoundException("file not on CLASSPATH");

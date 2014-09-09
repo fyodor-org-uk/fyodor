@@ -1,7 +1,5 @@
 package com.fyodor.generators;
 
-import static com.fyodor.random.RandomValuesProvider.randomValues;
-
 public class SuffixGenerator implements Generator<String> {
 
     String[] suffixes = new String[]{"ac","com.ac","edu.ac","gov.ac","net.ac","mil.ac","org.ac","ad","nom.ad","ae","co.ae",
@@ -581,9 +579,14 @@ public class SuffixGenerator implements Generator<String> {
             "sew","prof","gle","amsterdam","aquarelle","nexus","flsmidth","bnl","bcn","chrome","google",
             "barcelona","cal","abbott"};
 
-    @Override
+    Generator<String> generator;
+
+    public SuffixGenerator() {
+        generator = RDG.value(suffixes);
+    }
+
     public String next() {
-        return suffixes[randomValues().randomInteger(suffixes.length)];
+        return generator.next();
     }
 
     public String[] getSuffixes(){
