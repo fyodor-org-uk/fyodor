@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Random Data Generators &middot; Fyodor
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/fyodor.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="atom.xml">
+</head>
+
+
+<body>
+
+<div id="header">
+    <div class="background dice-splash">
+        <h1>Fyodor</h1>
+    </div>
+    <h2><em>Right or wrong, it's very pleasant to break something from time to time - Fyodor Dostoyevsky</em></h2>
+</div>
+
+<div class="content">
+    <div class="nav">
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#">User Guide</a></li>
+        <li><a href="/random-generators">Random Data and Builders</a></li>
+        <li><a href="#">Roadmap</a></li>
+    </ul>
+</div>
+    <div class="main">
+        <h1>Random Data Generators and Builders</h1>
+
+<p>Setting up fixtures - the objects and data you&#39;re testing against - for your tests can be difficult, time-consuming and error-prone
+especially for legacy or unfamiliar systems.
+Especially once we start writing integration style tests where our objects may be persisted, (de)serialized or sent over the wire
+then things can really start to become challenging and frustrating.</p>
+
+<ul>
+<li><strong>Data items</strong> affecting our test can potentially be all over the object graph, having to create
+multiple objects correctly, each with their own fields, types and idiosyncracies just to get one field
+in a particular state can be frustrating as well as a minefield.</li>
+<li><strong>Extra code</strong> in our tests concerned with fixture details just adds noise to the test: 
+it makes it harder to understand, more prone to human error and adds to the maintenance burden.</li>
+<li><strong>False-negatives:</strong> To get valid fixtures we might well have to understand and set up other objects that our test just doesn’t care about, otherwise our tests fail for reasons unrelated to our test scenario</li>
+<li><strong>False-positives:</strong> Tests might unwittingly pass because we’ve left fields empty that we don’t (think we) care about for the purposes of our test e.g. our test only works properly because something is null or false etc.</li>
+</ul>
+
+<h3>For Example...</h3>
+
+<p>As an example of what I&#39;m talking about let’s imagine a simple car that we want to create for 
+our test:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Car</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+    <span class="n">String</span> <span class="n">description</span><span class="o">;</span>
+    <span class="n">Manufacturer</span> <span class="n">manufacturer</span><span class="o">;</span>
+    <span class="n">LocalDate</span> <span class="n">dateOfManufacture</span><span class="o">;</span>
+    <span class="n">BigDecimal</span> <span class="n">price</span><span class="o">;</span>
+    <span class="n">Engine</span> <span class="n">engine</span><span class="o">;</span>
+<span class="o">}</span></code></pre></div>
+
+<p>And some typical test code to create one:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SomeTest</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">LocalDate</span> <span class="n">DATE_OF_MANUFACTURE</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">LocalDate</span><span class="o">().</span><span class="na">minusYears</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+    <span class="kd">private</span> <span class="n">Car</span> <span class="n">car</span><span class="o">;</span>
+
+    <span class="nd">@Before</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setUpCar</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">car</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Car</span><span class="o">();</span>
+        <span class="n">car</span><span class="o">.</span><span class="na">setDateOfManufacture</span><span class="o">(</span><span class="n">DATE_OF_MANUFACTURE</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+
+<p>For our test purposes we’re only interested in the age of our car, but you can see we’re 
+already getting bogged down with concerns about the rest of the data on our car:</p>
+
+<ul>
+<li>if we don&#39;t populate name and description will it get persisted/serialized etc OK?</li>
+<li>and what the Engine?  And just what&#39;s involved with making an Engine object anyway?</li>
+<li>I’m not interested in price here but 
+what is it anyway, GBP? USD? How many different code paths can my car end up going down because of 
+different prices?</li>
+<li>You can imagine how quickly this complexity escalates with real code.</li>
+</ul>
+
+<p>And on top of all this we might not even care about the car anyway, it might be a line item we want
+to create for someone to buy for example.</p>
+
+<h3>The Builder</h3>
+
+<p>Using the Builder Pattern to create our fixtures can address some of these issues:</p>
+
+<ul>
+<li>All the fields in our object are pre-populated (where it makes sense to do so)</li>
+<li>In our test we only need to override the contents of the fields that we care about</li>
+<li>Use a fluent interface to create our object, hopefully expressing a lot of semantic meaning to 
+a reader of the test.</li>
+</ul>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CarBuilder</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;SuperBadDog&quot;</span><span class="o">;</span>
+    <span class="n">String</span> <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;Baddest Super Dog&quot;</span><span class="o">;</span>
+    <span class="n">Manufacturer</span> <span class="n">manufacturer</span> <span class="o">=</span> <span class="n">Manufacturer</span><span class="o">.</span><span class="na">TOYOTA</span><span class="o">;</span>
+    <span class="n">LocalDate</span> <span class="n">dateOfManufacture</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">LocalDate</span><span class="o">().</span><span class="na">minusYears</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+    <span class="n">BigDecimal</span> <span class="n">price</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">BigDecimal</span><span class="o">(</span><span class="mi">20000</span><span class="o">);</span>
+    <span class="n">Engine</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">EngineBuilder</span><span class="o">.</span><span class="na">engineBuilder</span><span class="o">().</span><span class="na">build</span><span class="o">();</span>
+    
+    <span class="kd">private</span> <span class="nf">CarBuilder</span><span class="o">(){}</span>
+    
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">CarBuilder</span> <span class="nf">carBuilder</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">CarBuilder</span><span class="o">();</span>
+    <span class="o">}</span>
+    
+    <span class="kd">public</span> <span class="n">CarBuilder</span> <span class="nf">withName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+    <span class="o">}</span>
+    
+    <span class="kd">public</span> <span class="n">CarBuilder</span> <span class="nf">withDescription</span><span class="o">(</span><span class="n">String</span> <span class="n">description</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+    <span class="o">}</span>
+     
+    <span class="kd">public</span> <span class="n">CarBuilder</span> <span class="nf">withManufacturer</span><span class="o">(</span><span class="n">Manufacturer</span> <span class="n">manufacturer</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">manufacturer</span> <span class="o">=</span> <span class="n">manufacturer</span><span class="o">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+    <span class="o">}</span>
+    
+    <span class="kd">public</span> <span class="n">CarBuilder</span> <span class="nf">withDateOfManufacture</span><span class="o">(</span><span class="n">LocalDate</span> <span class="n">date</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">dateOfManufacture</span> <span class="o">=</span> <span class="n">date</span><span class="o">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+    <span class="o">}</span>
+    
+    <span class="kd">public</span> <span class="n">CarBuilder</span> <span class="nf">withAge</span><span class="o">(</span><span class="n">Integer</span> <span class="n">age</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nf">withDateOfManufacture</span><span class="o">(</span><span class="k">new</span> <span class="nf">LocalDate</span><span class="o">().</span><span class="na">minusYears</span><span class="o">(</span><span class="n">age</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="kd">public</span> <span class="n">CarBuilder</span> <span class="nf">withPrice</span><span class="o">(</span><span class="n">BigDecimal</span> <span class="n">price</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">price</span> <span class="o">=</span> <span class="n">price</span><span class="o">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+    <span class="o">}</span>
+    
+    <span class="kd">public</span> <span class="n">CarBuilder</span> <span class="nf">withPrice</span><span class="o">(</span><span class="n">Integer</span> <span class="n">price</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nf">withPrice</span><span class="o">(</span><span class="k">new</span> <span class="nf">BigDecimal</span><span class="o">(</span><span class="n">price</span><span class="o">));</span>
+    <span class="o">}</span>
+    
+    <span class="kd">public</span> <span class="n">CarBuilder</span> <span class="nf">withEngine</span><span class="o">(</span><span class="n">Engine</span> <span class="n">engine</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">engine</span> <span class="o">=</span> <span class="n">engine</span><span class="o">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+    <span class="o">}</span>
+    
+    <span class="kd">public</span> <span class="n">Employee</span> <span class="nf">build</span><span class="o">(){</span>
+        <span class="n">Car</span> <span class="n">car</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Car</span><span class="o">();</span>
+        <span class="n">car</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="n">car</span><span class="o">.</span><span class="na">setDescription</span><span class="o">(</span><span class="n">description</span><span class="o">);</span>
+        <span class="n">car</span><span class="o">.</span><span class="na">setManufacturer</span><span class="o">(</span><span class="n">manufacturer</span><span class="o">);</span>
+        <span class="n">car</span><span class="o">.</span><span class="na">setDateOfManufacture</span><span class="o">(</span><span class="n">dateOfManufacture</span><span class="o">);</span>
+        <span class="n">car</span><span class="o">.</span><span class="na">setPrice</span><span class="o">(</span><span class="n">price</span><span class="o">);</span>
+        <span class="n">car</span><span class="o">.</span><span class="na">setEngine</span><span class="o">(</span><span class="n">engine</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">car</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+
+<p>This makes our test setup look a bit nicer and takes away some of the concerns we were having:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SomeTest</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Integer</span> <span class="n">AGE</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">Car</span> <span class="n">car</span><span class="o">;</span>
+
+    <span class="nd">@Before</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setUpCar</span><span class="o">(){</span>
+        <span class="n">car</span> <span class="o">=</span> <span class="n">CarBuilder</span><span class="o">.</span><span class="na">carBuilder</span><span class="o">().</span><span class="na">withAge</span><span class="o">(</span><span class="n">AGE</span><span class="o">).</span><span class="na">build</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+
+<p>A nice feature of builders is that you can add and overload methods to make your fixture setup 
+simpler, more readable and more meaningful:</p>
+
+<ul>
+<li>We’ve overloaded <code>withPrice()</code> so you can supply a simple <code>Integer</code> and it will convert it to the required <code>BigDecimal</code> for you</li>
+<li>The <code>dateOfManufacture(LocalDate)</code> method is accompanied by an <code>age(Integer)</code> method so you can make your test code simpler and more readable by avoiding the boilerplate of massaging a <code>LocalDate</code></li>
+<li>Finally you may have noticed that the <code>engine</code> field is populated initially with … an <code>EngineBuilder</code>!</li>
+</ul>
+
+<h3>Better Data</h3>
+
+<p>We’ve made our test setup a lot better with the builder but we can do better with the quality 
+of the data. At the moment every test that uses our builder is going to get a Car with exactly 
+the same default attributes which may create its own false-positive problem for us.</p>
+
+<p>What we need is random data:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CarBuilder</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">Date</span> <span class="n">dateOfManufacture</span> <span class="o">=</span> <span class="n">RDG</span><span class="o">.</span><span class="na">localDate</span><span class="o">(</span><span class="n">LocalDate</span><span class="o">.</span><span class="na">now</span><span class="o">().</span><span class="na">minusYears</span><span class="o">(</span><span class="mi">15</span><span class="o">),</span> <span class="n">LocalDate</span><span class="o">.</span><span class="na">now</span><span class="o">().</span><span class="na">minusYears</span><span class="o">(</span><span class="mi">3</span><span class="o">)).</span><span class="na">next</span><span class="o">();</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">RDG</span><span class="o">.</span><span class="na">string</span><span class="o">(</span><span class="mi">15</span><span class="o">).</span><span class="na">next</span><span class="o">();</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">description</span> <span class="o">=</span> <span class="n">RDG</span><span class="o">.</span><span class="na">string</span><span class="o">(</span><span class="mi">50</span><span class="o">).</span><span class="na">next</span><span class="o">();</span>
+    <span class="kd">private</span> <span class="n">BigDecimal</span> <span class="n">price</span> <span class="o">=</span> <span class="n">RDG</span><span class="o">.</span><span class="na">bigDecimal</span><span class="o">(</span><span class="mi">50000</span><span class="o">).</span><span class="na">next</span><span class="o">();</span>
+    <span class="kd">private</span> <span class="n">Address</span> <span class="n">homeAddress</span> <span class="o">=</span> <span class="n">AddressBuilder</span><span class="o">.</span><span class="na">addressBuilder</span><span class="o">().</span><span class="na">build</span><span class="o">();</span>
+    <span class="err">…</span>
+<span class="o">}</span></code></pre></div>
+
+<p>Well this looks exciting! Let’s take a look at some of this RDG (RandomDataGenerator) class:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RDG</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Generator</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">integer</span> <span class="o">=</span> <span class="n">integer</span><span class="o">(</span><span class="n">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Generator</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">integer</span><span class="o">(</span><span class="n">Integer</span> <span class="n">max</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">IntegerGenerator</span><span class="o">(</span><span class="n">max</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Generator</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">integer</span><span class="o">(</span><span class="n">Range</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">range</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">IntegerGenerator</span><span class="o">(</span><span class="n">range</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Generator</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">(</span><span class="mi">30</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Generator</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">string</span><span class="o">(</span><span class="n">Integer</span> <span class="n">max</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">StringGenerator</span><span class="o">(</span><span class="n">max</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="err">…</span>
+<span class="o">}</span></code></pre></div>
+
+<p>It’s basically a collection of static <code>Generator&lt;T&gt;</code> members and some static helper and convenience methods.</p>
+
+<p>Let’s look at the <code>Generator&lt;T&gt;</code> interface and the <code>IntegerGenerator</code> class:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Generator</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">T</span> <span class="nf">next</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">IntegerGenerator</span> <span class="kd">implements</span> <span class="n">Generator</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Integer</span> <span class="n">min</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Integer</span> <span class="n">max</span><span class="o">;</span>
+
+    <span class="n">IntegerGenerator</span><span class="o">(</span><span class="n">Integer</span> <span class="n">max</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">max</span> <span class="o">=</span> <span class="n">max</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">min</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="n">IntegerGenerator</span><span class="o">(</span><span class="n">Range</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">range</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">min</span> <span class="o">=</span> <span class="n">range</span><span class="o">.</span><span class="na">lowerBound</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">max</span> <span class="o">=</span> <span class="n">range</span><span class="o">.</span><span class="na">upperBound</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">next</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nf">randomValues</span><span class="o">().</span><span class="na">randomInteger</span><span class="o">(</span><span class="n">min</span><span class="o">,</span> <span class="n">max</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+
+<p><code>Generator&lt;T&gt;</code> is a simple interface with one method <code>next()</code>, expecting
+implementing classes to be effectively a never-ending iterator of random values.</p>
+
+<p>There are 2 constructors for the <code>IntegerGenerator</code> you either specify a maximum or a <code>Range</code>.
+The <code>Range</code> is a Fyodor class containing just an upper and lower bound (it acts as a closed range,
+meaning the bounds are inclusive). 
+You can see the default version provided by <code>RDG.integer</code> uses <code>Integer.MAX_VALUE</code> when it creates 
+it and it also provides a utility method to create your own <code>IntegerGenerator</code> with a different 
+maximum or <code>Range</code> as needed.</p>
+
+<p>And that is the general idea with all the other types we want to generate, the <code>StringGenerators</code>
+in the snippet above from <code>RDG</code> provide much the same thing, although their internals are very different.</p>
+
+<p>Fyodor has generators to construct pretty much anything you want, check out the user guide for more details.</p>
+
+<p>Generating data with tighter formatting is also a useful addition for tests - here’s an email address generator:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">EmailAddressGenerator</span> <span class="kd">extends</span> <span class="n">Generator</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">next</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nf">format</span><span class="o">(</span><span class="s">&quot;%s@%s.%s&quot;</span><span class="o">,</span> <span class="n">Random</span><span class="o">.</span><span class="na">string</span><span class="o">(</span><span class="mi">10</span><span class="o">).</span><span class="na">next</span><span class="o">(),</span> <span class="n">Random</span><span class="o">.</span><span class="na">string</span><span class="o">(</span><span class="mi">10</span><span class="o">).</span><span class="na">next</span><span class="o">(),</span> <span class="n">Random</span><span class="o">.</span><span class="na">values</span><span class="o">(</span><span class="s">&quot;com&quot;</span><span class="o">,</span> <span class="s">&quot;co.uk&quot;</span><span class="o">,</span> <span class="s">&quot;gov.uk&quot;</span> <span class="o">,</span> <span class="s">&quot;org&quot;</span><span class="o">,</span> <span class="s">&quot;net&quot;</span><span class="o">).</span><span class="na">next</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+
+<p>A postcode generator:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PostcodeGenerator</span> <span class="kd">extends</span> <span class="n">Generator</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">next</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nf">format</span><span class="o">(</span><span class="s">&quot;%s%s%01d %01d%s&quot;</span><span class="o">,</span>
+                <span class="n">random</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">&quot;ABCDEFGHIJKLMNOPRSTUWYZ&quot;</span><span class="o">),</span>
+                <span class="n">random</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">&quot;ABCDEFGHKLMNOPQRSTUVWXY&quot;</span><span class="o">),</span>
+                <span class="n">Random</span><span class="o">.</span><span class="na">integer</span><span class="o">(</span><span class="mi">9</span><span class="o">).</span><span class="na">next</span><span class="o">(),</span>
+                <span class="n">Random</span><span class="o">.</span><span class="na">integer</span><span class="o">(</span><span class="mi">9</span><span class="o">).</span><span class="na">next</span><span class="o">(),</span>
+                <span class="n">random</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="s">&quot;ABDEFGHJLNPQRSTUWXYZ&quot;</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+
+<p>And a random URI generator:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UriGenerator</span> <span class="kd">extends</span> <span class="n">Generator</span><span class="o">&lt;</span><span class="n">URI</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">URI</span> <span class="nf">next</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">URI</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;http://%s.%s&quot;</span><span class="o">,</span> <span class="n">Random</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">next</span><span class="o">(),</span> <span class="n">Random</span><span class="o">.</span><span class="na">values</span><span class="o">(</span><span class="s">&quot;com&quot;</span><span class="o">,</span> <span class="s">&quot;co.uk&quot;</span><span class="o">,</span> <span class="s">&quot;org&quot;</span><span class="o">).</span><span class="na">next</span><span class="o">()));</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">URISyntaxException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+
+    </div>
+</div>
+
+<div class="footer">
+    <p>
+        &copy; 2014. All rights reserved.
+    </p>
+</div>
+</body>
+</html>
