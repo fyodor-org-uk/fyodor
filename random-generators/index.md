@@ -1,241 +1,289 @@
 ---
-layout: default
-title:  "Setting up fixtures to test against"
-date:   11-11-2013
-category: automated testing
-excerpt: One of the challenges testing a system with a large domain and a complex data model is setting up fixtures to test against.  Once we move beyond unit tests and want to create real objects with real data - either as part of the setup stage of an automated test or for manually testing - then things become more challenging.
-image: what-is-scrum.gif
-homepageStyle: 2
-featured: yes
+layout: page
+image: dice-splash
+title: Random Data Generators
 ---
 
+#Random Data Generators and Builders#
+Setting up fixtures - the objects and data you're testing against - for your tests can be difficult, time-consuming and error-prone
+especially for legacy or unfamiliar systems.
+Especially once we start writing integration style tests where our objects may be persisted, (de)serialized or sent over the wire
+then things can really start to become challenging and frustrating.
 
+* **Data items** affecting our test can potentially be all over the object graph, having to create
+multiple objects correctly, each with their own fields, types and idiosyncracies just to get one field
+in a particular state can be frustrating as well as a minefield.
+* **Extra code** in our tests concerned with fixture details just adds noise to the test: 
+it makes it harder to understand, more prone to human error and adds to the maintenance burden.
+* **False-negatives:** To get valid fixtures we might well have to understand and set up other objects that our test just doesn’t care about, otherwise our tests fail for reasons unrelated to our test scenario
+* **False-positives:** Tests might unwittingly pass because we’ve left fields empty that we don’t (think we) care about for the purposes of our test e.g. our test only works properly because something is null or false etc.
 
+###For Example...###
 
-###Problem###
+As an example of what I'm talking about let’s imagine a simple car that we want to create for 
+our test:
 
-One of the challenges testing a system with a large domain and a complex data model is setting up fixtures to test against.
-
-Once we move beyond unit tests and want to create real objects with real data – either as part of the setup stage of an automated test or for manually testing – then things become more challenging:
-
-* The data items we care about for the test may not all live on the object; our test might be interested in the payroll cut-off date for an employee for instance, but concerning ourselves with the details of where that data goes and the object graph needed to correctly set it all up is error prone and time consuming
-* Extra code in our tests concerned with fixture details just adds noise to the test: it makes it harder to understand and adds to the maintenance burden.
-* False-negatives: To get valid fixtures we might well have to set up other bits of data and other objects that our test just doesn’t care about, otherwise our tests fail for reasons unrelated to our test scenario
-* False-positives: Tests might unwittingly pass because we’ve left fields empty that we don’t (think we) care about for the purposes of our test e.g. our test only works properly because something is null or false etc.
-
-###Initial Solution###
-
-As an example let’s imagine a simple employee that we want to create for our test:
-
-<!--code-->
-public class Employee {
-String firstname;
-String surname;
-LocalDate dateOfBirth;
-BigDecimal basicSalary;
-Address homeAddress;
+{% highlight java %}
+public class Car {
+    String name;
+    String description;
+    Manufacturer manufacturer;
+    LocalDate dateOfManufacture;
+    BigDecimal price;
+    Engine engine;
 }
-
+{% endhighlight %}
 And some typical test code to create one:
 
-<!--code-->
-public class EmployeeTest {
-private final LocalDate DATE_OF_BIRTH = new LocalDate().minusYears(50);
-private Employee employee;
-@Before
-public void setUpEmployee(){
-employee = new Employee();
-employee.setDateOfBirth(DATE_OF_BIRTH);
-}
-}
+{% highlight java %}
+public class SomeTest {
+    private final LocalDate DATE_OF_MANUFACTURE = new LocalDate().minusYears(10);
+    private Car car;
 
-For our test purposes we’re only interested in the age of our employee, but you can see we’re already getting bogged down with concerns about the rest of the data on our employee:
+    @Before
+    public void setUpCar() {
+        car = new Car();
+        car.setDateOfManufacture(DATE_OF_MANUFACTURE);
+    }
+}
+{% endhighlight %}
 
-* What if the database requires non-null values for firstname and surname?
-* What if the address is required too? Just what’s involved with making an Address object?
-* Will it matter if the salary is not set to anything? I’m not interested in salary here but maybe I should make something up in case having a null salary makes something weird happen elsewhere.
+For our test purposes we’re only interested in the age of our car, but you can see we’re 
+already getting bogged down with concerns about the rest of the data on our car:
+
+* if we don't populate name and description will it get persisted/serialized etc OK?
+* and what the Engine?  And just what's involved with making an Engine object anyway?
+* I’m not interested in price here but 
+what is it anyway, GBP? USD? How many different code paths can my car end up going down because of 
+different prices?
 * You can imagine how quickly this complexity escalates with real code.
 
-###Improvement - The Builder###
+And on top of all this we might not even care about the car anyway, it might be a line item we want
+to create for someone to buy for example.
+
+###The Builder###
 
 Using the Builder Pattern to create our fixtures can address some of these issues:
 
-* All the fields in our object are pre-populated
-* We only need to override the contents of the fields that we care about
-* Use method chaining ending with build() to create our object.
+* All the fields in our object are pre-populated (where it makes sense to do so)
+* In our test we only need to override the contents of the fields that we care about
+* Use a fluent interface to create our object, hopefully expressing a lot of semantic meaning to 
+a reader of the test.
 
-<!--code-->
-public class EmployeeBuilder {
-private LocalDate dateOfBirth = new LocalDate().minusYears(30);
-private String firstname = “Firstname”;
-private String surname = “Surname”;
-private BigDecimal basicSalary = new BigDecimal(20000);
-private Address homeAddress = AddressBuilder.addressBuilder().build();
-private EmployeeBuilder(){}
-
-public static EmployeeBuilder employeeBuilder(){
-return new EmployeeBuilder();
+{% highlight java %}
+public class CarBuilder {
+    String name = "SuperBadDog";
+    String description = "Baddest Super Dog";
+    Manufacturer manufacturer = Manufacturer.TOYOTA;
+    LocalDate dateOfManufacture = new LocalDate().minusYears(10);
+    BigDecimal price = new BigDecimal(20000);
+    Engine engine = EngineBuilder.engineBuilder().build();
+    
+    private CarBuilder(){}
+    
+    public static CarBuilder carBuilder() {
+        return new CarBuilder();
+    }
+    
+    public CarBuilder withName(String name) {
+        this.name = name;
+        return this;
+    }
+    
+    public CarBuilder withDescription(String description) {
+        this.description = description;
+        return this;
+    }
+     
+    public CarBuilder withManufacturer(Manufacturer manufacturer) {
+        this.manufacturer = manufacturer;
+        return this;
+    }
+    
+    public CarBuilder withDateOfManufacture(LocalDate date) {
+        this.dateOfManufacture = date;
+        return this;
+    }
+    
+    public CarBuilder withAge(Integer age) {
+        return withDateOfManufacture(new LocalDate().minusYears(age);
+    }
+    
+    public CarBuilder withPrice(BigDecimal price) {
+        this.price = price;
+        return this;
+    }
+    
+    public CarBuilder withPrice(Integer price) {
+        return withPrice(new BigDecimal(price));
+    }
+    
+    public CarBuilder withEngine(Engine engine) {
+        this.engine = engine;
+        return this;
+    }
+    
+    public Employee build(){
+        Car car = new Car();
+        car.setName(name);
+        car.setDescription(description);
+        car.setManufacturer(manufacturer);
+        car.setDateOfManufacture(dateOfManufacture);
+        car.setPrice(price);
+        car.setEngine(engine);
+        return car;
+    }
 }
-
-public EmployeeBuilder firstname(String firstname) {
-this.firstname = firstname;
-return this;
-}
-
-public EmployeeBuilder surname(String surname) {
-this.surname = surname;
-return this;
-}
-
-public EmployeeBuilder age(int age) {
-this.dateOfBirth = new LocalDate().minusYears(age);
-return this;
-}
-
-public EmployeeBuilder dateOfBirth(int age) {
-this.dateOfBirth = new LocalDate().minusYears(age);
-return this;
-}
-
-public EmployeeBuilder basicSalary(BigDecimal salary){
-this.basicSalary = basicSalary;
-return this;
-}
-
-public EmployeeBuilder basicSalary(Integer salary) {
-this.basicSalary = new BigDecimal(salary);
-return this;
-}
-
-public EmployeeBuilder homeAddress(Address address) {
-this.homeAddress = homeAddress;
-return this;
-}
-
-public Employee build(){
-Employee employee = new Employee();
-employee.setFirstname(firstname);
-employee.setSurname(surname);
-employee.setDateOfBirth(dateOfBirth);
-employee.setBasicSalary(basicSalary);
-employee.setHomeAddress(homeAddress);
-return employee;
-}
-}
+{% endhighlight %}
 
 This makes our test setup look a bit nicer and takes away some of the concerns we were having:
 
-public class EmployeeTest {
-private final Integer AGE = 50;
-private Employee employee;
-@Before
-public void setUpEmployee(){
-employee = EmployeeBuilder.employeeBuilder().age(AGE).build();
-}
-}
+{% highlight java %}
+public class SomeTest {
+    private final Integer AGE = 10;
+    private Car car;
 
-A nice feature of builders is that you can add and overload methods to make fixture setup simpler:
+    @Before
+    public void setUpCar(){
+        car = CarBuilder.carBuilder().withAge(AGE).build();
+    }
+}
+{% endhighlight %}
 
-* We’ve overloaded basicSalary() so you can supply a simple Integer and it will convert it to the required BigDecimal for you
-* The dateOfBirth(LocalDate) method is accompanied by an age(Integer) method so you can make your test code simpler and more readable by avoiding the boilerplate of massaging a LocalDate
-* Finally you may have noticed that the homeAddress field is populated initially with … an AddressBuilder!
+A nice feature of builders is that you can add and overload methods to make your fixture setup 
+simpler, more readable and more meaningful:
+
+* We’ve overloaded `withPrice()` so you can supply a simple `Integer` and it will convert it to the required `BigDecimal` for you
+* The `dateOfManufacture(LocalDate)` method is accompanied by an `age(Integer)` method so you can make your test code simpler and more readable by avoiding the boilerplate of massaging a `LocalDate`
+* Finally you may have noticed that the `engine` field is populated initially with … an `EngineBuilder`!
 
 ###Better Data###
 
-We’ve made our test setup a lot better with the builder but we can do better with the quality of the default data. At the moment every test that uses our builder is going to get an Employee with exactly the same default attributes which may create its own false-positive problem for us.
+We’ve made our test setup a lot better with the builder but we can do better with the quality 
+of the data. At the moment every test that uses our builder is going to get a Car with exactly 
+the same default attributes which may create its own false-positive problem for us.
 
 What we need is random data:
 
-public class EmployeeBuilder {
-private Date dateOfBirth = Random.pastDate(years(17), years(64)).next();
-private String firstname = Random.string(50).next();
-private String surname = Random.string(50).next();
-private BigDecimal basicSalary = Random.bigDecimal(1000000).next();
-private Address homeAddress = AddressBuilder.addressBuilder().build();
-…
+{% highlight java %}
+public class CarBuilder {
+    private Date dateOfManufacture = RDG.localDate(LocalDate.now().minusYears(15), LocalDate.now().minusYears(3)).next();
+    private String name = RDG.string(15).next();
+    private String description = RDG.string(50).next();
+    private BigDecimal price = RDG.bigDecimal(50000).next();
+    private Address homeAddress = AddressBuilder.addressBuilder().build();
+    …
+}
+{% endhighlight %}
+
+Well this looks exciting! Let’s take a look at some of this RDG (RandomDataGenerator) class:
+
+{% highlight java %}
+public class RDG {
+
+    public static Generator<Integer> integer = integer(Integer.MAX_VALUE);
+
+    public static Generator<Integer> integer(Integer max) {
+        return new IntegerGenerator(max);
+    }
+
+    public static Generator<Integer> integer(Range<Integer> range) {
+        return new IntegerGenerator(range);
+    }
+
+    public static Generator<String> string = string(30);
+
+    public static Generator<String> string(Integer max) {
+        return new StringGenerator(max);
+    }
+    …
+}
+{% endhighlight %}
+
+It’s basically a collection of static `Generator<T>` members and some static helper and convenience methods.
+
+Let’s look at the `Generator<T>` interface and the `IntegerGenerator` class:
+
+{% highlight java %}
+public interface Generator<T> {
+    public T next();
 }
 
-Well this looks exciting! Let’s take a look at the Random class:
+class IntegerGenerator implements Generator<Integer> {
 
-public class Random {
-public static Generator<String> string = new StringGenerator(10);
-    public static Generator<Integer> integer = new IntegerGenerator(Integer.MAX_VALUE);
-        public static Generator<BigDecimal> bigDecimal = new BigDecimalGenerator(999999, 2);
-            …
-            }
+    private final Integer min;
+    private final Integer max;
 
-            It’s basically a collection of static Generator<T> members and some static helper methods.
+    IntegerGenerator(Integer max) {
+        this.max = max;
+        this.min = 0;
+    }
 
-                Let’s look at the Generator<T> and the IntegerGenerator classes:
+    IntegerGenerator(Range<Integer> range) {
+        this.min = range.lowerBound();
+        this.max = range.upperBound();
+    }
 
-                    public abstract class Generator<T> implements Iterator<T> {
-                        @Override
-                        public boolean hasNext() {
-                        return true;
-                        }
-                        @Override
-                        public void remove() {
-                        throw new UnsupportedOperationException();
-                        }
-                        }
+    @Override
+    public Integer next() {
+        return randomValues().randomInteger(min, max);
+    }
+}
+{% endhighlight %}
 
-                        class IntegerGenerator extends Generator<Integer> {
-                            private static java.util.Random random = new java.util.Random();
-                            private Integer max;
-                            public IntegerGenerator(Integer max) {
-                            this.max = max;
-                            }
-                            @Override
-                            public Integer next() {
-                            return random.nextInt(max);
-                            }
-                            }
+`Generator<T>` is a simple interface with one method `next()`, expecting
+implementing classes to be effectively a never-ending iterator of random values.
 
-                            Generator<T> is a never-ending abstract Iterator<T> implementation leaving it up to the extending classes to implement next().
+There are 2 constructors for the `IntegerGenerator` you either specify a maximum or a `Range`.
+The `Range` is a Fyodor class containing just an upper and lower bound (it acts as a closed range,
+meaning the bounds are inclusive). 
+You can see the default version provided by `RDG.integer` uses `Integer.MAX_VALUE` when it creates 
+it and it also provides a utility method to create your own `IntegerGenerator` with a different 
+maximum or `Range` as needed.
 
-                                IntegerGenerator simply returns a new random integer between 0 and the specified maximum for each call to next(). You can see the default version provided by Random.integer uses Integer.MAX_VALUE when it creates it and it also provides a utility method to create your own IntegerGenerator with a different maximum if needed:
+And that is the general idea with all the other types we want to generate, the `StringGenerators`
+in the snippet above from `RDG` provide much the same thing, although their internals are very different.
 
-                                public static Generator<Integer> integer(Integer max) {
-                                    return new IntegerGenerator(max);
-                                    }
+Fyodor has generators to construct pretty much anything you want, check out the user guide for more details.
 
+Generating data with tighter formatting is also a useful addition for tests - here’s an email address generator:
 
-                                    And that is the general idea with all the other types we want to generate.
+{% highlight java %}
+public class EmailAddressGenerator extends Generator<String> {
+    @Override
+    public String next() {
+        return format("%s@%s.%s", Random.string(10).next(), Random.string(10).next(), Random.values("com", "co.uk", "gov.uk" , "org", "net").next());
+    }
+}
+{% endhighlight %}
 
-                                    The default Random.string implementation creates a StringGenerator that returns a 10-character long random string, Random.string(Integer) will give you a StringGenerator that generates a random string of the given length if you need it. There are also generators for dates, selecting enums at random and so on.
+A postcode generator:
 
-                                    Generating data with tighter formatting is also a useful addition for tests - here’s an email address generator:
+{% highlight java %}
+public class PostcodeGenerator extends Generator<String> {
+    @Override
+    public String next() {
+        return format("%s%s%01d %01d%s",
+                random(1, "ABCDEFGHIJKLMNOPRSTUWYZ"),
+                random(1, "ABCDEFGHKLMNOPQRSTUVWXY"),
+                Random.integer(9).next(),
+                Random.integer(9).next(),
+                random(2, "ABDEFGHJLNPQRSTUWXYZ"));
+    }
+}
+{% endhighlight %}
 
-                                    public class EmailAddressGenerator extends Generator<String> {
-                                        @Override
-                                        public String next() {
-                                        return format("%s@%s.%s", Random.string(10).next(), Random.string(10).next(), Random.values("com", "co.uk", "gov.uk" , "org", "net").next());
-                                        }
-                                        }
+And a random URI generator:
 
-                                        A postcode generator:
-
-                                        public class PostcodeGenerator extends Generator<String> {
-                                            @Override
-                                            public String next() {
-                                            return format("%s%s%01d %01d%s",
-                                            random(1, "ABCDEFGHIJKLMNOPRSTUWYZ"),
-                                            random(1, "ABCDEFGHKLMNOPQRSTUVWXY"),
-                                            Random.integer(9).next(),
-                                            Random.integer(9).next(),
-                                            random(2, "ABDEFGHJLNPQRSTUWXYZ"));
-                                            }
-                                            }
-
-                                            And a random URI generator:
-
-                                            public class UriGenerator extends Generator<URI> {
-                                                @Override
-                                                public URI next() {
-                                                try {
-                                                return new URI(String.format("http://%s.%s", Random.string.next(), Random.values("com", "co.uk", "org").next()));
-                                                } catch (URISyntaxException e) {
-                                                throw new RuntimeException(e);
-                                                }
-                                                }
-                                                }
+{% highlight java %}
+public class UriGenerator extends Generator<URI> {
+    @Override
+    public URI next() {
+        try {
+            return new URI(String.format("http://%s.%s", Random.string.next(), Random.values("com", "co.uk", "org").next()));
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+{% endhighlight %}
