@@ -228,6 +228,10 @@ li a {
     text-decoration: none;
 }
 
+li a:hover {
+    color: #7f0e14;
+}
+
 li a.selected {
     font-weight: bold;
 }
