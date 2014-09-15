@@ -128,7 +128,7 @@ public class CarBuilder {
         return this;
     }
     
-    public Employee build(){
+    public Car build(){
         Car car = new Car();
         car.setName(name);
         car.setDescription(description);
