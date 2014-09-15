@@ -6,11 +6,11 @@ title: Random Data Generators
 
 #Random Data Generators and Builders#
 Setting up fixtures - the objects and data you're testing against - for your tests can be difficult, time-consuming and error-prone
-especially for legacy or unfamiliar systems.
-Especially once we start writing integration style tests where our objects may be persisted, (de)serialized or sent over the wire
+especially in large Enterprise, legacy or unfamiliar (or all three!) systems.
+Once we start writing integration style tests where our objects may be persisted, (de)serialized or sent over the wire
 then things can really start to become challenging and frustrating.
 
-* **Data items** affecting our test can potentially be all over the object graph, having to create
+* **Data** affecting our test can potentially be all over the object graph, having to create
 multiple objects correctly, each with their own fields, types and idiosyncracies just to get one field
 in a particular state can be frustrating as well as a minefield.
 * **Extra code** in our tests concerned with fixture details just adds noise to the test: 
@@ -48,26 +48,26 @@ public class SomeTest {
 }
 {% endhighlight %}
 
-For our test purposes we’re only interested in the age of our car, but you can see we’re 
+Out test's only interested in the age of our car, but you can see we’re 
 already getting bogged down with concerns about the rest of the data on our car:
 
-* if we don't populate name and description will it get persisted/serialized etc OK?
-* and what the Engine?  And just what's involved with making an Engine object anyway?
-* I’m not interested in price here but 
-what is it anyway, GBP? USD? How many different code paths can my car end up going down because of 
+* if we don't populate name and description will it get persisted/serialized etc OK? Are there any
+rules about valid characters and sizes?
+* what's the Engine?  And just what's involved with making an Engine object anyway?
+* I’m not interested in price here but what is it anyway, GBP? USD? How many different code paths can my car end up going down because of 
 different prices?
-* You can imagine how quickly this complexity escalates with real code.
+* You can imagine how quickly this complexity escalates with real objects in real codebases.
 
-And on top of all this we might not even care about the car anyway, it might be a line item we want
-to create for someone to buy for example.
+(And on top of all this we might not even care about the car anyway, we might just need an 
+old car to set something else up)
 
 ###The Builder###
 
-Using the Builder Pattern to create our fixtures can address some of these issues:
+Using Builders to create our fixtures can address some of these issues:
 
 * All the fields in our object are pre-populated (where it makes sense to do so)
 * In our test we only need to override the contents of the fields that we care about
-* Use a fluent interface to create our object, hopefully expressing a lot of semantic meaning to 
+* We can provide a fluent interface to create our object, hopefully expressing a lot of semantic meaning to 
 a reader of the test.
 
 {% highlight java %}
@@ -83,6 +83,11 @@ public class CarBuilder {
     
     public static CarBuilder carBuilder() {
         return new CarBuilder();
+    }
+    
+    public static CarBuilder expensiveCarBuilder() {
+        CarBuilder builder = carBuilder();
+        return builder.withPrice(100000);
     }
     
     public CarBuilder withName(String name) {
@@ -153,8 +158,11 @@ public class SomeTest {
 A nice feature of builders is that you can add and overload methods to make your fixture setup 
 simpler, more readable and more meaningful:
 
-* We’ve overloaded `withPrice()` so you can supply a simple `Integer` and it will convert it to the required `BigDecimal` for you
+* We’ve overloaded `withPrice()` so you can supply a simple `Integer` 
+to avoid the boilerplate involved with using `BigDecimal`s in the test code
 * The `dateOfManufacture(LocalDate)` method is accompanied by an `age(Integer)` method so you can make your test code simpler and more readable by avoiding the boilerplate of massaging a `LocalDate`
+* You can provide multiple static constructor methods to convey extra meaning in your test code, 
+here we have an `expensiveCarBuilder()` as well as the bog-standard `carBuilder()` 
 * Finally you may have noticed that the `engine` field is populated initially with … an `EngineBuilder`!
 
 ###Better Data###
@@ -167,12 +175,13 @@ What we need is random data:
 
 {% highlight java %}
 public class CarBuilder {
-    private Date dateOfManufacture = RDG.localDate(LocalDate.now().minusYears(15), LocalDate.now().minusYears(3)).next();
     private String name = RDG.string(15).next();
     private String description = RDG.string(50).next();
+    private Manufacturer manufacturer = RDG.values(Manufacturers.values());
+    private Date dateOfManufacture = RDG.localDate(LocalDate.now().minusYears(15), LocalDate.now().minusYears(3)).next();
     private BigDecimal price = RDG.bigDecimal(50000).next();
-    private Address homeAddress = AddressBuilder.addressBuilder().build();
-    …
+    private Engine engine = EngineBuilder.engineBuilder().build();
+    ...
 }
 {% endhighlight %}
 
@@ -196,19 +205,23 @@ public class RDG {
     public static Generator<String> string(Integer max) {
         return new StringGenerator(max);
     }
-    …
+    ...
 }
 {% endhighlight %}
 
-It’s basically a collection of static `Generator<T>` members and some static helper and convenience methods.
-
-Let’s look at the `Generator<T>` interface and the `IntegerGenerator` class:
+It’s basically a big collection of static methods returning `Generator<T>` objects. `Generator<T>`s
+are the core of Fyodor, a simple interface with one method `next()`, expecting
+implementing classes to be effectively a never-ending iterator of random values:
 
 {% highlight java %}
 public interface Generator<T> {
     public T next();
 }
+{% endhighlight %}
 
+Let's take a look at the `IntegerGenerator`:
+
+{% highlight java %}
 class IntegerGenerator implements Generator<Integer> {
 
     private final Integer min;
@@ -231,20 +244,16 @@ class IntegerGenerator implements Generator<Integer> {
 }
 {% endhighlight %}
 
-`Generator<T>` is a simple interface with one method `next()`, expecting
-implementing classes to be effectively a never-ending iterator of random values.
+You can give it a maximum value to generate numbers up to, or specify a `Range` for specific
+lower and upper bounds to what should be generated.
+Notice the call to `randomValues()` in its `next()` implementation, this is Fyodor's internal
+way to manage the source of randomness for its generators.  This gives it the ability to 
+reproduce test failures or any other scenario by using a specific seed value - using random data
+ to create more effective tests is all well and good but it can be frustrating to see intermittent failures
+ and have no way to track them down.
 
-There are 2 constructors for the `IntegerGenerator` you either specify a maximum or a `Range`.
-The `Range` is a Fyodor class containing just an upper and lower bound (it acts as a closed range,
-meaning the bounds are inclusive). 
-You can see the default version provided by `RDG.integer` uses `Integer.MAX_VALUE` when it creates 
-it and it also provides a utility method to create your own `IntegerGenerator` with a different 
-maximum or `Range` as needed.
-
-And that is the general idea with all the other types we want to generate, the `StringGenerators`
-in the snippet above from `RDG` provide much the same thing, although their internals are very different.
-
-Fyodor has generators to construct pretty much anything you want, check out the user guide for more details.
+The methods on the `RDG` class form Fyodor's public API for creating random data generators,
+check out the user guide for what it can do, how to use it and extending it to create your own generators.
 
 Generating data with tighter formatting is also a useful addition for tests - here’s an email address generator:
 
