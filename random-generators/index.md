@@ -13,17 +13,19 @@ Once we start writing integration style tests where our objects may be persisted
 then things can really start to become challenging and frustrating.
 
 * **Data** affecting our test can potentially be all over the object graph, having to create
-multiple objects correctly, each with their own fields, types and idiosyncracies just to get one field
-in a particular state can be frustrating as well as a minefield.
+multiple objects correctly, each with their own fields, types and idiosyncracies can be frustrating 
+as well as a minefield.
 * **Extra code** in our tests concerned with fixture details just adds noise to the test: 
 it makes it harder to understand, more prone to human error and adds to the maintenance burden.
-* **False-negatives:** To get valid fixtures we might well have to understand and set up other objects that our test just doesn’t care about, otherwise our tests fail for reasons unrelated to our test scenario
-* **False-positives:** Tests might unwittingly pass because we’ve left fields empty that we don’t (think we) care about for the purposes of our test e.g. our test only works properly because something is null or false etc.
+* **False-negatives:** To get valid fixtures we might well have to understand and set up data and/or other 
+objects that our test just doesn’t care about, otherwise our tests fail for reasons unrelated 
+to our test scenario
+* **False-positives:** Tests might unwittingly pass because we’ve left fields empty that we don’t 
+(think we) care about e.g. our test only works properly because something is null or false etc.
 
 ###For Example...###
 
-As an example of what I'm talking about let’s imagine a simple car that we want to create for 
-our test:
+Let’s imagine a simple car that we want to create for a test:
 
 {% highlight java %}
 public class Car {
@@ -51,13 +53,15 @@ public class SomeTest {
 {% endhighlight %}
 
 Out test's only interested in the age of our car but already some questions spring to mind
-about the rest of the data on our car:
+about the rest of it:
 
-* if we don't populate name and description will it get persisted/serialized etc OK? Are there any
-rules about valid characters and sizes?
+* if we don't populate name and description will it get persisted/serialized etc OK? 
+Do I need to start creating "TestCar1", "TestCar2" etc? Are there any rules about valid 
+characters and string sizes?
 * what's the Engine?  And just what's involved with making an Engine object anyway?
-* I’m not interested in price here but what is it anyway, GBP? USD? How many different code paths can my car end up going down because of 
-different prices?
+* I’m not interested in price here but what is it, is it always the same currency regardless 
+of manufacturer? What if my car doesn't have a price or it's zero? How many different code paths can my car 
+end up going down because of different prices?
 * You can imagine how quickly this complexity escalates with real objects in real codebases.
 
 <small>(And on top of all this we might not even care about the car anyway, we might just need an 
@@ -67,8 +71,9 @@ old car to set something else up)</small>
 
 Using Builders to create our fixtures can address some of these issues:
 
-* All the fields in our object are pre-populated (where it makes sense to do so)
-* In our test we only need to override the contents of the fields that we care about
+* All the fields in our object are sensibly pre-populated (where it makes sense to do so)
+* In our test code we only need to override the contents of the fields that we care about so readers
+can quickly pick up what's important in the context of the test
 * We can provide a fluent interface to create our object, hopefully expressing a lot of semantic meaning to 
 a reader of the test.
 * We can reuse them throughout our test suite.  This lets us
@@ -168,8 +173,9 @@ simpler, more readable and more meaningful:
 * We’ve overloaded `withPrice()` so you can supply a simple `Integer` 
 to avoid the boilerplate involved with using `BigDecimal`s in the test code
 * The `dateOfManufacture(LocalDate)` method is accompanied by an `age(Integer)` method so you can make your test code simpler and more readable by avoiding the boilerplate of massaging a `LocalDate`
-* You can provide multiple static constructor methods to convey extra meaning in your test code, 
-here we have an `expensiveCarBuilder()` as well as the bog-standard `carBuilder()` 
+* You can provide multiple static constructor methods to convey meaning in your test code as well
+ as standardising data set up for common scenarios, here we have an `expensiveCarBuilder()` as 
+ well as the bog-standard `carBuilder()` 
 * Finally you may have noticed that the `engine` field is populated initially with … an `EngineBuilder`!
 
 ###Better Data###
@@ -192,7 +198,7 @@ public class CarBuilder {
 }
 {% endhighlight %}
 
-Well this looks exciting! Let’s take a look at some of this RDG (RandomDataGenerator) class:
+Well this looks exciting! Let’s take a look at some of this `RDG` (RandomDataGenerator) class:
 
 {% highlight java %}
 public class RDG {
@@ -251,16 +257,14 @@ class IntegerGenerator implements Generator<Integer> {
 }
 {% endhighlight %}
 
-You can give it a maximum value to generate numbers up to, or specify a `Range` for specific
-lower and upper bounds to what should be generated.
-Notice the call to `randomValues()` in its `next()` implementation, this is Fyodor's internal
-way to manage the source of randomness for its generators.  This gives it the ability to 
-reproduce test failures or any other scenario by using a specific seed value - using random data
- to create more effective tests is all well and good but it can be frustrating to see intermittent failures
- and have no way to track them down.
+Quite self-explanatory hopefully but notice the call to `randomValues()` in its `next()` 
+implementation, this is Fyodor's internal way of managing the source of randomness for its generators. 
+ This gives it the ability to reproduce test failures or any other scenario by using a specific 
+ seed value - using random data to create more effective tests is all well and good but it can 
+ be frustrating to see intermittent failures and have no way to track them down.
 
 The methods on the `RDG` class form Fyodor's public API for creating random data generators,
-check out the user guide for what it can do, how to use it and extending it to create your own generators.
+check out <a href="{{ site.baseurl }}/user-guide">the user guide</a> for what it can do, how to use it and extending it to create your own generators.
 
 Generating data with tighter formatting is also a useful addition for tests - here’s an email address generator:
 
