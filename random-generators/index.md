@@ -1,6 +1,8 @@
 ---
 layout: page
 image: dice-splash
+tagline: “Much unhappiness has come into the world because of bewilderment and things left unsaid.”
+         ― Fyodor Dostoyevsky
 title: Random Data Generators
 ---
 
@@ -48,8 +50,8 @@ public class SomeTest {
 }
 {% endhighlight %}
 
-Out test's only interested in the age of our car, but you can see we’re 
-already getting bogged down with concerns about the rest of the data on our car:
+Out test's only interested in the age of our car but already some questions spring to mind
+about the rest of the data on our car:
 
 * if we don't populate name and description will it get persisted/serialized etc OK? Are there any
 rules about valid characters and sizes?
@@ -58,8 +60,8 @@ rules about valid characters and sizes?
 different prices?
 * You can imagine how quickly this complexity escalates with real objects in real codebases.
 
-(And on top of all this we might not even care about the car anyway, we might just need an 
-old car to set something else up)
+<small>(And on top of all this we might not even care about the car anyway, we might just need an 
+old car to set something else up)</small>
 
 ###The Builder###
 
@@ -69,6 +71,11 @@ Using Builders to create our fixtures can address some of these issues:
 * In our test we only need to override the contents of the fields that we care about
 * We can provide a fluent interface to create our object, hopefully expressing a lot of semantic meaning to 
 a reader of the test.
+* We can reuse them throughout our test suite.  This lets us
+ * write tests more quickly, letting us concentrate on stuff that matters
+ * gives our tests a consistent structure, making them more readable
+ * encapsulate rules and logic specific to objects in one place (e.g. allowed characters in the
+ name of a car)
 
 {% highlight java %}
 public class CarBuilder {

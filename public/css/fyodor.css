@@ -48,7 +48,7 @@ body {
 html {
     font-family: Helvetica, Arial, sans-serif;
     font-size: 16px;
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 @media (min-width: 38em) {
@@ -157,7 +157,7 @@ h2 {
     width: 80%;
     margin: auto;
     color: #6c6f71;
-    font-size: 1.5em;
+    font-size: 1.2em;
     font-style: italic;
     text-align: center;
     padding-top: 20px;
@@ -168,6 +168,10 @@ h2 {
 p {
     margin-top: 0;
     margin-bottom: 1rem;
+}
+
+small {
+    line-height: 1em;
 }
 
 strong {
@@ -213,7 +217,7 @@ ul, ol, dl {
 
 .main li {
     margin-bottom: 1em;
-    line-height: 1.3em;
+    line-height: 1.1em;
 }
 
 li a {
