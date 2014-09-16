@@ -215,8 +215,27 @@ ul, ol, dl {
     float: left;
 }
 
+.posts {
+    margin-top: 3rem;
+}
+
+.posts li {
+    list-style: none;
+}
+
+.posts li a {
+    display: inline;
+    font-weight: bolder;
+    font-size: larger;
+}
+
+.posts p {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
 .main li {
-    margin-bottom: 1em;
+    margin-bottom: 2rem;
     line-height: 1.1em;
 }
 

@@ -18,5 +18,6 @@ author:
 
 # Custom vars
 version:          0.0.1
+excerpt_separator: <!--more-->
 github:
   repo:           https://github.com/IanEsling/fyodor
