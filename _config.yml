@@ -10,7 +10,7 @@ title:            Fyodor
 tagline:          Right or wrong, it's very pleasant to break something from time to time - Fyodor Dostoyevsky
 url:              http://ianesling.github.io/fyodor
 paginate:         1
-baseurl:          /fyodor
+baseurl:          
 author:
   name:           Ian Esling
   url:            https://twitter.com/IanEs
