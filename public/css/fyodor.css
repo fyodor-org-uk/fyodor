@@ -179,7 +179,7 @@ strong {
 }
 
 .content {
-    width: 70%;
+    width: 80%;
     margin-left: auto;
     margin-right: auto;
     height: 100%;
@@ -191,12 +191,12 @@ strong {
     font-size: 1em;
     float: right;
     width: 80%;
+    padding-left: 4%;
 }
 
 .nav {
     float: left;
     width: 20%;
-    margin-left: -5%;
 }
 
 .footer {
@@ -212,7 +212,6 @@ ul, ol, dl {
 .nav li {
     list-style: none;
     vertical-align: middle;
-    float: left;
 }
 
 .posts {
