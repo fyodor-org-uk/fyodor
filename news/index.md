@@ -11,6 +11,8 @@ title: Latest News from Fyodor
     <li>
         <a href="{{ post.url }}">{{ post.title }}</a> <small>{{ post.date | date_to_string }}</small>
         {{ post.excerpt }}
+        
+        <a href="{{ post.url }}"><small>(read full post)</small></a>
     </li>
     {% endfor %}
 </ul>
