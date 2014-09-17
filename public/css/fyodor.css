@@ -85,6 +85,17 @@ a:focus {
     background-size: cover;
 }
 
+
+.butterfly {
+    background: url('../images/butterfly.png') no-repeat center;
+    background-size: cover;
+}
+
+.chaos {
+    background: url('../images/chaos.jpg') no-repeat center;
+    background-size: cover;
+}
+
 .dice {
     background: url('../images/dice-crop2.png') no-repeat center;
     background-size: cover;
