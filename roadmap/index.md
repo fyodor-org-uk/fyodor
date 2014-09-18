@@ -1,7 +1,7 @@
 ---
 layout: default
 image: dice-splash
-tagline: “Much unhappiness has come into the world because of bewilderment and things left unsaid.”
+tagline: “The formula 'Two and two make five' is not without its attractions.”
 title: Roadmap
 ---
 

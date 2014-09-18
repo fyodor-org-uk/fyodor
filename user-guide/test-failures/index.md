@@ -1,6 +1,6 @@
 ---
 layout: user-guide
-tagline: “Talking nonsense is the sole privilege mankind possesses over the other organisms. It's by talking nonsense that one gets to the truth! I talk nonsense, therefore I'm human” ― Fyodor Dostoyevsky
+tagline: “A man who lies to himself, and believes his own lies, becomes unable to recognize truth"
 image: dice-splash
 title: Reproducing Test Failures
 ---

@@ -1,6 +1,6 @@
 ---
 layout: user-guide
-tagline: “Talking nonsense is the sole privilege mankind possesses over the other organisms. It's by talking nonsense that one gets to the truth! I talk nonsense, therefore I'm human” ― Fyodor Dostoyevsky
+tagline: Above all, avoid falsehood, every kind of falsehood, especially falseness to yourself. Watch over your own deceitfulness and look into it every hour, every minute.
 image: dice-splash
 title: String Generators
 ---

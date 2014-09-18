@@ -1,7 +1,7 @@
 ---
 layout: default
 image: butterfly
-tagline: “Much unhappiness has come into the world because of bewilderment and things left unsaid.”
+tagline: “Realists do not fear the results of their study.”
 title: Latest News from Fyodor
 ---
 
