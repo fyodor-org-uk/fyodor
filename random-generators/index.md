@@ -2,7 +2,6 @@
 layout: default
 image: dice-splash
 tagline: “Much unhappiness has come into the world because of bewilderment and things left unsaid.”
-         ― Fyodor Dostoyevsky
 title: Random Data Generators
 ---
 

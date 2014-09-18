@@ -108,8 +108,8 @@ a:focus {
     padding-bottom: 8%;
 }
 
-.header h1 {
-    text-decoration: none;
+#header h2 {
+    font-family: 'Trocchi', serif;
 }
 
 .header a {
@@ -167,9 +167,9 @@ h4, h5, h6 {
 h2 {
     width: 80%;
     margin: auto;
-    color: #6c6f71;
+    /*color: #6c6f71;*/
     font-size: 1.2em;
-    font-style: italic;
+    /*font-style: italic;*/
     text-align: center;
     padding-top: 20px;
     padding-bottom: 20px;
