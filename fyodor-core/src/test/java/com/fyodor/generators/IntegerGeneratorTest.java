@@ -6,7 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.fyodor.range.Range.closed;
 import static com.google.common.collect.Lists.newArrayList;
@@ -27,8 +29,11 @@ public class IntegerGeneratorTest {
     public void closedRangeCheck() {
         Generator<Integer> generator = RDG.integer(closed(LOWER_BOUND, UPPER_BOUND));
         generateRandomData(generator);
-        assertThat(randomValues).contains(LOWER_BOUND);
-        assertThat(randomValues).contains(UPPER_BOUND);
+        Set<Integer> expectedIntegers = new HashSet<Integer>();
+        for (int i = LOWER_BOUND; i <= UPPER_BOUND; i++) {
+            expectedIntegers.add(i);
+        }
+        assertThat(randomValues.elementSet()).containsExactlyElementsOf(expectedIntegers);
     }
 
     private void generateRandomData(Generator<Integer> generator) {
