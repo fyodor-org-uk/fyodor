@@ -186,6 +186,10 @@ public class RDG {
         return new MapGenerator<K, V>(randomValues(), generatorOfK, generatorOfV, sizeRange);
     }
 
+    public static Generator<String> niNumber() {
+        return new NINumberGenerator();
+    }
+
     private RDG() {
     }
 }
