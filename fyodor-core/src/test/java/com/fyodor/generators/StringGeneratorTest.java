@@ -46,16 +46,14 @@ public class StringGeneratorTest {
             chars.add(val.charAt(0));
         }
         assertThat(chars.elementSet()).hasSize(generator.getCharSet().length);
-        for (char c : generator.getCharSet()) {
-            assertThat(chars.elementSet()).containsOnly('A', 'B', 'C', 'D', 'E', 'F', 'G');
-        }
+        assertThat(chars.elementSet()).containsOnly('A', 'B', 'C', 'D', 'E', 'F', 'G');
     }
 
     @Test
     public void cannotChangeCharset() {
         StringGenerator generator = new StringGenerator(SIZE_OF_RANDOM_STRING);
-        Character[] chars = generator.getCharSet();
-        chars[randomValues().randomInteger(chars.length - 1)] = null;
+        char[] chars = generator.getCharSet();
+        chars[randomValues().randomInteger(chars.length - 1)] = (char) randomValues().randomInteger(chars.length - 1);
         assertThat(chars).isNotEqualTo(generator.getCharSet());
     }
 

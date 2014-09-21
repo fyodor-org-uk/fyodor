@@ -3,14 +3,12 @@ package com.fyodor.generators.characters;
 import com.fyodor.range.Range;
 
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 public class CharacterSetGenerator {
 
     public static final Range<Integer> defaultRange = Range.closed(33, 126);
     public static final CharacterFilter defaultFilter = AllCharactersFilter.getFilter();
-    private final Character[] charset;
+    private final char[] charset;
 
     public CharacterSetGenerator(){
         this(defaultRange, defaultFilter);
@@ -25,17 +23,19 @@ public class CharacterSetGenerator {
     }
 
     public CharacterSetGenerator(Range<Integer> range, CharacterFilter filter) {
-        List<Character> chars = new LinkedList<Character>();
+        char[] charset = new char[range.upperBound() - range.lowerBound() + 1];
 
+        int j = 0;
         for (int i = range.lowerBound(); i <= range.upperBound(); i++) {
             if (filter.includeCharacter(i)) {
-                chars.add((char) i);
+                charset[j] = (char) i;
+                j++;
             }
         }
-        this.charset = chars.toArray(new Character[chars.size()]);
+        this.charset = Arrays.copyOf(charset, j);
     }
 
-    public Character[] getCharset() {
+    public char[] getCharset() {
         return Arrays.copyOf(charset, charset.length);
     }
 }

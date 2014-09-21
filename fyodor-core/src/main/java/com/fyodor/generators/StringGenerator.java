@@ -5,7 +5,6 @@ import com.fyodor.generators.characters.CharacterSetGenerator;
 import com.fyodor.range.Range;
 
 import java.util.Arrays;
-import java.util.Collection;
 
 import static com.fyodor.generators.characters.CharacterSetGenerator.defaultFilter;
 import static com.fyodor.generators.characters.CharacterSetGenerator.defaultRange;
@@ -14,7 +13,7 @@ import static com.fyodor.random.RandomValuesProvider.randomValues;
 class StringGenerator implements Generator<String> {
 
     private Range<Integer> range;
-    private Character[] charSet;
+    private char[] charSet;
 
     StringGenerator(Integer length) {
         this(length, new CharacterSetGenerator(defaultRange, defaultFilter));
@@ -32,11 +31,7 @@ class StringGenerator implements Generator<String> {
         this(length, characterSetGenerator.getCharset());
     }
 
-    StringGenerator(Integer length, Collection<Character> charset) {
-        this(length, charset.toArray(new Character[charset.size()]));
-    }
-
-    StringGenerator(Integer length, Character[] charset) {
+    StringGenerator(Integer length, char[] charset) {
         this(Range.fixed(length), charset);
     }
 
@@ -56,24 +51,11 @@ class StringGenerator implements Generator<String> {
         this(range, characterSetGenerator.getCharset());
     }
 
-    StringGenerator(Range<Integer> range, Collection<Character> charset) {
-        this(range, charset.toArray(new Character[charset.size()]));
-    }
-
     StringGenerator(Integer length, String charset) {
         this(Range.fixed(length), charset.toCharArray());
     }
 
     StringGenerator(Range<Integer> range, char[] charset) {
-        Character[] chars = new Character[charset.length];
-        for (int i = 0; i < charset.length; i++) {
-            chars[i] = charset[i];
-        }
-        this.range = range;
-        this.charSet = chars;
-    }
-
-    StringGenerator(Range<Integer> range, Character[] charset) {
         this.range = range;
         this.charSet = charset;
     }
@@ -88,7 +70,7 @@ class StringGenerator implements Generator<String> {
         return String.valueOf(ret);
     }
 
-    public Character[] getCharSet() {
+    public char[] getCharSet() {
         return Arrays.copyOf(charSet, charSet.length);
     }
 }

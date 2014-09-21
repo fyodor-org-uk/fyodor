@@ -153,7 +153,6 @@ public final class DefaultRandomValuesTest {
         final double actualValue = randomValues.randomDouble(0.0, 100.0, 2);
         assertThat(BigDecimal.valueOf(actualValue).scale())
                 .isEqualTo(2);
-
     }
 
     @Test
