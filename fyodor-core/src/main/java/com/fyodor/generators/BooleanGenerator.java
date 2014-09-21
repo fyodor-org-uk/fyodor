@@ -1,11 +1,17 @@
 package com.fyodor.generators;
 
-import static com.fyodor.random.RandomValuesProvider.randomValues;
+import com.fyodor.random.RandomValues;
 
-class BooleanGenerator implements Generator<Boolean> {
+final class BooleanGenerator implements Generator<Boolean> {
+
+    private final RandomValues randomValues;
+
+    BooleanGenerator(final RandomValues randomValues) {
+        this.randomValues = randomValues;
+    }
 
     @Override
     public Boolean next() {
-        return randomValues().randomBoolean();
+        return randomValues.randomBoolean();
     }
 }

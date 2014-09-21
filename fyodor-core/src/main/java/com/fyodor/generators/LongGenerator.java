@@ -1,11 +1,20 @@
 package com.fyodor.generators;
 
-import static com.fyodor.random.RandomValuesProvider.randomValues;
+import com.fyodor.random.RandomValues;
+import com.fyodor.range.Range;
 
-class LongGenerator implements Generator<Long> {
+final class LongGenerator implements Generator<Long> {
+
+    private final RandomValues randomValues;
+    private final Range<Long> range;
+
+    LongGenerator(final RandomValues randomValues, final Range<Long> range) {
+        this.randomValues = randomValues;
+        this.range = range;
+    }
 
     @Override
     public Long next() {
-        return randomValues().randomLong();
+        return randomValues.randomLong(range.lowerBound(), range.upperBound());
     }
 }

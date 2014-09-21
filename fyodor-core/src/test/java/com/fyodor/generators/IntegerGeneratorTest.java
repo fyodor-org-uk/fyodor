@@ -1,57 +1,82 @@
 package com.fyodor.generators;
 
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Multiset;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import static com.fyodor.Sampler.from;
 import static com.fyodor.range.Range.closed;
-import static com.google.common.collect.Lists.newArrayList;
+import static com.fyodor.range.Range.fixed;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegerGeneratorTest {
 
-    private final static Integer LOWER_BOUND = 20;
-    private final static Integer UPPER_BOUND = 60;
-    private Multiset<Integer> randomValues;
-
-    @Before
-    public void randomValues() {
-        randomValues = HashMultiset.create();
+    @Test
+    public void neverReturnsNull() {
+        final Generator<Integer> generator = RDG.integer(closed(Integer.MIN_VALUE, Integer.MAX_VALUE));
+        assertThat(from(generator).sample(10000)).doesNotContainNull();
     }
 
     @Test
-    public void closedRangeCheck() {
-        Generator<Integer> generator = RDG.integer(closed(LOWER_BOUND, UPPER_BOUND));
-        generateRandomData(generator);
-        Set<Integer> expectedIntegers = new HashSet<Integer>();
-        for (int i = LOWER_BOUND; i <= UPPER_BOUND; i++) {
-            expectedIntegers.add(i);
-        }
-        assertThat(randomValues.elementSet()).containsExactlyElementsOf(expectedIntegers);
+    public void generatesIntegerAcrossZero() {
+        assertThat(from(RDG.integer(closed(-1, 1))).sample(100).unique()).containsOnly(-1, 0, 1);
     }
 
-    private void generateRandomData(Generator<Integer> generator) {
-        generateRandomData(generator, 1000);
+    @Test
+    public void returnsIntegerWithinOneOfMinimum() {
+        final Generator<Integer> generator = RDG.integer(closed(Integer.MIN_VALUE, Integer.MIN_VALUE + 1));
+        assertThat(from(generator).sample(100).unique())
+                .containsOnly(Integer.MIN_VALUE, Integer.MIN_VALUE + 1);
     }
 
-    private void generateRandomData(Generator<Integer> generator, int times) {
-        for (int i = 0; i < times; i++) {
-            randomValues.add(generator.next());
-        }
-        printOut();
+    @Test
+    public void returnsFixedMinimumInteger() {
+        final Generator<Integer> generator = RDG.integer(fixed(Integer.MIN_VALUE));
+        assertThat(from(generator).sample(100).unique())
+                .containsOnly(Integer.MIN_VALUE);
     }
 
-    private void printOut() {
-        List<Integer> sortedValues = newArrayList(randomValues.elementSet());
-        Collections.sort(sortedValues);
-        for (Integer value : sortedValues) {
-            System.out.println(value + ": " + randomValues.count(value));
-        }
+    @Test
+    public void returnsIntegerWithinOneOfMaximum() {
+        final Generator<Integer> generator = RDG.integer(closed(Integer.MAX_VALUE - 1, Integer.MAX_VALUE));
+        assertThat(from(generator).sample(100).unique())
+                .containsOnly(Integer.MAX_VALUE - 1, Integer.MAX_VALUE);
+    }
+
+    @Test
+    public void returnsFixedMaximumInteger() {
+        final Generator<Integer> generator = RDG.integer(fixed(Integer.MAX_VALUE));
+        assertThat(from(generator).sample(100).unique())
+                .containsOnly(Integer.MAX_VALUE);
+    }
+
+    @Test
+    public void returnsMinimumOfZeroAndMaximumOfSomeInteger() {
+        final Generator<Integer> generator = RDG.integer(1);
+        assertThat(from(generator).sample(100).unique())
+                .containsOnly(0, 1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void throwsExceptionWhenMaximumIsNegative() {
+        RDG.integer(-1);
+    }
+
+    @Test
+    public void returnsFixedIntegerForZeroMaximum() {
+        assertThat(from(RDG.integer(0)).sample(100)).containsOnly(0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void rangeCannotBeNull() {
+        RDG.integer(null);
+    }
+
+    @Test
+    public void neverReturnsNullForAllIntegers() {
+        assertThat(from(RDG.integer()).sample(10000).unique()).doesNotContainNull();
+    }
+
+    @Test
+    public void doesNotGenerateTheSameNumberEveryTime() {
+        assertThat(from(RDG.integer()).sample(1000).unique().size()).isGreaterThan(900);
     }
 }

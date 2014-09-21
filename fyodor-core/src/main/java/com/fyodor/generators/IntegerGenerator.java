@@ -1,27 +1,20 @@
 package com.fyodor.generators;
 
+import com.fyodor.random.RandomValues;
 import com.fyodor.range.Range;
 
-import static com.fyodor.random.RandomValuesProvider.randomValues;
+final class IntegerGenerator implements Generator<Integer> {
 
-class IntegerGenerator implements Generator<Integer> {
+    private final RandomValues randomValues;
+    private final Range<Integer> range;
 
-    private final Integer min;
-    private final Integer max;
-
-    IntegerGenerator(Integer max) {
-        this.max = max;
-        this.min = 0;
-    }
-
-    IntegerGenerator(Range<Integer> range) {
-        this.min = range.lowerBound();
-
-        this.max = range.upperBound();
+    IntegerGenerator(final RandomValues randomValues, final Range<Integer> range) {
+        this.randomValues = randomValues;
+        this.range = range;
     }
 
     @Override
     public Integer next() {
-        return randomValues().randomInteger(min, max);
+        return randomValues.randomInteger(range.lowerBound(), range.upperBound());
     }
 }

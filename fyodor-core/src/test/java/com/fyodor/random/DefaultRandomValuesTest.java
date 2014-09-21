@@ -3,6 +3,7 @@ package com.fyodor.random;
 import com.fyodor.generators.Generator;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.Random;
 
 import static com.fyodor.Sampler.from;
@@ -11,19 +12,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public final class DefaultRandomValuesTest {
 
     private final RandomValues randomValues = new DefaultRandomValues(new Random());
-
-    @Test
-    public void returnsNextRandomLong() {
-        final long expectedLong = new Random().nextLong();
-        final Random stubRandom = new Random() {
-            @Override
-            public long nextLong() {
-                return expectedLong;
-            }
-        };
-        final long actualLong = new DefaultRandomValues(stubRandom).randomLong();
-        assertThat(actualLong).isEqualTo(expectedLong);
-    }
 
     @Test
     public void returnsSingleLongValueWhenLowerAndUpperBoundAreEqual() {
@@ -38,6 +26,12 @@ public final class DefaultRandomValuesTest {
 
         assertThat(randomValues.randomLong(Long.MAX_VALUE, Long.MAX_VALUE))
                 .isEqualTo(Long.MAX_VALUE);
+    }
+
+    @Test
+    public void returnsLongBetweenMinimumAndMaximum() {
+        assertThat(from(randomLongs(randomValues, Long.MIN_VALUE, Long.MAX_VALUE)).sample(1000).unique().size())
+                .isGreaterThan(900);
     }
 
     @Test
@@ -85,13 +79,25 @@ public final class DefaultRandomValuesTest {
 
     }
 
+    @Test
+    public void returnsIntegerBetweenMinimumAndMaximum() {
+        assertThat(from(randomIntegers(randomValues, Integer.MIN_VALUE, Integer.MAX_VALUE)).sample(1000).unique().size())
+                .isGreaterThan(900);
+    }
+
+    @Test
+    public void returnsIntegerUpToAndIncludingMaximum() {
+        assertThat(from(randomIntegers(randomValues, 10)).sample(100).unique())
+                .containsExactly(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void throwsAnExceptionWhenUpperBoundIsLessThanTheLowerBoundForRandomInteger() {
         randomValues.randomInteger(1, 0);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void throwsAnExceptionWhenMaxIsNegative() {
+    public void throwsAnExceptionWhenMaxIntegerIsNegative() {
         randomValues.randomInteger(-1);
     }
 
@@ -121,6 +127,107 @@ public final class DefaultRandomValuesTest {
         assertThat(actualBoolean).isEqualTo(expectedBoolean);
     }
 
+    @Test
+    public void returnsFixedDouble() {
+        final double fixedValue = new Random().nextDouble();
+        final double actualValue = randomValues.randomDouble(fixedValue, fixedValue);
+        assertThat(actualValue).isEqualTo(fixedValue);
+    }
+
+    @Test
+    public void returnsUpperBoundOfRandomDoubleWithScale() {
+        final RandomValues randomValues = new DefaultRandomValues(new Random() {
+            @Override
+            public double nextDouble() {
+                return 0.99999999999999;
+            }
+        });
+        final double actualValue = randomValues.randomDouble(0.0, 100.0, 2);
+        assertThat(actualValue)
+                .isEqualTo(100.00);
+
+    }
+
+    @Test
+    public void returnsRandomDoubleWithScale() {
+        final double actualValue = randomValues.randomDouble(0.0, 100.0, 2);
+        assertThat(BigDecimal.valueOf(actualValue).scale())
+                .isEqualTo(2);
+
+    }
+
+    @Test
+    public void returnsRandomDoubleWithZeroScale() {
+        final double actualValue = randomValues.randomDouble(1.0, 1.0, 0);
+        assertThat(actualValue).isEqualTo(1.0);
+    }
+
+    @Test
+    public void doubleScaledToZeroDpIsRoundedDownAndDoesNotExceedTheUpperBound() {
+        final double nextDouble = 0.99999999;
+        final RandomValues randomValues = new DefaultRandomValues(new Random() {
+            @Override
+            public double nextDouble() {
+                return nextDouble;
+            }
+        });
+
+        final double actualValue = randomValues.randomDouble(0, 1.99, 0);
+
+        assertThat(actualValue)
+                .describedAs("When scaled the value 1.99 should be rounded down to 1.0 rather than up to 2.0 to avoid exceeding the upper bound")
+                .isEqualTo(1.0);
+    }
+
+    @Test
+    public void doubleScaledToZeroDpIsRoundedUpWhenItWillNotExceedTheUpperBound() {
+        final double nextDouble = 0.5;
+        final RandomValues randomValues = new DefaultRandomValues(new Random() {
+            @Override
+            public double nextDouble() {
+                return nextDouble;
+            }
+        });
+
+        final double actualValue = randomValues.randomDouble(0, 1.99, 0);
+
+        assertThat(actualValue)
+                .describedAs("When scaled the value 0.995 should be rounded up to 1 as it will not exceed the upper bound")
+                .isEqualTo(1);
+    }
+
+    @Test
+    public void randomDoubleIsInclusiveOfUpperBound() {
+        final double upperBound = 10.0;
+        final double lowerBound = upperBound - 0.000000000000001;
+        assertThat(from(randomDoubles(randomValues, lowerBound, upperBound)).sample(100).unique())
+                .contains(upperBound);
+    }
+
+    @Test
+    public void randomDoubleIsInclusiveOfLowerBound() {
+        final double lowerBound = 10.0;
+        final double upperBound = lowerBound + 0.000000000000001;
+        assertThat(from(randomDoubles(randomValues, lowerBound, upperBound)).sample(100).unique())
+                .contains(lowerBound);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void cannotGenerateDoubleWithNegativeScale() {
+        randomValues.randomDouble(1.0, 1.0, -1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void cannotGenerateDoubleWhenLowerBoundIsGreaterThanUpperBound() {
+        randomValues.randomDouble(1.0, 0.0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void cannotGenerateDoubleWhenLowerBoundIsGreaterThanUpperBoundForAnyGivenScale() {
+        final int anyScale = new Random().nextInt();
+        randomValues.randomDouble(1.0, 0.0, anyScale);
+    }
+
     private static Generator<Long> randomLongs(final RandomValues randomValues, final long lower, final long upper) {
         return new Generator<Long>() {
             @Override
@@ -139,4 +246,21 @@ public final class DefaultRandomValuesTest {
         };
     }
 
+    private Generator<Integer> randomIntegers(final RandomValues randomValues, final int maximum) {
+        return new Generator<Integer>() {
+            @Override
+            public Integer next() {
+                return randomValues.randomInteger(maximum);
+            }
+        };
+    }
+
+    private Generator<Double> randomDoubles(final RandomValues randomValues, final double lower, final double upper) {
+        return new Generator<Double>() {
+            @Override
+            public Double next() {
+                return randomValues.randomDouble(lower, upper);
+            }
+        };
+    }
 }

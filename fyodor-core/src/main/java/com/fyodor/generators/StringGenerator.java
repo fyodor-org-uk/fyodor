@@ -70,7 +70,7 @@ class StringGenerator implements Generator<String> {
         Integer length = RDG.integer(range).next();
         char[] ret = new char[length];
         for (int i = 0; i < length; i++) {
-            ret[i] = charSet[randomValues().randomInteger(charSet.length)];
+            ret[i] = charSet[randomValues().randomInteger(charSet.length - 1)];
         }
         return String.valueOf(ret);
     }

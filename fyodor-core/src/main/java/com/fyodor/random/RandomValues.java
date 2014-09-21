@@ -2,8 +2,6 @@ package com.fyodor.random;
 
 public interface RandomValues {
 
-    long randomLong();
-
     long randomLong(long lower, long upper);
 
     int randomInteger(int upper);
@@ -11,4 +9,8 @@ public interface RandomValues {
     int randomInteger(int lower, int upper);
 
     boolean randomBoolean();
+
+    double randomDouble(double lower, double upper);
+
+    double randomDouble(double lower, double upper, int scale);
 }

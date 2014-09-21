@@ -8,23 +8,91 @@ import com.fyodor.generators.collections.MapGenerator;
 import com.fyodor.generators.collections.SetGenerator;
 import com.fyodor.range.Range;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import static com.fyodor.random.RandomValuesProvider.randomValues;
+import static com.fyodor.range.Range.closed;
 import static com.fyodor.range.Range.fixed;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
-public class RDG {
+public final class RDG {
 
-    public static Generator<Integer> integer = integer(Integer.MAX_VALUE);
-
-    public static Generator<Integer> integer(Integer max) {
-        return new IntegerGenerator(max);
+    public static Generator<Integer> integer() {
+        return integer(closed(Integer.MIN_VALUE, Integer.MAX_VALUE));
     }
 
-    public static Generator<Integer> integer(Range<Integer> range) {
-        return new IntegerGenerator(range);
+    public static Generator<Integer> integer(final int maximum) {
+        ensure(isNotNegative(maximum), "maximum cannot be negative");
+
+        return integer(closed(0, maximum));
+    }
+
+    public static Generator<Integer> integer(final Range<Integer> range) {
+        ensure(isNotNull(range), "range cannot be null");
+
+        return new IntegerGenerator(randomValues(), range);
+    }
+
+    public static Generator<Boolean> bool() {
+        return new BooleanGenerator(randomValues());
+    }
+
+    public static Generator<Long> longVal() {
+        return longVal(closed(Long.MIN_VALUE, Long.MAX_VALUE));
+    }
+
+    public static Generator<Long> longVal(final long maximum) {
+        ensure(isNotNegative(maximum), "maximum cannot be negative");
+
+        return longVal(closed(0l, maximum));
+    }
+
+    public static Generator<Long> longVal(final Range<Long> range) {
+        ensure(isNotNull(range), "range cannot be null");
+
+        return new LongGenerator(randomValues(), range);
+    }
+
+    public static Generator<Double> doubleVal() {
+        return doubleVal(closed(Double.MIN_VALUE, Double.MAX_VALUE));
+    }
+
+    public static Generator<Double> doubleVal(final double maximum) {
+        ensure(isNotNegative(maximum), "maximum cannot be negative");
+
+        return doubleVal(closed(0.0, maximum));
+    }
+
+    public static Generator<Double> doubleVal(final Range<Double> range) {
+        ensure(isNotNull(range), "range cannot be null");
+
+        final double lowerBound = range.lowerBound();
+        ensure(isNumber(lowerBound) && isNotInfinite(lowerBound), "lower bound must be a number and cannot be infinite");
+
+        final double upperBound = range.upperBound();
+        ensure(isNumber(upperBound) && isNotInfinite(upperBound), "upper bound must be a number and cannot be infinite");
+
+        return new DoubleGenerator(randomValues(), range);
+    }
+
+    public static Generator<BigDecimal> bigDecimal() {
+        final BigDecimal min = BigDecimal.valueOf(Double.MIN_VALUE);
+        final BigDecimal max = BigDecimal.valueOf(Double.MAX_VALUE);
+
+        return bigDecimal(closed(min, max));
+    }
+
+    public static Generator<BigDecimal> bigDecimal(final Range<BigDecimal> range) {
+        return bigDecimal(range, 2);
+    }
+
+    public static Generator<BigDecimal> bigDecimal(final Range<BigDecimal> range, final int scale) {
+        ensure(isNotNull(range), "range cannot be null");
+        ensure(isNotNegative(scale), "scale cannot be negative");
+
+        return new BigDecimalGenerator(randomValues(), range, scale);
     }
 
     public static Generator<String> string = string(30);
@@ -54,16 +122,16 @@ public class RDG {
     }
 
     public static <T extends Enum<T>> Generator<T> value(final Class<T> classOfEnumT) {
-        cannotBeNull(classOfEnumT, "enum class cannot be null");
+        ensure(isNotNull(classOfEnumT), "enum class cannot be null");
 
         final T[] enumConstants = classOfEnumT.getEnumConstants();
-        satisfies(enumConstants.length > 0, format("enum %s does not have any constants", classOfEnumT));
+        ensure(enumConstants.length > 0, format("enum %s does not have any constants", classOfEnumT));
 
         return value(enumConstants);
     }
 
     public static <T> Generator<T> value(final T first, T... arrayOfTs) {
-        cannotBeNull(arrayOfTs, "varargs array of values cannot be null");
+        ensure(isNotNull(arrayOfTs), "varargs array of values cannot be null");
 
         final List<T> listOfTs = new ArrayList<T>(asList(arrayOfTs));
         listOfTs.add(0, first);
@@ -71,15 +139,15 @@ public class RDG {
     }
 
     public static <T> Generator<T> value(final T[] arrayOfTs) {
-        cannotBeNull(arrayOfTs, "array of values cannot be null");
-        satisfies(arrayOfTs.length > 0, "array of values cannot be empty");
+        ensure(isNotNull(arrayOfTs), "array of values cannot be null");
+        ensure(arrayOfTs.length > 0, "array of values cannot be empty");
 
         return value(asList(arrayOfTs));
     }
 
     public static <T> Generator<T> value(final Iterable<T> iterableOfT) {
-        cannotBeNull(iterableOfT, "values cannot be null");
-        satisfies(iterableOfT.iterator().hasNext(), "there must be at-least one value");
+        ensure(isNotNull(iterableOfT), "values cannot be null");
+        ensure(iterableOfT.iterator().hasNext(), "there must be at-least one value");
 
         return new ValueGenerator<T>(randomValues(), iterableOfT);
     }
@@ -100,18 +168,6 @@ public class RDG {
         return new DomainGenerator(range);
     }
 
-    private static void cannotBeNull(final Object argument, final String message) {
-        if (argument == null) {
-            throw new IllegalArgumentException(message);
-        }
-    }
-
-    private static void satisfies(final boolean check, final String message) {
-        if (!check) {
-            throw new IllegalArgumentException(message);
-        }
-    }
-
     public static <T> Generator<List<T>> list(final Generator<? extends T> generatorOfT) {
         return list(generatorOfT, 15);
     }
@@ -122,8 +178,8 @@ public class RDG {
 
     public static <T> Generator<List<T>> list(final Generator<? extends T> generatorOfT,
                                               final Range<Integer> sizeRange) {
-        cannotBeNull(generatorOfT, "generator cannot be null");
-        cannotBeNull(sizeRange, "size range cannot be null");
+        ensure(isNotNull(generatorOfT), "generator cannot be null");
+        ensure(isNotNull(sizeRange), "size range cannot be null");
 
         return new ListGenerator<T>(randomValues(), generatorOfT, sizeRange);
     }
@@ -142,9 +198,9 @@ public class RDG {
     public static <T> Generator<T[]> array(final Class<? extends T> classOfT,
                                            final Generator<? extends T> generatorOfT,
                                            final Range<Integer> sizeRange) {
-        cannotBeNull(classOfT, "type of array elements cannot be null");
-        cannotBeNull(generatorOfT, "generator cannot be null");
-        cannotBeNull(sizeRange, "size range cannot be null");
+        ensure(isNotNull(classOfT), "type of array elements cannot be null");
+        ensure(isNotNull(generatorOfT), "generator cannot be null");
+        ensure(isNotNull(sizeRange), "size range cannot be null");
 
         return new ArrayGenerator<T>(randomValues(), classOfT, generatorOfT, sizeRange);
     }
@@ -159,8 +215,8 @@ public class RDG {
 
     public static <T> Generator<Set<T>> set(final Generator<? extends T> generatorOfT,
                                             final Range<Integer> sizeRange) {
-        cannotBeNull(generatorOfT, "generator cannot be null");
-        cannotBeNull(sizeRange, "size range cannot be null");
+        ensure(isNotNull(generatorOfT), "generator cannot be null");
+        ensure(isNotNull(sizeRange), "size range cannot be null");
 
         return new SetGenerator<T>(randomValues(), generatorOfT, sizeRange);
     }
@@ -179,15 +235,46 @@ public class RDG {
     public static <K, V> Generator<Map<K, V>> map(final Generator<? extends K> generatorOfK,
                                                   final Generator<? extends V> generatorOfV,
                                                   final Range<Integer> sizeRange) {
-        cannotBeNull(generatorOfK, "key generator cannot be null");
-        cannotBeNull(generatorOfV, "value generator cannot be null");
-        cannotBeNull(sizeRange, "size range cannot be null");
+        ensure(isNotNull(generatorOfK), "key generator cannot be null");
+        ensure(isNotNull(generatorOfV), "value generator cannot be null");
+        ensure(isNotNull(sizeRange), "size range cannot be null");
 
         return new MapGenerator<K, V>(randomValues(), generatorOfK, generatorOfV, sizeRange);
     }
 
     public static Generator<String> niNumber() {
         return new NINumberGenerator();
+    }
+
+    private static void ensure(final boolean check, final String message) {
+        if (!check) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    private static boolean isNotNull(final Object value) {
+        return value != null;
+    }
+
+    private static boolean isNumber(final double value) {
+        return value == value;
+    }
+
+    private static boolean isNotInfinite(final double value) {
+        return value != Double.NEGATIVE_INFINITY &&
+                value != Double.POSITIVE_INFINITY;
+    }
+
+    private static boolean isNotNegative(final int value) {
+        return value >= 0;
+    }
+
+    private static boolean isNotNegative(final double value) {
+        return value >= 0;
+    }
+
+    private static boolean isNotNegative(final long value) {
+        return value >= 0;
     }
 
     private RDG() {

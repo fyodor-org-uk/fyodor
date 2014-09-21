@@ -24,6 +24,26 @@ public final class Sampler<T> {
         return new Sampler<T>(generatorOfT);
     }
 
+    public static <T extends Comparable<T>> T smallest(final Sample<? extends T> sampleOfT) {
+        T smallest = null;
+        for (final T t : sampleOfT) {
+            if (smallest == null || smallest.compareTo(t) > 0) {
+                smallest = t;
+            }
+        }
+        return smallest;
+    }
+
+    public static <T extends Comparable<T>> T largest(final Sample<? extends T> sampleOfT) {
+        T largest = null;
+        for (final T t : sampleOfT) {
+            if (largest == null || largest.compareTo(t) < 0) {
+                largest = t;
+            }
+        }
+        return largest;
+    }
+
     public static final class Sample<T> implements Iterable<T> {
 
         private final List<T> listOfT;
