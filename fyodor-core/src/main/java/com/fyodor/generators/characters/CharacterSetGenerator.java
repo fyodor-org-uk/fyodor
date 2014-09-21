@@ -27,7 +27,7 @@ public class CharacterSetGenerator {
     public CharacterSetGenerator(Range<Integer> range, CharacterFilter filter) {
         List<Character> chars = new LinkedList<Character>();
 
-        for (int i = range.lowerBound(); i < range.upperBound(); i++) {
+        for (int i = range.lowerBound(); i <= range.upperBound(); i++) {
             if (filter.includeCharacter(i)) {
                 chars.add((char) i);
             }
