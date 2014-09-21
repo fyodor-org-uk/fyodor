@@ -101,6 +101,9 @@ public final class RDG {
         return new StringGenerator(max);
     }
 
+    public static Generator<String> string(Integer max, String charset) {
+        return new StringGenerator(max, charset);
+    }
     public static Generator<String> string(Integer max, CharacterFilter filter) {
         return new StringGenerator(max, filter);
     }

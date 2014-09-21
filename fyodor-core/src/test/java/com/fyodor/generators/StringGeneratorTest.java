@@ -38,6 +38,20 @@ public class StringGeneratorTest {
     }
 
     @Test
+    public void stringAsCharSet() {
+        StringGenerator generator = new StringGenerator(1, "ABCDEFG");
+        for (int i = 0; i < 1000; i++) {
+            String val = generator.next();
+            assertThat(val.length()).isEqualTo(1);
+            chars.add(val.charAt(0));
+        }
+        assertThat(chars.elementSet()).hasSize(generator.getCharSet().length);
+        for (char c : generator.getCharSet()) {
+            assertThat(chars.elementSet()).containsOnly('A', 'B', 'C', 'D', 'E', 'F', 'G');
+        }
+    }
+
+    @Test
     public void cannotChangeCharset() {
         StringGenerator generator = new StringGenerator(SIZE_OF_RANDOM_STRING);
         Character[] chars = generator.getCharSet();

@@ -60,6 +60,19 @@ class StringGenerator implements Generator<String> {
         this(range, charset.toArray(new Character[charset.size()]));
     }
 
+    StringGenerator(Integer length, String charset) {
+        this(Range.fixed(length), charset.toCharArray());
+    }
+
+    StringGenerator(Range<Integer> range, char[] charset) {
+        Character[] chars = new Character[charset.length];
+        for (int i = 0; i < charset.length; i++) {
+            chars[i] = charset[i];
+        }
+        this.range = range;
+        this.charSet = chars;
+    }
+
     StringGenerator(Range<Integer> range, Character[] charset) {
         this.range = range;
         this.charSet = charset;
