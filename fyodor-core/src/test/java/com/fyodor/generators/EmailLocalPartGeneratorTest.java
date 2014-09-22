@@ -12,7 +12,6 @@ public class EmailLocalPartGeneratorTest {
     public void noWrongDots(){
         for (int i = 0; i < 10000; i++) {
             String localPart = generator.next().trim();
-            System.out.println(localPart);
             assertThat(localPart).doesNotContain("..");
             assertThat(localPart.startsWith(".")).isFalse();
             assertThat(localPart.endsWith(".")).isFalse();

@@ -15,7 +15,6 @@ public class NINumberGeneratorTest {
         Generator<String> generator = RDG.niNumber();
         for (int i = 0; i < 1000; i++) {
             String niNumber = generator.next();
-            System.out.println(niNumber);
             assertThat(niNumberPattern.matcher(niNumber).matches()).isTrue();
         }
     }
