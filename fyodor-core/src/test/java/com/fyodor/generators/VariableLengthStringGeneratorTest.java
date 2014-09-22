@@ -22,7 +22,6 @@ public class VariableLengthStringGeneratorTest {
         generator = new StringGenerator(Range.closed(minSize, maxSize));
         for (int i = 0; i < 10000; i++) {
             String next = generator.next();
-            System.out.println(next);
             generated.add(next.length());
         }
         assertThat(generated.elementSet())

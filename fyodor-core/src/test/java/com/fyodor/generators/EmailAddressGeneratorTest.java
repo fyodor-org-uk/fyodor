@@ -7,9 +7,6 @@ public class EmailAddressGeneratorTest {
     Generator<String> generator = RDG.emailAddress();
 
     @Test
-    public void checkoutEmailAddresses(){
-        for (int i = 0; i < 100; i++) {
-            System.out.println(generator.next());
-        }
+    public void checkoutEmailAddresses() {
     }
 }
