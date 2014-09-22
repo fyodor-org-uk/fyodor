@@ -3,8 +3,8 @@ package com.fyodor.generators;
 import org.junit.Test;
 
 import static com.fyodor.Sampler.from;
-import static com.fyodor.range.Range.closed;
-import static com.fyodor.range.Range.fixed;
+import static com.fyodor.Sampler.smallest;
+import static com.fyodor.range.Range.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegerGeneratorTest {
@@ -13,6 +13,66 @@ public class IntegerGeneratorTest {
     public void neverReturnsNull() {
         final Generator<Integer> generator = RDG.integer(closed(Integer.MIN_VALUE, Integer.MAX_VALUE));
         assertThat(from(generator).sample(10000)).doesNotContainNull();
+    }
+
+    @Test
+    public void generatesIntegerAtLeastSomeLowerBoundUpToTheMaximum() {
+        assertThat(from(RDG.integer(atLeast(Integer.MAX_VALUE - 1))).sample(10).unique())
+                .containsExactly(Integer.MAX_VALUE - 1, Integer.MAX_VALUE);
+    }
+
+    @Test
+    public void generatesIntegerAtLeastTheMaximum() {
+        assertThat(from(RDG.integer(atLeast(Integer.MAX_VALUE))).sample(10).unique())
+                .containsExactly(Integer.MAX_VALUE);
+    }
+
+    @Test
+    public void generatesIntegerFromTheMinimumToAtMostSomeUpperBound() {
+        assertThat(from(RDG.integer(atMost(Integer.MIN_VALUE + 1))).sample(10).unique())
+                .containsExactly(Integer.MIN_VALUE, Integer.MIN_VALUE + 1);
+    }
+
+    @Test
+    public void generatesIntegerAtMostTheMinimum() {
+        assertThat(from(RDG.integer(atMost(Integer.MIN_VALUE))).sample(10).unique())
+                .containsExactly(Integer.MIN_VALUE);
+    }
+
+    @Test
+    public void generatesIntegerGreaterThanSomeLowerBound() {
+        assertThat(from(RDG.integer(greaterThan(Integer.MAX_VALUE - 1))).sample(10).unique())
+                .containsExactly(Integer.MAX_VALUE);
+    }
+
+    @Test
+    public void generatesIntegerLessThanSomeUpperBound() {
+        assertThat(from(RDG.integer(lessThan(Integer.MIN_VALUE + 1))).sample(10).unique())
+                .containsExactly(Integer.MIN_VALUE);
+    }
+
+    @Test
+    public void generatesPositiveIntegers() {
+        assertThat(smallest(from(RDG.integer(positive())).sample(1000)))
+                .isPositive();
+    }
+
+    @Test
+    public void generatesNegativeIntegers() {
+        assertThat(smallest(from(RDG.integer(negative())).sample(1000)))
+                .isNegative();
+    }
+
+    @Test
+    public void generatesIntegerFromZeroUpToSomeUpperBound() {
+        assertThat(from(RDG.integer(zero().upTo(2))).sample(20).unique())
+                .containsOnly(0, 1, 2);
+    }
+
+    @Test
+    public void generatesIntegerFromClosedRangeUpToSomeUpperBound() {
+        assertThat(from(RDG.integer(closed(10, 11).upTo(13))).sample(20).unique())
+                .containsOnly(10, 11, 12, 13);
     }
 
     @Test

@@ -12,21 +12,20 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import static com.fyodor.random.RandomValuesProvider.randomValues;
-import static com.fyodor.range.Range.closed;
-import static com.fyodor.range.Range.fixed;
+import static com.fyodor.range.Range.*;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 public final class RDG {
 
     public static Generator<Integer> integer() {
-        return integer(closed(Integer.MIN_VALUE, Integer.MAX_VALUE));
+        return integer(all());
     }
 
     public static Generator<Integer> integer(final int maximum) {
         ensure(isNotNegative(maximum), "maximum cannot be negative");
 
-        return integer(closed(0, maximum));
+        return integer(zero().upTo(maximum));
     }
 
     public static Generator<Integer> integer(final Range<Integer> range) {
