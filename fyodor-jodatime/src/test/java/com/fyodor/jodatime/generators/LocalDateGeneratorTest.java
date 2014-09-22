@@ -4,9 +4,11 @@ import com.fyodor.generators.Generator;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
+import static com.fyodor.jodatime.generators.JodaTimeRanges.*;
 import static com.fyodor.jodatime.generators.RDG.localDate;
-import static com.fyodor.jodatime.generators.Sampler.from;
+import static com.fyodor.jodatime.generators.Sampler.*;
 import static com.fyodor.range.Range.closed;
+import static com.fyodor.range.Range.fixed;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.joda.time.LocalDate.now;
 
@@ -27,6 +29,54 @@ public final class LocalDateGeneratorTest {
         final Generator<LocalDate> generator = localDate(closed(MIN, MAX));
         assertThat(from(generator).sample(10000))
                 .doesNotContainNull();
+    }
+
+    @Test
+    public void returnsFixedLocalDate() {
+        final LocalDate fixedDate = now().minusDays(55);
+        assertThat(from(localDate(fixed(fixedDate))).sample(10).unique())
+                .containsOnly(fixedDate);
+    }
+
+    @Test
+    public void returnsDateAgedInDays() {
+        assertThat(from(localDate(aged(days(18, 19)))).sample(10).unique())
+                .containsExactly(now().minusDays(18), now().minusDays(19));
+    }
+
+    @Test
+    public void returnsDateAgedInMonths() {
+        final Sampler.Sample<LocalDate> sample = from(localDate(aged(months(18, 19)))).sample(100);
+        final LocalDate smallest = smallest(sample);
+        final LocalDate largest = largest(sample);
+        assertThat(smallest).isEqualTo(now().minusMonths(19));
+        assertThat(largest).isEqualTo(now().minusMonths(18));
+    }
+
+    @Test
+    public void returnsDateAgedInYears() {
+        final Sampler.Sample<LocalDate> sample = from(localDate(aged(years(18, 19)))).sample(10000);
+        final LocalDate smallest = smallest(sample);
+        final LocalDate largest = largest(sample);
+        assertThat(smallest).isEqualTo(now().minusYears(19));
+        assertThat(largest).isEqualTo(now().minusYears(18));
+    }
+
+    @Test
+    public void returnsFutureDateOnly() {
+        final LocalDate smallest = smallest(from(localDate(futureDate())).sample(10000));
+        assertThat(smallest.compareTo(now()) > 0).isTrue();
+    }
+
+    @Test
+    public void returnsPastDateOnly() {
+        final LocalDate smallest = smallest(from(localDate(pastDate())).sample(10000));
+        assertThat(smallest.compareTo(now()) < 0).isTrue();
+    }
+
+    @Test
+    public void neverReturnsNullForAllDates() {
+        assertThat(from(localDate(allDates())).sample(10000)).doesNotContainNull();
     }
 
     @Test

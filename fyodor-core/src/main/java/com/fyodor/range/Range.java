@@ -1,5 +1,7 @@
 package com.fyodor.range;
 
+import static java.lang.String.format;
+
 public final class Range<T extends Comparable<? super T>> {
 
     private final T lowerBound;
@@ -71,6 +73,11 @@ public final class Range<T extends Comparable<? super T>> {
         int result = lowerBound != null ? lowerBound.hashCode() : 0;
         result = 31 * result + (upperBound != null ? upperBound.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return format("Range %s .. %s", lowerBound, upperBound);
     }
 
     public static <T extends Comparable<? super T>> Range<T> closed(final T lowerBound, final T upperBound) {
