@@ -3,6 +3,7 @@ package uk.org.fyodor.generators.characters;
 import org.junit.Test;
 
 import static uk.org.fyodor.FyodorAssertions.assertThat;
+import static uk.org.fyodor.generators.characters.CharacterSetGenerator.*;
 
 public class CharacterSetGeneratorTest {
 
@@ -19,5 +20,15 @@ public class CharacterSetGeneratorTest {
         assertThat(generator.getCharset())
                 .hasSize(2)
                 .containsOnly('A', 'B');
+    }
+
+    @Test
+    public void canTakeMultipleRanges() {
+        CharacterSetGenerator generator = new CharacterSetGenerator(latin1Range,
+                latinExtendedARange,
+                basicLatinRange,
+                latinExtendedBRange);
+        assertThat(generator.getCharset()).hasSize(525);
+        System.out.println(generator.getCharset());
     }
 }

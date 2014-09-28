@@ -14,15 +14,15 @@ class StringGenerator implements Generator<String> {
     private char[] charSet;
 
     StringGenerator(Integer length) {
-        this(length, new CharacterSetGenerator(CharacterSetGenerator.defaultRange, CharacterSetGenerator.defaultFilter));
+        this(length, new CharacterSetGenerator(CharacterSetGenerator.defaultFilter, CharacterSetGenerator.basicLatinRange));
     }
 
     StringGenerator(Integer length, CharacterFilter filter) {
-        this(length, new CharacterSetGenerator(CharacterSetGenerator.defaultRange, filter));
+        this(length, new CharacterSetGenerator(filter, CharacterSetGenerator.basicLatinRange));
     }
 
     StringGenerator(Integer length, Range<Integer> range) {
-        this(length, new CharacterSetGenerator(range, CharacterSetGenerator.defaultFilter));
+        this(length, new CharacterSetGenerator(CharacterSetGenerator.defaultFilter, range));
     }
 
     StringGenerator(Integer length, CharacterSetGenerator characterSetGenerator) {
@@ -34,15 +34,15 @@ class StringGenerator implements Generator<String> {
     }
 
     StringGenerator(Range<Integer> range) {
-        this(range, new CharacterSetGenerator(CharacterSetGenerator.defaultRange, CharacterSetGenerator.defaultFilter));
+        this(range, new CharacterSetGenerator(CharacterSetGenerator.defaultFilter, CharacterSetGenerator.basicLatinRange));
     }
 
     StringGenerator(Range<Integer> range, CharacterFilter filter) {
-        this(range, new CharacterSetGenerator(CharacterSetGenerator.defaultRange, filter));
+        this(range, new CharacterSetGenerator(filter, CharacterSetGenerator.basicLatinRange));
     }
 
     StringGenerator(Range<Integer> stringRange, Range<Integer> charsetRange) {
-        this(stringRange, new CharacterSetGenerator(charsetRange, CharacterSetGenerator.defaultFilter));
+        this(stringRange, new CharacterSetGenerator(CharacterSetGenerator.defaultFilter, charsetRange));
     }
 
     StringGenerator(Range<Integer> range, CharacterSetGenerator characterSetGenerator) {

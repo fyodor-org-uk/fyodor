@@ -20,7 +20,7 @@ public class CharacterSetGeneratorTest {
     public void generateCorrectNumberOfChars(){
         Integer rangeStart = RDG.integer(50).next();
         Integer rangeEnd = RDG.integer(Range.closed(51, 1000)).next();
-        CharacterSetGenerator generator = new CharacterSetGenerator(Range.closed(rangeStart, rangeEnd), allowEverythingFilter);
+        CharacterSetGenerator generator = new CharacterSetGenerator(allowEverythingFilter, Range.closed(rangeStart, rangeEnd));
         assertThat(generator.getCharset()).hasSize(rangeEnd - rangeStart + 1);
     }
 }
