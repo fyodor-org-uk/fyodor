@@ -6,27 +6,46 @@ import java.util.Arrays;
 
 public class CharacterSetGenerator {
 
-    public static final Range<Integer> basicLatinRange = Range.closed(33, 126);
-    public static final Range<Integer> latin1Range = Range.closed(160, 255);
-    public static final Range<Integer> latinExtendedARange = Range.closed(256, 383);
-    public static final Range<Integer> latinExtendedBRange = Range.closed(384, 591);
-    public static final CharacterFilter defaultFilter = AllCharactersFilter.getFilter();
-    private final char[] charset;
+    private char[] charset = null;
 
     public CharacterSetGenerator() {
-        this(defaultFilter, basicLatinRange);
+        this(CharacterSetFilter.AllExceptDoubleQuotes, CharacterSetRange.defaultLatinBasic);
     }
 
     public CharacterSetGenerator(Range<Integer>... ranges) {
-        this(defaultFilter, ranges);
+        this(CharacterSetFilter.AllExceptDoubleQuotes, ranges);
+    }
+
+    public CharacterSetGenerator(CharacterSetRange... ranges) {
+        this(CharacterSetFilter.AllExceptDoubleQuotes, ranges);
     }
 
     public CharacterSetGenerator(CharacterFilter filter) {
-        this(filter, basicLatinRange);
+        this(filter, CharacterSetRange.defaultLatinBasic.getRange());
+    }
+
+    public CharacterSetGenerator(CharacterSetFilter filter, CharacterSetRange... characterSetRanges) {
+        this(filter.getFilter(), characterSetRanges);
+    }
+
+    public CharacterSetGenerator(CharacterSetFilter filter, Range<Integer>... ranges) {
+        this(filter.getFilter(), ranges);
+    }
+
+    public CharacterSetGenerator(CharacterFilter filter, CharacterSetRange... characterSetRanges) {
+        Range<Integer>[] ranges = new Range[characterSetRanges.length];
+        for (int i = 0; i < characterSetRanges.length; i++) {
+            ranges[i] = characterSetRanges[i].getRange();
+        }
+        generateCharacterSet(filter, ranges);
     }
 
     public CharacterSetGenerator(CharacterFilter filter, Range<Integer>... ranges) {
 
+        generateCharacterSet(filter, ranges);
+    }
+
+    private void generateCharacterSet(CharacterFilter filter, Range<Integer>... ranges) {
         char[] charset = new char[getTotalSizeOfRanges(ranges)];
 
         int j = 0;
@@ -38,7 +57,7 @@ public class CharacterSetGenerator {
                 }
             }
         }
-        this.charset=Arrays.copyOf(charset,j);
+        this.charset = Arrays.copyOf(charset, j);
     }
 
     private int getTotalSizeOfRanges(Range<Integer>[] ranges) {

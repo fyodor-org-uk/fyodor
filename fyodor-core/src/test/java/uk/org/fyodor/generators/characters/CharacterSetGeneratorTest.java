@@ -24,10 +24,7 @@ public class CharacterSetGeneratorTest {
 
     @Test
     public void canTakeMultipleRanges() {
-        CharacterSetGenerator generator = new CharacterSetGenerator(latin1Range,
-                latinExtendedARange,
-                basicLatinRange,
-                latinExtendedBRange);
+        CharacterSetGenerator generator = new CharacterSetGenerator(CharacterSetRange.values());
         assertThat(generator.getCharset()).hasSize(525);
         System.out.println(generator.getCharset());
     }

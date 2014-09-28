@@ -1,7 +1,9 @@
 package uk.org.fyodor.generators;
 
 import uk.org.fyodor.generators.characters.CharacterFilter;
+import uk.org.fyodor.generators.characters.CharacterSetFilter;
 import uk.org.fyodor.generators.characters.CharacterSetGenerator;
+import uk.org.fyodor.generators.characters.CharacterSetRange;
 import uk.org.fyodor.range.Range;
 
 import java.util.Arrays;
@@ -14,15 +16,15 @@ class StringGenerator implements Generator<String> {
     private char[] charSet;
 
     StringGenerator(Integer length) {
-        this(length, new CharacterSetGenerator(CharacterSetGenerator.defaultFilter, CharacterSetGenerator.basicLatinRange));
+        this(length, new CharacterSetGenerator(CharacterSetFilter.AllExceptDoubleQuotes, CharacterSetRange.defaultLatinBasic));
     }
 
     StringGenerator(Integer length, CharacterFilter filter) {
-        this(length, new CharacterSetGenerator(filter, CharacterSetGenerator.basicLatinRange));
+        this(length, new CharacterSetGenerator(filter, CharacterSetRange.defaultLatinBasic));
     }
 
     StringGenerator(Integer length, Range<Integer> range) {
-        this(length, new CharacterSetGenerator(CharacterSetGenerator.defaultFilter, range));
+        this(length, new CharacterSetGenerator(CharacterSetFilter.AllExceptDoubleQuotes, range));
     }
 
     StringGenerator(Integer length, CharacterSetGenerator characterSetGenerator) {
@@ -34,15 +36,15 @@ class StringGenerator implements Generator<String> {
     }
 
     StringGenerator(Range<Integer> range) {
-        this(range, new CharacterSetGenerator(CharacterSetGenerator.defaultFilter, CharacterSetGenerator.basicLatinRange));
+        this(range, new CharacterSetGenerator(CharacterSetFilter.AllExceptDoubleQuotes, CharacterSetRange.defaultLatinBasic));
     }
 
     StringGenerator(Range<Integer> range, CharacterFilter filter) {
-        this(range, new CharacterSetGenerator(filter, CharacterSetGenerator.basicLatinRange));
+        this(range, new CharacterSetGenerator(filter, CharacterSetRange.defaultLatinBasic));
     }
 
     StringGenerator(Range<Integer> stringRange, Range<Integer> charsetRange) {
-        this(stringRange, new CharacterSetGenerator(CharacterSetGenerator.defaultFilter, charsetRange));
+        this(stringRange, new CharacterSetGenerator(CharacterSetFilter.AllExceptDoubleQuotes, charsetRange));
     }
 
     StringGenerator(Range<Integer> range, CharacterSetGenerator characterSetGenerator) {

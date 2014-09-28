@@ -4,7 +4,7 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import org.junit.Before;
 import org.junit.Test;
-import uk.org.fyodor.generators.characters.AllCharactersFilter;
+import uk.org.fyodor.generators.characters.NoDoubleQuotesFilter;
 import uk.org.fyodor.generators.characters.CharacterFilter;
 import uk.org.fyodor.generators.characters.LettersAndDigitsFilter;
 import uk.org.fyodor.generators.characters.LettersOnlyFilter;
@@ -34,7 +34,7 @@ public class StringGeneratorTest {
 
     @Test
     public void allCharsString() {
-        generateRandomStringsForCharSet(AllCharactersFilter.getFilter());
+        generateRandomStringsForCharSet(NoDoubleQuotesFilter.getFilter());
     }
 
     @Test

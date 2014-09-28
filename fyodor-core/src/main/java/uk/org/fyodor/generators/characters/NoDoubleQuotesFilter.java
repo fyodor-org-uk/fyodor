@@ -1,10 +1,10 @@
 package uk.org.fyodor.generators.characters;
 
-public class AllCharactersFilter implements CharacterFilter {
+public class NoDoubleQuotesFilter implements CharacterFilter {
 
-    private static CharacterFilter filter = new AllCharactersFilter();
+    private static CharacterFilter filter = new NoDoubleQuotesFilter();
 
-    private AllCharactersFilter() {}
+    private NoDoubleQuotesFilter() {}
 
     public static CharacterFilter getFilter() {
         return filter;
