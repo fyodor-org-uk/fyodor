@@ -51,7 +51,7 @@ public class SomeTest {
 }
 {% endhighlight %}
 
-Out test's only interested in the age of our car but already some questions spring to mind
+Our test's only interested in the age of our car but already some questions spring to mind
 about the rest of it:
 
 * if we don't populate name and description will it get persisted/serialized etc OK? 
