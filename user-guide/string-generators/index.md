@@ -56,7 +56,24 @@ lovely.
 ##Character Sets##
 
 You can also customise the set of characters that a `StringGenerator` will select from. There are several ways
-to do this, the first one is by specifying a range of integers that correspond to Unicode character points.
+to do this, the simplest is probably this:
+
+{% highlight java %}
+RDG.string(Integer, String)
+RDG.string(Integer, char[])
+RDG.string(Range<Integer>, String)
+RDG.string(Range<Integer>, char[])
+{% endhighlight %}
+
+which will return a `StringGenerator` that takes the supplied `char`s as the underlying source. 
+For instance in Fyodor's `NINumberGenerator` the last character needs to be an A, B, C or D.  
+This is generated with 
+
+{% highlight java %}
+RDG.string(1, "ABCD")
+{% endhighlight %} 
+
+If this is too limited you can specify a range of integers that correspond to Unicode character points.
 The default set of characters in Fyodor (used in the examples above) is `Range.closed(33,126)` which
 corresponds to the following characters:
 
@@ -170,20 +187,16 @@ which takes a regular expression string in its constructor. As the name suggests
 out any character that doesn't return true when matching the given regular expression.
 This is how the `DomainName` and `EmailLocalPart` filters are implemented.
 
-
-### `string(Integer, String)`
-### `string(Integer, char[])`
-
-These are both convenience methods if you really want to go crazy if supplying your own 
-`Range` and/or `CharacterFilter` is just too fiddly, they'll both just take the 
-supplied `Character`s and use them as the underlying source. For instance in Fyodor's `NINumberGenerator`
-the last character needs to be an A, B, C or D.  This is generated with 
+You can of course combine a `CharacterFilter` with one or more `Range`s when creating a `StringGenerator`:
 
 {% highlight java %}
-RDG.string(1, "ABCD")
+RDG.string(Integer max, CharacterSetFilter filter, Range<Integer>... ranges)
+RDG.string(Range<Integer> range, CharacterSetFilter filter, Range<Integer>... ranges)
+RDG.string(Integer max, CharacterFilter filter, Range<Integer>... ranges)
+RDG.string(Range<Integer> range, CharacterFilter filter, Range<Integer>... ranges)
 {% endhighlight %}
-
-You can call `char[] getCharSet()` on any `StringGenerator` if it's easier to just fine tune the 
+ 
+Note: You can call `char[] getCharSet()` on any `StringGenerator` if it's easier to just fine tune the 
 underlying charset of an existing generator (this returns a copy of the array used by the 
 generator so you can add and remove characters without borking anything but it means you'll need 
 to create a new generator to use it).
