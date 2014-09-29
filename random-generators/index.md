@@ -1,7 +1,7 @@
 ---
 layout: default
 image: dice-splash
-tagline: “Much unhappiness has come into the world because of bewilderment and things left unsaid.”
+tagline: “Much unhappiness has come into the world because of bewilderment and things left unsaid”
 title: Random Data Generators
 ---
 

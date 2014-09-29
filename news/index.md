@@ -1,7 +1,7 @@
 ---
 layout: default
 image: butterfly
-tagline: “Realists do not fear the results of their study.”
+tagline: “Realists do not fear the results of their study”
 title: Latest News from Fyodor
 ---
 

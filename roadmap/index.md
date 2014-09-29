@@ -1,7 +1,7 @@
 ---
 layout: default
 image: dice-splash
-tagline: “The formula 'Two and two make five' is not without its attractions.”
+tagline: “The formula 'Two and two make five' is not without its attractions”
 title: Roadmap
 ---
 

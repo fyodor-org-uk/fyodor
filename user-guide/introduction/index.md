@@ -1,6 +1,6 @@
 ---
 layout: user-guide
-tagline: "What terrible tragedies realism inflicts on people."
+tagline: "What terrible tragedies realism inflicts on people"
 image: dice-splash
 title: Introduction
 ---

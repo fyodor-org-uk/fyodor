@@ -1,6 +1,6 @@
 ---
 layout: user-guide
-tagline: Above all, avoid falsehood, every kind of falsehood, especially falseness to yourself. Watch over your own deceitfulness and look into it every hour, every minute.
+tagline: "Above all, avoid falsehood, every kind of falsehood, especially falseness to yourself. Watch over your own deceitfulness and look into it every hour, every minute"
 image: dice-splash
 title: String Generators
 ---
