@@ -63,6 +63,10 @@ class StringGenerator implements Generator<String> {
         this(Range.fixed(length), charset.toCharArray());
     }
 
+    StringGenerator(Range<Integer> range, String charset) {
+        this(range, charset.toCharArray());
+    }
+
     StringGenerator(Range<Integer> range, char[] charset) {
         this.charSet = charset;
         this.randomIntGenerator = RDG.integer(range);

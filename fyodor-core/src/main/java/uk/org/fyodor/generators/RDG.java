@@ -11,13 +11,16 @@ import uk.org.fyodor.generators.collections.SetGenerator;
 import uk.org.fyodor.range.Range;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static uk.org.fyodor.random.RandomValuesProvider.randomValues;
 import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
-import static java.lang.String.format;
-import static java.util.Arrays.asList;
 
 public final class RDG {
 
@@ -107,6 +110,10 @@ public final class RDG {
         return new StringGenerator(max, charset);
     }
 
+    public static Generator<String> string(Range<Integer> range, String charset) {
+        return new StringGenerator(range, charset);
+    }
+
     public static Generator<String> string(Integer max, CharacterFilter filter) {
         return new StringGenerator(max, filter);
     }
@@ -119,8 +126,24 @@ public final class RDG {
         return new StringGenerator(max, filter.getFilter());
     }
 
+    public static Generator<String> string(Integer max, CharacterFilter filter, Range<Integer>... ranges) {
+        return new StringGenerator(max, new CharacterSetGenerator(filter, ranges));
+    }
+
+    public static Generator<String> string(Integer max, CharacterSetFilter filter, Range<Integer>... ranges) {
+        return new StringGenerator(max, new CharacterSetGenerator(filter.getFilter(), ranges));
+    }
+
     public static Generator<String> string(Range<Integer> range, CharacterSetFilter filter) {
         return new StringGenerator(range, filter.getFilter());
+    }
+
+    public static Generator<String> string(Range<Integer> range, CharacterSetFilter filter, Range<Integer>... ranges) {
+        return new StringGenerator(range, new CharacterSetGenerator(filter.getFilter(), ranges));
+    }
+
+    public static Generator<String> string(Range<Integer> range, CharacterFilter filter, Range<Integer>... ranges) {
+        return new StringGenerator(range, new CharacterSetGenerator(filter, ranges));
     }
 
     public static Generator<String> string(Integer max, Range<Integer>... ranges) {
@@ -131,12 +154,12 @@ public final class RDG {
         return new StringGenerator(max, characterSetRanges);
     }
 
-    public static Generator<String> string(Integer max, CharacterSetGenerator generator) {
-        return new StringGenerator(max, generator);
-    }
-
     public static Generator<String> string(Integer max, char[] chars) {
         return new StringGenerator(max, chars);
+    }
+
+    public static Generator<String> string(Range<Integer> range, char[] chars) {
+        return new StringGenerator(range, chars);
     }
 
     public static Generator<String> string(Range<Integer> range) {
