@@ -3,14 +3,13 @@ package uk.org.fyodor.generators.characters;
 import org.junit.Test;
 
 import static uk.org.fyodor.FyodorAssertions.assertThat;
-import static uk.org.fyodor.generators.characters.CharacterSetGenerator.*;
 
 public class CharacterSetGeneratorTest {
 
     CharacterFilter filter = new CharacterFilter() {
         @Override
-        public boolean includeCharacter(int i) {
-            return 'A' == (char) i || 'B' == (char) i;
+        public boolean includeCharacter(char c) {
+            return 'A' == c || 'B' == c;
         }
     };
 

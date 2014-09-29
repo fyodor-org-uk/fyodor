@@ -12,8 +12,8 @@ import static uk.org.fyodor.random.RandomValuesProvider.randomValues;
 
 class StringGenerator implements Generator<String> {
 
-    private Range<Integer> range;
-    private char[] charSet;
+    private final Generator<Integer> randomIntGenerator;
+    private final char[] charSet;
 
     StringGenerator(Integer length) {
         this(length, new CharacterSetGenerator(CharacterSetFilter.AllExceptDoubleQuotes, CharacterSetRange.defaultLatinBasic));
@@ -23,7 +23,11 @@ class StringGenerator implements Generator<String> {
         this(length, new CharacterSetGenerator(filter, CharacterSetRange.defaultLatinBasic));
     }
 
-    StringGenerator(Integer length, Range<Integer> range) {
+    StringGenerator(Integer length, Range<Integer>... range) {
+        this(length, new CharacterSetGenerator(CharacterSetFilter.AllExceptDoubleQuotes, range));
+    }
+
+    StringGenerator(Integer length, CharacterSetRange... range) {
         this(length, new CharacterSetGenerator(CharacterSetFilter.AllExceptDoubleQuotes, range));
     }
 
@@ -43,7 +47,11 @@ class StringGenerator implements Generator<String> {
         this(range, new CharacterSetGenerator(filter, CharacterSetRange.defaultLatinBasic));
     }
 
-    StringGenerator(Range<Integer> stringRange, Range<Integer> charsetRange) {
+    StringGenerator(Range<Integer> stringRange, CharacterSetRange... charsetRange) {
+        this(stringRange, new CharacterSetGenerator(CharacterSetFilter.AllExceptDoubleQuotes, charsetRange));
+    }
+
+    StringGenerator(Range<Integer> stringRange, Range<Integer>... charsetRange) {
         this(stringRange, new CharacterSetGenerator(CharacterSetFilter.AllExceptDoubleQuotes, charsetRange));
     }
 
@@ -56,13 +64,13 @@ class StringGenerator implements Generator<String> {
     }
 
     StringGenerator(Range<Integer> range, char[] charset) {
-        this.range = range;
         this.charSet = charset;
+        this.randomIntGenerator = RDG.integer(range);
     }
 
     @Override
     public String next() {
-        Integer length = RDG.integer(range).next();
+        Integer length = randomIntGenerator.next();
         char[] ret = new char[length];
         for (int i = 0; i < length; i++) {
             ret[i] = charSet[randomValues().randomInteger(charSet.length - 1)];

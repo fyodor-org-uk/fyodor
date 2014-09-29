@@ -11,7 +11,7 @@ public class NoDoubleQuotesFilter implements CharacterFilter {
     }
 
     @Override
-    public boolean includeCharacter(int i) {
-        return !"\"".equals(String.valueOf((char)i));
+    public boolean includeCharacter(char c) {
+        return !"\"".equals(String.valueOf(c));
     }
 }

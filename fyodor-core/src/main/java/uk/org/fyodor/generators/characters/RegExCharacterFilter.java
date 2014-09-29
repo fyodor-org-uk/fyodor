@@ -11,7 +11,7 @@ public class RegExCharacterFilter implements CharacterFilter {
     }
 
     @Override
-    public boolean includeCharacter(int i) {
-        return pattern.matcher(String.valueOf((char)i)).find();
+    public boolean includeCharacter(char c) {
+        return pattern.matcher(String.valueOf(c)).find();
     }
 }

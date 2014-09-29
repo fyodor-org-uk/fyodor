@@ -11,7 +11,7 @@ public class LettersAndDigitsFilter implements CharacterFilter {
     }
 
     @Override
-    public boolean includeCharacter(int i) {
-        return Character.isLetterOrDigit(i);
+    public boolean includeCharacter(char c) {
+        return Character.isLetterOrDigit(c);
     }
 }

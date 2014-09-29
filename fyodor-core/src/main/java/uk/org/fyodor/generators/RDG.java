@@ -1,7 +1,9 @@
 package uk.org.fyodor.generators;
 
 import uk.org.fyodor.generators.characters.CharacterFilter;
+import uk.org.fyodor.generators.characters.CharacterSetFilter;
 import uk.org.fyodor.generators.characters.CharacterSetGenerator;
+import uk.org.fyodor.generators.characters.CharacterSetRange;
 import uk.org.fyodor.generators.collections.ArrayGenerator;
 import uk.org.fyodor.generators.collections.ListGenerator;
 import uk.org.fyodor.generators.collections.MapGenerator;
@@ -109,8 +111,24 @@ public final class RDG {
         return new StringGenerator(max, filter);
     }
 
-    public static Generator<String> string(Integer max, Range<Integer> range) {
-        return new StringGenerator(max, range);
+    public static Generator<String> string(Range<Integer> range, CharacterFilter filter) {
+        return new StringGenerator(range, filter);
+    }
+
+    public static Generator<String> string(Integer max, CharacterSetFilter filter) {
+        return new StringGenerator(max, filter.getFilter());
+    }
+
+    public static Generator<String> string(Range<Integer> range, CharacterSetFilter filter) {
+        return new StringGenerator(range, filter.getFilter());
+    }
+
+    public static Generator<String> string(Integer max, Range<Integer>... ranges) {
+        return new StringGenerator(max, ranges);
+    }
+
+    public static Generator<String> string(Integer max, CharacterSetRange... characterSetRanges) {
+        return new StringGenerator(max, characterSetRanges);
     }
 
     public static Generator<String> string(Integer max, CharacterSetGenerator generator) {
@@ -121,6 +139,17 @@ public final class RDG {
         return new StringGenerator(max, chars);
     }
 
+    public static Generator<String> string(Range<Integer> range) {
+        return new StringGenerator(range);
+    }
+
+    public static Generator<String> string(Range<Integer> stringLength, Range<Integer>... charSetRanges) {
+        return new StringGenerator(stringLength, charSetRanges);
+    }
+
+    public static Generator<String> string(Range<Integer> stringLength, CharacterSetRange... charSetRanges) {
+        return new StringGenerator(stringLength, charSetRanges);
+    }
     public static <T extends Enum<T>> Generator<T> value(final Class<T> classOfEnumT) {
         ensure(isNotNull(classOfEnumT), "enum class cannot be null");
 

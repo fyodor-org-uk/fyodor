@@ -11,7 +11,7 @@ public class CharacterSetGeneratorTest {
 
     CharacterFilter allowEverythingFilter = new CharacterFilter() {
         @Override
-        public boolean includeCharacter(int i) {
+        public boolean includeCharacter(char c) {
             return true;
         }
     };

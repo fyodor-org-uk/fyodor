@@ -4,34 +4,34 @@ public enum CharacterSetFilter {
 
     AllExceptDoubleQuotes {
         @Override
-        CharacterFilter getFilter() {
+        public CharacterFilter getFilter() {
             return NoDoubleQuotesFilter.getFilter();
         }
     },
     DomainName {
         @Override
-        CharacterFilter getFilter() {
+        public CharacterFilter getFilter() {
             return DomainNameFilter.getFilter();
         }
     },
     EmailLocalPart {
         @Override
-        CharacterFilter getFilter() {
+        public CharacterFilter getFilter() {
             return EmailLocalPartFilter.getFilter();
         }
     },
     LettersAndDigits {
         @Override
-        CharacterFilter getFilter() {
+        public CharacterFilter getFilter() {
             return LettersAndDigitsFilter.getFilter();
         }
     },
     LettersOnly {
         @Override
-        CharacterFilter getFilter() {
+        public CharacterFilter getFilter() {
             return LettersOnlyFilter.getFilter();
         }
     };
 
-    abstract CharacterFilter getFilter();
+    public abstract CharacterFilter getFilter();
 }

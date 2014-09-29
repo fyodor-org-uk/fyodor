@@ -51,8 +51,9 @@ public class CharacterSetGenerator {
         int j = 0;
         for (Range<Integer> range : ranges) {
             for (int i = range.lowerBound(); i <= range.upperBound(); i++) {
-                if (filter.includeCharacter(i)) {
-                    charset[j] = (char) i;
+                char c = (char) i;
+                if (filter.includeCharacter(c)) {
+                    charset[j] = c;
                     j++;
                 }
             }

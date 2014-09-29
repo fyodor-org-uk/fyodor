@@ -11,7 +11,7 @@ public class LettersOnlyFilter implements CharacterFilter {
     }
 
     @Override
-    public boolean includeCharacter(int i) {
-        return Character.isLetter(i);
+    public boolean includeCharacter(char c) {
+        return Character.isLetter(c);
     }
 }
