@@ -147,13 +147,14 @@ public interface CharacterFilter {
 
 This is called before each character from the `Range` is added to the `StringGenerator`'s underlying
 character set. This is how the double-quotes are removed from the character set in the default `StringGenerator`
-implementation, or you can supply your own filter when you create a `StringGenerator`:
+implementation, or you can supply your own filter when you create a `StringGenerator` with the default 
+character set:
  
 {% highlight java %}
-RDG.string(Integer, CharacterFilter)
-RDG.string(Range<Integer>, CharacterFilter)
-RDG.string(Integer, CharacterSetFilter)
-RDG.string(Range<Integer>, CharacterSetFilter)
+RDG.string(Integer lengthOfString, CharacterFilter filter)
+RDG.string(Range<Integer> lengthOfString, CharacterFilter filter)
+RDG.string(Integer lengthOfString, CharacterSetFilter filter)
+RDG.string(Range<Integer> lengthOfString, CharacterSetFilter filter)
 {% endhighlight %}
 
 The `CharacterSetFilter` in the code above is an enum with some pre-defined `CharacterFilter`s:
@@ -190,10 +191,10 @@ This is how the `DomainName` and `EmailLocalPart` filters are implemented.
 You can of course combine a `CharacterFilter` with one or more `Range`s when creating a `StringGenerator`:
 
 {% highlight java %}
-RDG.string(Integer max, CharacterSetFilter filter, Range<Integer>... ranges)
-RDG.string(Range<Integer> range, CharacterSetFilter filter, Range<Integer>... ranges)
-RDG.string(Integer max, CharacterFilter filter, Range<Integer>... ranges)
-RDG.string(Range<Integer> range, CharacterFilter filter, Range<Integer>... ranges)
+RDG.string(Integer lengthOfString, CharacterSetFilter filter, Range<Integer>... charSetRanges)
+RDG.string(Range<Integer> lengthOfString, CharacterSetFilter filter, Range<Integer>... charSetRanges)
+RDG.string(Integer lengthOfString, CharacterFilter filter, Range<Integer>... charSetRanges)
+RDG.string(Range<Integer> lengthOfString, CharacterFilter filter, Range<Integer>... charSetRanges)
 {% endhighlight %}
  
 Note: You can call `char[] getCharSet()` on any `StringGenerator` if it's easier to just fine tune the 
