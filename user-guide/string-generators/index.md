@@ -103,7 +103,7 @@ CharacterSetRange.latinExtendedB
 
 ###`defaultLatinBasic`###
 The default character set used (shown earlier) if none specified, this is the ASCII standard without the control
-characters (1 - 32, things like backspace, linefeed etc) and without the double quote character (see later)
+characters (1 - 32, things like backspace, linefeed etc.) and without the double quote character (see later)
 
 ###`latin1`###
 The non-control characters from the second Unicode block (160 - 255) - common international punctuation

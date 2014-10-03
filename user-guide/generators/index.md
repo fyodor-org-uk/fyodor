@@ -9,4 +9,4 @@ title: Generators
 
 This page gives a general run down of the number generators in Fyodor.  Should be pretty simple
 and straightforward but documents the methods in RDG available to create new generators for 
-ints, longs etc, explanation of the `Range` class and so on.
+ints, longs etc., explanation of the `Range` class and so on.

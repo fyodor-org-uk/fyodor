@@ -54,8 +54,8 @@ public class SomeTest {
 Our test's only interested in the age of our car but already some questions spring to mind
 about the rest of it:
 
-* if we don't populate name and description will it get persisted/serialized etc OK? 
-Do I need to start creating "TestCar1", "TestCar2" etc? Are there any rules about valid 
+* if we don't populate name and description will it get persisted/serialized etc. OK? 
+Do I need to start creating "TestCar1", "TestCar2" etc.? Are there any rules about valid 
 characters and string sizes?
 * what's the Engine?  And just what's involved with making an Engine object anyway?
 * I’m not interested in price here but what is it, is it always the same currency regardless 
