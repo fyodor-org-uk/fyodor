@@ -1,18 +1,14 @@
 package uk.org.fyodor.generators;
 
-import uk.org.fyodor.generators.characters.LettersOnlyFilter;
+import uk.org.fyodor.generators.characters.CharacterSetFilter;
 
 /*
 rules for format taken from http://en.wikipedia.org/wiki/National_Insurance_number#Format
  */
 public class NINumberGenerator implements Generator<String> {
 
-    Generator<String> beginning;
+    Generator<String> beginning = RDG.string(2, CharacterSetFilter.LettersOnly);
     Generator<String> end = RDG.string(1, "ABCD");
-
-    public NINumberGenerator() {
-        beginning = RDG.string(2, LettersOnlyFilter.getFilter());
-    }
 
     @Override
     public String next() {

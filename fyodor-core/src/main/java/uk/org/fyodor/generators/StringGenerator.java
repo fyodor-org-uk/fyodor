@@ -8,11 +8,10 @@ import uk.org.fyodor.range.Range;
 
 import java.util.Arrays;
 
-import static uk.org.fyodor.random.RandomValuesProvider.randomValues;
-
 class StringGenerator implements Generator<String> {
 
-    private final Generator<Integer> randomIntGenerator;
+    private final Generator<Integer> stringLengthGenerator;
+    private final Generator<Integer> charSetIndexGenerator;
     private final char[] charSet;
 
     StringGenerator(Integer length) {
@@ -69,15 +68,16 @@ class StringGenerator implements Generator<String> {
 
     StringGenerator(Range<Integer> range, char[] charset) {
         this.charSet = charset;
-        this.randomIntGenerator = RDG.integer(range);
+        this.stringLengthGenerator = RDG.integer(range);
+        this.charSetIndexGenerator = RDG.integer(charset.length - 1);
     }
 
     @Override
     public String next() {
-        Integer length = randomIntGenerator.next();
+        Integer length = stringLengthGenerator.next();
         char[] ret = new char[length];
         for (int i = 0; i < length; i++) {
-            ret[i] = charSet[randomValues().randomInteger(charSet.length - 1)];
+            ret[i] = charSet[charSetIndexGenerator.next()];
         }
         return String.valueOf(ret);
     }

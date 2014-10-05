@@ -15,6 +15,15 @@ public class VariableLengthStringGeneratorTest {
     Generator<String> generator;
 
     @Test
+    public void parp(){
+        generator = new StringGenerator(Range.closed(10,20));
+
+        for (int i = 0; i < 10; i++){
+            System.out.println(generator.next());
+        }
+    }
+
+    @Test
     public void variableLength() {
         generated = HashMultiset.create();
         final Integer minSize = randomValues().randomInteger(5, 15);

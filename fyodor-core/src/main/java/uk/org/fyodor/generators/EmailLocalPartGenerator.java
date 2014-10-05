@@ -1,6 +1,6 @@
 package uk.org.fyodor.generators;
 
-import uk.org.fyodor.generators.characters.EmailLocalPartFilter;
+import uk.org.fyodor.generators.characters.CharacterSetFilter;
 import uk.org.fyodor.range.Range;
 
 public class EmailLocalPartGenerator implements Generator<String> {
@@ -8,11 +8,11 @@ public class EmailLocalPartGenerator implements Generator<String> {
     Generator<String> generator;
 
     public EmailLocalPartGenerator(int length) {
-        generator = new StringGenerator(length, EmailLocalPartFilter.getFilter());
+        generator = RDG.string(length, CharacterSetFilter.EmailLocalPart);
     }
 
     public EmailLocalPartGenerator(Range<Integer> range) {
-        generator = new StringGenerator(range, EmailLocalPartFilter.getFilter());
+        generator = RDG.string(range, CharacterSetFilter.EmailLocalPart);
     }
 
     @Override

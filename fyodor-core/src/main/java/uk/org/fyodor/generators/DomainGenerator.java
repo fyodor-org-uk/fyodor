@@ -1,6 +1,6 @@
 package uk.org.fyodor.generators;
 
-import uk.org.fyodor.generators.characters.DomainNameFilter;
+import uk.org.fyodor.generators.characters.CharacterSetFilter;
 import uk.org.fyodor.range.Range;
 
 public class DomainGenerator implements Generator<String> {
@@ -12,7 +12,7 @@ public class DomainGenerator implements Generator<String> {
     }
 
     public DomainGenerator(Range<Integer> range) {
-        domainGenerator = new StringGenerator(range, DomainNameFilter.getFilter());
+        domainGenerator = RDG.string(range, CharacterSetFilter.DomainName);
     }
 
     @Override
