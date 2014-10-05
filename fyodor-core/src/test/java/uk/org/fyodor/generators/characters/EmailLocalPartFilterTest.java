@@ -1,11 +1,12 @@
 package uk.org.fyodor.generators.characters;
 
 import org.junit.Test;
+import uk.org.fyodor.BaseTestWithRule;
 
 import static uk.org.fyodor.FyodorAssertions.assertThat;
 
 
-public class EmailLocalPartFilterTest {
+public class EmailLocalPartFilterTest extends BaseTestWithRule {
 
     CharacterFilter filter = EmailLocalPartFilter.getFilter();
 

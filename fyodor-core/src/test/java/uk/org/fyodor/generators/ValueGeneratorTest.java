@@ -1,6 +1,7 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
+import uk.org.fyodor.BaseTestWithRule;
 
 import java.util.List;
 import java.util.Set;
@@ -13,7 +14,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class ValueGeneratorTest {
+public final class ValueGeneratorTest extends BaseTestWithRule {
 
     @Test
     public void generatesValuesFromListOfStrings() {

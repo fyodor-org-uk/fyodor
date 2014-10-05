@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import org.junit.Before;
 import org.junit.Test;
+import uk.org.fyodor.BaseTestWithRule;
 import uk.org.fyodor.generators.characters.NoDoubleQuotesFilter;
 import uk.org.fyodor.generators.characters.CharacterFilter;
 import uk.org.fyodor.generators.characters.LettersAndDigitsFilter;
@@ -12,7 +13,7 @@ import uk.org.fyodor.generators.characters.LettersOnlyFilter;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.org.fyodor.random.RandomValuesProvider.randomValues;
 
-public class StringGeneratorTest {
+public class StringGeneratorTest extends BaseTestWithRule {
 
     private Multiset<Character> chars;
     private static final int SIZE_OF_RANDOM_STRING = 50;

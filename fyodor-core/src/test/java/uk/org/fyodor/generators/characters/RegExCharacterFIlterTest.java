@@ -1,11 +1,12 @@
 package uk.org.fyodor.generators.characters;
 
 import org.junit.Test;
+import uk.org.fyodor.BaseTestWithRule;
 
 import static uk.org.fyodor.FyodorAssertions.assertThat;
 
 
-public class RegExCharacterFIlterTest {
+public class RegExCharacterFIlterTest extends BaseTestWithRule {
 
     @Test
     public void useRegEx(){

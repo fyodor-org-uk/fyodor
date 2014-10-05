@@ -1,5 +1,6 @@
 package uk.org.fyodor.generators;
 
+import uk.org.fyodor.BaseTestWithRule;
 import uk.org.fyodor.Sampler;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ import static uk.org.fyodor.range.Range.fixed;
 import static java.math.BigDecimal.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class BigDecimalGeneratorTest {
+public final class BigDecimalGeneratorTest extends BaseTestWithRule {
 
     @Test
     public void generatesFixedBigDecimalWithZeroScale() {

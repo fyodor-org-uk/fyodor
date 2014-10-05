@@ -1,6 +1,7 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
+import uk.org.fyodor.BaseTestWithRule;
 
 import java.util.Random;
 
@@ -9,7 +10,7 @@ import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class LongGeneratorTest {
+public final class LongGeneratorTest extends BaseTestWithRule {
 
     @Test
     public void generatesLongFromClosedRangeWithinOneFromTheMinimum() {

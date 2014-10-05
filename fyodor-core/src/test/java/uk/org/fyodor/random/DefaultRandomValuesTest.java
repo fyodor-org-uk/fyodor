@@ -1,6 +1,7 @@
 package uk.org.fyodor.random;
 
 import org.junit.Test;
+import uk.org.fyodor.BaseTestWithRule;
 import uk.org.fyodor.generators.Generator;
 
 import java.math.BigDecimal;
@@ -9,7 +10,7 @@ import java.util.Random;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.org.fyodor.Sampler.from;
 
-public final class DefaultRandomValuesTest {
+public final class DefaultRandomValuesTest extends BaseTestWithRule {
 
     private final RandomValues randomValues = new DefaultRandomValues(new Random());
 

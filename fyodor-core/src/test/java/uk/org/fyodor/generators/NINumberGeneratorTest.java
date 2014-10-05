@@ -1,12 +1,13 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
+import uk.org.fyodor.BaseTestWithRule;
 
 import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NINumberGeneratorTest {
+public class NINumberGeneratorTest extends BaseTestWithRule {
 
     Pattern niNumberPattern = Pattern.compile("^(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)(?:[A-CEGHJ-PR-TW-Z][A-CEGHJ-NPR-TW-Z])(?:\\s*\\d\\s*){6}([A-D]|\\s)$");
 

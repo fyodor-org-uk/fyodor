@@ -1,6 +1,7 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
+import uk.org.fyodor.BaseTestWithRule;
 
 import java.util.Random;
 
@@ -11,7 +12,7 @@ import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.POSITIVE_INFINITY;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class DoubleGeneratorTest {
+public final class DoubleGeneratorTest extends BaseTestWithRule {
 
     @Test
     public void generatesFixedDouble() {

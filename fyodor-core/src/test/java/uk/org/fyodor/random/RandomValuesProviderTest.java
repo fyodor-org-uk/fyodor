@@ -1,5 +1,6 @@
 package uk.org.fyodor.random;
 
+import uk.org.fyodor.BaseTestWithRule;
 import uk.org.fyodor.generators.Generator;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ import static uk.org.fyodor.Sampler.Sample;
 import static uk.org.fyodor.Sampler.from;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class RandomValuesProviderTest {
+public final class RandomValuesProviderTest extends BaseTestWithRule {
 
     @Test
     public void consistentSequenceOfBooleansShouldBeReturnedForKnownSeed() {

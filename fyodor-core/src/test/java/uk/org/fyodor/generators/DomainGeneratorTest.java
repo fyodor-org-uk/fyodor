@@ -1,10 +1,11 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
+import uk.org.fyodor.BaseTestWithRule;
 
 import static uk.org.fyodor.FyodorAssertions.assertThat;
 
-public class DomainGeneratorTest {
+public class DomainGeneratorTest extends BaseTestWithRule {
 
     Generator<String> domainGenerator = RDG.domain();
 

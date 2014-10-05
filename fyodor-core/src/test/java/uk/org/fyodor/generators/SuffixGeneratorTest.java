@@ -3,10 +3,11 @@ package uk.org.fyodor.generators;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import org.junit.Test;
+import uk.org.fyodor.BaseTestWithRule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SuffixGeneratorTest {
+public class SuffixGeneratorTest extends BaseTestWithRule {
 
     SuffixGenerator generator = new SuffixGenerator();
     Multiset<String> suffixes = HashMultiset.create();

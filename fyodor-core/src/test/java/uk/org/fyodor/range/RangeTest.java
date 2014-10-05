@@ -1,12 +1,13 @@
 package uk.org.fyodor.range;
 
 import org.junit.Test;
+import uk.org.fyodor.BaseTestWithRule;
 
 import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class RangeTest {
+public final class RangeTest extends BaseTestWithRule {
 
     @Test(expected = IllegalArgumentException.class)
     public void lowerBoundCannotBeNull() {

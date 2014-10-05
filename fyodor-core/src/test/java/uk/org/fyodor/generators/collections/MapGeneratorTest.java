@@ -1,5 +1,6 @@
 package uk.org.fyodor.generators.collections;
 
+import uk.org.fyodor.BaseTestWithRule;
 import uk.org.fyodor.generators.Generator;
 import uk.org.fyodor.generators.RDG;
 import org.junit.Test;
@@ -15,7 +16,7 @@ import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class MapGeneratorTest {
+public final class MapGeneratorTest extends BaseTestWithRule {
 
     private static final int MAX_SIZE = 1000;
 

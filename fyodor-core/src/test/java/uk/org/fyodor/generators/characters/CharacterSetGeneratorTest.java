@@ -1,10 +1,11 @@
 package uk.org.fyodor.generators.characters;
 
 import org.junit.Test;
+import uk.org.fyodor.BaseTestWithRule;
 
 import static uk.org.fyodor.FyodorAssertions.assertThat;
 
-public class CharacterSetGeneratorTest {
+public class CharacterSetGeneratorTest extends BaseTestWithRule {
 
     CharacterFilter filter = new CharacterFilter() {
         @Override

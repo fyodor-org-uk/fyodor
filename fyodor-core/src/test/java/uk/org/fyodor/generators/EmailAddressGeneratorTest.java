@@ -1,8 +1,9 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
+import uk.org.fyodor.BaseTestWithRule;
 
-public class EmailAddressGeneratorTest {
+public class EmailAddressGeneratorTest extends BaseTestWithRule {
 
     Generator<String> generator = RDG.emailAddress();
 
