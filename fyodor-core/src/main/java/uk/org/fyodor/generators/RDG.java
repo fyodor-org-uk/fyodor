@@ -22,7 +22,7 @@ import static uk.org.fyodor.random.RandomValuesProvider.randomValues;
 import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
 
-public final class RDG {
+public class RDG {
 
     public static Generator<Integer> integer() {
         return integer(closed(Integer.MIN_VALUE, Integer.MAX_VALUE));
@@ -87,6 +87,18 @@ public final class RDG {
         final BigDecimal max = BigDecimal.valueOf(Double.MAX_VALUE);
 
         return bigDecimal(closed(min, max));
+    }
+
+    public static Generator<BigDecimal> bigDecimal(final double val) {
+        return bigDecimal(Range.fixed(BigDecimal.valueOf(val)));
+    }
+
+    public static Generator<BigDecimal> bigDecimal(final long val) {
+        return bigDecimal(Range.fixed(BigDecimal.valueOf(val)));
+    }
+
+    public static Generator<BigDecimal> bigDecimal(final BigDecimal val) {
+        return bigDecimal(Range.fixed(val));
     }
 
     public static Generator<BigDecimal> bigDecimal(final Range<BigDecimal> range) {
@@ -327,8 +339,5 @@ public final class RDG {
 
     private static boolean isNotNegative(final long value) {
         return value >= 0;
-    }
-
-    private RDG() {
     }
 }

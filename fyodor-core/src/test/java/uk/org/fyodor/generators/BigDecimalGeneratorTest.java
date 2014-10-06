@@ -1,19 +1,19 @@
 package uk.org.fyodor.generators;
 
+import org.junit.Test;
 import uk.org.fyodor.BaseTestWithRule;
 import uk.org.fyodor.Sampler;
-import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.Set;
 
+import static java.math.BigDecimal.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static uk.org.fyodor.Sampler.from;
 import static uk.org.fyodor.Sampler.largest;
 import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
-import static java.math.BigDecimal.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public final class BigDecimalGeneratorTest extends BaseTestWithRule {
 
@@ -21,6 +21,12 @@ public final class BigDecimalGeneratorTest extends BaseTestWithRule {
     public void generatesFixedBigDecimalWithZeroScale() {
         assertThat(from(RDG.bigDecimal(fixed(TEN))).sample(1000).unique())
                 .containsOnly(TEN);
+        assertThat(from(RDG.bigDecimal(TEN)).sample(1000).unique())
+                .containsOnly(TEN);
+        assertThat(from(RDG.bigDecimal(10d)).sample(1000).unique())
+                .containsOnly(BigDecimal.valueOf(10d));
+        assertThat(from(RDG.bigDecimal(10l)).sample(1000).unique())
+                .containsOnly(BigDecimal.valueOf(10));
     }
 
     @Test
@@ -36,11 +42,6 @@ public final class BigDecimalGeneratorTest extends BaseTestWithRule {
 
         assertThat(from(RDG.bigDecimal(fixed(fixedValue), 1)).sample(10000).unique())
                 .containsOnly(fixedValue);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void rangeCannotBeNull() {
-        RDG.bigDecimal(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
