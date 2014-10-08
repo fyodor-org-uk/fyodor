@@ -13,5 +13,6 @@ title: Latest News from Fyodor
         
         <a href="{{ post.url }}"><small>(read full post)</small></a>
     </li>
+    <br>
     {% endfor %}
 </ul>
