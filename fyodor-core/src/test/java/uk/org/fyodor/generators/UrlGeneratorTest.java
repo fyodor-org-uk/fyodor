@@ -1,12 +1,13 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
+import uk.org.fyodor.BaseTestWithRule;
 
 import java.util.regex.Pattern;
 
 import static uk.org.fyodor.FyodorAssertions.assertThat;
 
-public class UrlGeneratorTest {
+public class UrlGeneratorTest extends BaseTestWithRule {
 
     Pattern pattern = Pattern.compile("^https?://[\\w\\-.]*[\\.!?\\w]+$");
 
@@ -18,7 +19,7 @@ public class UrlGeneratorTest {
             if (!stringContainsWeirdChar(url)) {
                 //RegEx-fu not strong enough to cope with non-ascii chars in some URLs that get generated
                 //have to settle for checking format of those we can
-                assertThat(pattern.matcher(url).find()).isTrue();
+                assertThat(pattern.matcher(url).matches()).isTrue();
             }
         }
     }
