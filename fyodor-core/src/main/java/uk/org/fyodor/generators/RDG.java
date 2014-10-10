@@ -216,6 +216,8 @@ public class RDG {
         return new ValueGenerator<T>(randomValues(), iterableOfT);
     }
 
+    public static Generator<String> url() {return new UrlGenerator();}
+
     public static Generator<String> domainSuffix() {
         return new SuffixGenerator();
     }
