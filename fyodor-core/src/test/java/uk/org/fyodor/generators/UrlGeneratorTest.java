@@ -12,7 +12,7 @@ public class UrlGeneratorTest {
 
     @Test
     public void createUrls(){
-        Generator<String> urlGenerator = new UrlGenerator();
+        Generator<String> urlGenerator = RDG.url();
         for (int i = 0; i < 10000; i++) {
             String url = urlGenerator.next();
             if (!stringContainsWeirdChar(url)) {
