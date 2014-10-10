@@ -2,6 +2,7 @@ package uk.org.fyodor.generators;
 
 import org.junit.Test;
 import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.random.Seed;
 
 import java.util.Random;
 
@@ -36,6 +37,7 @@ public final class DoubleGeneratorTest extends BaseTestWithRule {
     }
 
     @Test
+    @Seed(1412958930480l)
     public void doublesAreNoLessThanTheLowerBound() {
         final double lowerBound = 2.0;
         final double upperBound = lowerBound + 0.00000000000001;
