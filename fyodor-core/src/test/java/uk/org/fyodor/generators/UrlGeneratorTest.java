@@ -16,6 +16,7 @@ public class UrlGeneratorTest extends BaseTestWithRule {
         Generator<String> urlGenerator = RDG.url();
         for (int i = 0; i < 10000; i++) {
             String url = urlGenerator.next();
+            print(url);
             if (!stringContainsWeirdChar(url)) {
                 //RegEx-fu not strong enough to cope with non-ascii chars in some URLs that get generated
                 //have to settle for checking format of those we can

@@ -22,6 +22,7 @@ public class PostcodeGeneratorTest extends BaseTestWithRule {
         Generator<String> postcodeGenerator = RDG.postcode();
         for (int i = 0; i < 10000; i++) {
             String postcode = postcodeGenerator.next();
+            print(postcode);
             assertThat(pattern.matcher(postcode).matches()).isTrue();
         }
     }

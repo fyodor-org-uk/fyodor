@@ -10,9 +10,10 @@ public class EmailAddressGeneratorTest extends BaseTestWithRule {
     @Test
     public void checkoutEmailAddresses(){
         for (int i = 0; i < 100; i++) {
+            String emailAddress = generator.next();
             //TODO: invent a regex to validate email addresses
             //http://www.regular-expressions.info/email.html
-            System.out.println(generator.next());
+            print(emailAddress);
         }
     }
 }

@@ -13,6 +13,7 @@ public class EmailLocalPartGeneratorTest extends BaseTestWithRule {
     public void noWrongDots(){
         for (int i = 0; i < 10000; i++) {
             String localPart = generator.next().trim();
+            print(localPart);
             assertThat(localPart).doesNotContain("..");
             assertThat(localPart.startsWith(".")).isFalse();
             assertThat(localPart.endsWith(".")).isFalse();

@@ -16,6 +16,7 @@ public class NINumberGeneratorTest extends BaseTestWithRule {
         Generator<String> generator = RDG.niNumber();
         for (int i = 0; i < 1000; i++) {
             String niNumber = generator.next();
+            print(niNumber);
             assertThat(niNumberPattern.matcher(niNumber).matches()).isTrue();
         }
     }

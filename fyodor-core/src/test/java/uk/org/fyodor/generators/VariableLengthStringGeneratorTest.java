@@ -16,15 +16,6 @@ public class VariableLengthStringGeneratorTest extends BaseTestWithRule {
     Generator<String> generator;
 
     @Test
-    public void parp(){
-        generator = new StringGenerator(Range.closed(10,20));
-
-        for (int i = 0; i < 10; i++){
-            System.out.println(generator.next());
-        }
-    }
-
-    @Test
     public void variableLength() {
         generated = HashMultiset.create();
         final Integer minSize = randomValues().randomInteger(5, 15);
@@ -33,6 +24,7 @@ public class VariableLengthStringGeneratorTest extends BaseTestWithRule {
         for (int i = 0; i < 10000; i++) {
             String next = generator.next();
             generated.add(next.length());
+            print(next);
         }
         FyodorAssertions.assertThat(generated.elementSet())
                 .hasSize(maxSize - minSize + 1)

@@ -13,6 +13,7 @@ public class DomainGeneratorTest extends BaseTestWithRule {
     public void noInvalidCharacters(){
         for (int i = 0;i < 10000; i++) {
             String domain = domainGenerator.next();
+            print(domain);
             assertThat(domain.startsWith("-")).isFalse();
             assertThat(domain.endsWith("-")).isFalse();
         }
