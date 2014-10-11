@@ -2,16 +2,15 @@ package uk.org.fyodor.generators;
 
 import org.junit.Test;
 import uk.org.fyodor.BaseTestWithRule;
-import uk.org.fyodor.random.Seed;
 
 import java.util.Random;
 
-import static uk.org.fyodor.Sampler.*;
-import static uk.org.fyodor.range.Range.closed;
-import static uk.org.fyodor.range.Range.fixed;
 import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.POSITIVE_INFINITY;
 import static org.assertj.core.api.Assertions.assertThat;
+import static uk.org.fyodor.Sampler.*;
+import static uk.org.fyodor.range.Range.closed;
+import static uk.org.fyodor.range.Range.fixed;
 
 public final class DoubleGeneratorTest extends BaseTestWithRule {
 
@@ -37,12 +36,12 @@ public final class DoubleGeneratorTest extends BaseTestWithRule {
     }
 
     @Test
-    @Seed(1412958930480l)
     public void doublesAreNoLessThanTheLowerBound() {
         final double lowerBound = 2.0;
         final double upperBound = lowerBound + 0.00000000000001;
         assertThat((double) smallest(from(RDG.doubleVal(closed(lowerBound, upperBound))).sample(100)))
-                .isEqualTo(lowerBound);
+                .isGreaterThanOrEqualTo(lowerBound)
+                .isLessThan(upperBound);
     }
 
     @Test(expected = IllegalArgumentException.class)
