@@ -342,4 +342,12 @@ public class RDG {
     private static boolean isNotNegative(final long value) {
         return value >= 0;
     }
+
+    public static Generator<String> postcode() {
+        return new PostcodeGenerator();
+    }
+
+    public static Generator<Boolean> percentageChanceOf(int chance) {
+        return new PercentageChanceGenerator(chance);
+    }
 }
