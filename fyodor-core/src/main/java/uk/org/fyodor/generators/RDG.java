@@ -18,6 +18,7 @@ import java.util.Set;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static uk.org.fyodor.generators.Validations.*;
 import static uk.org.fyodor.random.RandomValuesProvider.randomValues;
 import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
@@ -310,37 +311,6 @@ public class RDG {
 
     public static Generator<String> niNumber() {
         return new NINumberGenerator();
-    }
-
-    private static void ensure(final boolean check, final String message) {
-        if (!check) {
-            throw new IllegalArgumentException(message);
-        }
-    }
-
-    private static boolean isNotNull(final Object value) {
-        return value != null;
-    }
-
-    private static boolean isNumber(final double value) {
-        return value == value;
-    }
-
-    private static boolean isNotInfinite(final double value) {
-        return value != Double.NEGATIVE_INFINITY &&
-                value != Double.POSITIVE_INFINITY;
-    }
-
-    private static boolean isNotNegative(final int value) {
-        return value >= 0;
-    }
-
-    private static boolean isNotNegative(final double value) {
-        return value >= 0;
-    }
-
-    private static boolean isNotNegative(final long value) {
-        return value >= 0;
     }
 
     public static Generator<String> postcode() {
