@@ -11,10 +11,10 @@ Reproducibility is important when using random data within tests, fyodor current
 
 ### JUnit
 
-The fyodor-junit module supplies a junit test rule (`com.fyodor.random.FyodorTestRule`) that does two important things:
+The fyodor-junit module supplies a junit test rule (`uk.org.fyodor.random.FyodorTestRule`) that does two important things:
 
 1. Enhances test failure exceptions with the seed used to generate random values
-2. Allows you to control the seed for a test using the `com.fyodor.random.Seed` annotation
+2. Allows you to control the seed for a test using the `uk.org.fyodor.random.Seed` annotation
 
 To add this functionality to your test simply add the test rule
 
@@ -36,9 +36,9 @@ The above test should fail ~50% of the time, and when it does the failure except
 ```
 java.lang.AssertionError
 	...
-	at com.fyodor.SomeTest.someTest(SomeTest.java:17)
+	at uk.org.fyodor.SomeTest.someTest(SomeTest.java:17)
 	...
-Caused by: com.fyodor.random.FailedWithSeedException: Test failed with seed 1410125843980
+Caused by: uk.org.fyodor.random.FailedWithSeedException: Test failed with seed 1410125843980
 	...
 ```
 

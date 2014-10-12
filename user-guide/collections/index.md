@@ -135,7 +135,7 @@ Map<String, List<Integer>> integersByString = RDG.map(RDG.string(), RDG.list(RDG
 
 #### Using custom generators
 
-Combined with your own custom generators, you can generate intersting collections of your own objects.
+Combined with your own custom generators, you can generate interesting collections of your own objects.
 
 ```java
 List<Thundercat> thundercats = RDG.list(MyRDG.thundercat()).next();
