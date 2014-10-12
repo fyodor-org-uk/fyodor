@@ -14,6 +14,6 @@ public class PercentageChanceGenerator implements Generator<Boolean> {
 
     @Override
     public Boolean next() {
-        return generator.next() <= chance;
+        return generator.next() < chance;
     }
 }
