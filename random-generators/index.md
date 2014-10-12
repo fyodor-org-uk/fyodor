@@ -30,6 +30,7 @@ Let’s imagine a simple car that we want to create for a test:
 public class Car {
     String name;
     String description;
+    String productCode;
     Manufacturer manufacturer;
     LocalDate dateOfManufacture;
     BigDecimal price;
@@ -55,8 +56,8 @@ Our test's only interested in the age of our car but already some questions spri
 about the rest of it:
 
 * if we don't populate name and description will it get persisted/serialized etc. OK? 
-Do I need to start creating "TestCar1", "TestCar2" etc.? Are there any rules about valid 
-characters and string sizes?
+Do I need to start creating "TestCar1", "TestCar2" etc.? How important is it to have a productCode?
+What format is it in, if any? Are there any rules about valid characters and string sizes?
 * what's the Engine?  And just what's involved with making an Engine object anyway?
 * I’m not interested in price here but what is it, is it always the same currency regardless 
 of manufacturer? What if my car doesn't have a price or it's zero? How many different code paths can my car 
@@ -85,6 +86,7 @@ a reader of the test.
 public class CarBuilder {
     String name = "SuperBadDog";
     String description = "Baddest Super Dog";
+    String productCode = "HUFS-SH7E9BE-743-D";
     Manufacturer manufacturer = Manufacturer.TOYOTA;
     LocalDate dateOfManufacture = new LocalDate().minusYears(10);
     BigDecimal price = new BigDecimal(20000);
@@ -189,6 +191,7 @@ What we need is random data:
 public class CarBuilder {
     private String name = RDG.string(15).next();
     private String description = RDG.string(50).next();
+    private String productCode = RDG.productCode().next();
     private Manufacturer manufacturer = RDG.values(Manufacturers.values());
     private Date dateOfManufacture = RDG.localDate(LocalDate.now().minusYears(15), LocalDate.now().minusYears(3)).next();
     private BigDecimal price = RDG.bigDecimal(50000).next();
@@ -262,47 +265,30 @@ implementation, this is Fyodor's internal way of managing the source of randomne
  seed value - using random data to create more effective tests is all well and good but it can 
  be frustrating to see intermittent failures and have no way to track them down.
 
+Finally, notice in our builder that we're populating our product code with a call to `RDG.productCode()`
+to get a `Generator<String>`.  The product code generator is actually a bespoke generator written for
+our `Car`'s specially-formatted product code:
+
+{% highlight java %}
+public class ProductCodeGenerator implements Generator<String> {
+
+    private Generator<String> firstBit = RDG.string(5, CharacterSetFilter.LettersOnly);
+    private Generator<String> secondBit = RDG.string(7, CharacterSetFilter.LettersAndDigits);
+    private Generator<Integer> number = RDG.integer(Range.closed(100, 999));
+    private Generator<String> lastBit = RDG.string(1, "DXZ");
+
+    public String next() {
+        return String.format("%s-%s-%d-%s",
+                firstBit.next().toUpperCase(),
+                secondBit.next().toUpperCase(),
+                number.next(),
+                lastBit.next());
+    }
+}
+{% endhighlight %}
+
+By extending Fyodor's core `RDG` class with our own we can seamlessly add bespoke generators specific to our
+domain.  
+
 The methods on the `RDG` class form Fyodor's public API for creating random data generators,
 check out <a href="{{ site.baseurl }}/user-guide">the user guide</a> for what it can do, how to use it and extending it to create your own generators.
-
-Generating data with tighter formatting is also a useful addition for tests - here’s an email address generator:
-
-{% highlight java %}
-public class EmailAddressGenerator extends Generator<String> {
-    @Override
-    public String next() {
-        return format("%s@%s.%s", Random.string(10).next(), Random.string(10).next(), Random.values("com", "co.uk", "gov.uk" , "org", "net").next());
-    }
-}
-{% endhighlight %}
-
-A postcode generator:
-
-{% highlight java %}
-public class PostcodeGenerator extends Generator<String> {
-    @Override
-    public String next() {
-        return format("%s%s%01d %01d%s",
-                random(1, "ABCDEFGHIJKLMNOPRSTUWYZ"),
-                random(1, "ABCDEFGHKLMNOPQRSTUVWXY"),
-                Random.integer(9).next(),
-                Random.integer(9).next(),
-                random(2, "ABDEFGHJLNPQRSTUWXYZ"));
-    }
-}
-{% endhighlight %}
-
-And a random URI generator:
-
-{% highlight java %}
-public class UriGenerator extends Generator<URI> {
-    @Override
-    public URI next() {
-        try {
-            return new URI(String.format("http://%s.%s", Random.string.next(), Random.values("com", "co.uk", "org").next()));
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
-}
-{% endhighlight %}
