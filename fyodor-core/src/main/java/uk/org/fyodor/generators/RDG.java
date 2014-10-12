@@ -11,6 +11,7 @@ import uk.org.fyodor.generators.collections.SetGenerator;
 import uk.org.fyodor.range.Range;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -217,7 +218,7 @@ public class RDG {
         return new ValueGenerator<T>(randomValues(), iterableOfT);
     }
 
-    public static Generator<String> url() {return new UrlGenerator();}
+    public static Generator<URI> uri() {return new UriGenerator();}
 
     public static Generator<String> domainSuffix() {
         return new SuffixGenerator();

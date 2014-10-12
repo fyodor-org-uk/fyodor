@@ -20,6 +20,12 @@ public class PostcodeGenerator implements Generator<String> {
     }
 
     private enum OutwardCodeOptions {
+        twoLettersOneNumberOneLetter {
+            @Override
+            OutwardCodeOption getGenerator() {
+                return new TwoLettersOneNumberAndOneLetterOption();
+            }
+        },
         oneLetterOneNumberOneLetter {
             @Override
             OutwardCodeOption getGenerator() {
@@ -65,6 +71,17 @@ public class PostcodeGenerator implements Generator<String> {
                     letterExceptIOrZ.next() +
                     number.next() +
                     (RDG.bool().next() ? number.next() : "");
+        }
+    }
+
+    private static class TwoLettersOneNumberAndOneLetterOption implements OutwardCodeOption {
+
+        @Override
+        public String next() {
+            return letter.next() +
+                    letterExceptIOrZ.next() +
+                    number.next() +
+                    letter.next();
         }
     }
 
