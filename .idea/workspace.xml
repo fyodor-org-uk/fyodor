@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="eed33f63-abc9-49d2-9b21-29abf2d1b725" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/random-generators/index.md" afterPath="$PROJECT_DIR$/random-generators/index.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/roadmap/index.md" afterPath="$PROJECT_DIR$/roadmap/index.md" />
     </list>
     <ignored path="fyodor-pages.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,10 +26,10 @@
   <component name="FileEditorManager">
     <leaf>
       <file leaf-file-name="index.md" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/random-generators/index.md">
+        <entry file="file://$PROJECT_DIR$/roadmap/index.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.057718" vertical-offset="7655" max-vertical-offset="8400">
-              <caret line="59" column="30" selection-start-line="59" selection-start-column="30" selection-end-line="59" selection-end-column="30" />
+            <state vertical-scroll-proportion="0.8126649" vertical-offset="0" max-vertical-offset="784">
+              <caret line="22" column="24" selection-start-line="22" selection-start-column="24" selection-end-line="22" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -68,7 +68,6 @@
         <option value="$PROJECT_DIR$/_includes/header.html" />
         <option value="$PROJECT_DIR$/user-guide/test-failures/index.md" />
         <option value="$PROJECT_DIR$/public/css/fyodor.css" />
-        <option value="$PROJECT_DIR$/roadmap/index.md" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/_site/random-generators/index.html" />
         <option value="$PROJECT_DIR$/_site/user-guide/generators/index.html" />
@@ -86,6 +85,7 @@
         <option value="$PROJECT_DIR$/news/index.md" />
         <option value="$PROJECT_DIR$/_posts/2014-10-10-maven.md" />
         <option value="$PROJECT_DIR$/random-generators/index.md" />
+        <option value="$PROJECT_DIR$/roadmap/index.md" />
       </list>
     </option>
   </component>
@@ -513,12 +513,12 @@
       <workItem from="1412373495382" duration="5584000" />
       <workItem from="1412539984942" duration="368000" />
       <workItem from="1412799552304" duration="853000" />
-      <workItem from="1413131309788" duration="721000" />
+      <workItem from="1413131309788" duration="1714000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="73871000" />
+    <option name="totallyTimeSpent" value="74864000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1436" height="878" extended-state="0" />
@@ -828,16 +828,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/roadmap/index.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.31190926" vertical-offset="647" max-vertical-offset="1176">
-          <caret line="29" column="66" selection-start-line="29" selection-start-column="66" selection-end-line="29" selection-end-column="66" />
-        </state>
-      </provider>
-      <provider editor-type-id="MarkdownPreviewEditor">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/user-guide/introduction/index.md">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.7153748" vertical-offset="1817" max-vertical-offset="2604">
@@ -959,8 +949,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/random-generators/index.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.057718" vertical-offset="7655" max-vertical-offset="8400">
-          <caret line="59" column="30" selection-start-line="59" selection-start-column="30" selection-end-line="59" selection-end-column="30" />
+        <state vertical-scroll-proportion="0.62416106" vertical-offset="7655" max-vertical-offset="8400">
+          <caret line="290" column="2" selection-start-line="290" selection-start-column="2" selection-end-line="290" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/roadmap/index.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8126649" vertical-offset="0" max-vertical-offset="784">
+          <caret line="22" column="24" selection-start-line="22" selection-start-column="24" selection-end-line="22" selection-end-column="24" />
           <folding />
         </state>
       </provider>
