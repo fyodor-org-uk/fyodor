@@ -30,7 +30,7 @@ public final class DoubleGeneratorTest extends BaseTestWithRule {
     @Test
     public void doublesDoNotExceedTheUpperBound() {
         final double upperBound = 10;
-        final double lowerBound = upperBound - 0.00000000000001;
+        final double lowerBound = upperBound - 0.000000000000001;
         assertThat((double) largest(from(RDG.doubleVal(closed(lowerBound, upperBound))).sample(100)))
                 .isEqualTo(upperBound);
     }
@@ -38,7 +38,7 @@ public final class DoubleGeneratorTest extends BaseTestWithRule {
     @Test
     public void doublesAreNoLessThanTheLowerBound() {
         final double lowerBound = 2.0;
-        final double upperBound = lowerBound + 0.00000000000001;
+        final double upperBound = lowerBound + 0.000000000000001;
         assertThat((double) smallest(from(RDG.doubleVal(closed(lowerBound, upperBound))).sample(100)))
                 .isGreaterThanOrEqualTo(lowerBound)
                 .isLessThan(upperBound);
