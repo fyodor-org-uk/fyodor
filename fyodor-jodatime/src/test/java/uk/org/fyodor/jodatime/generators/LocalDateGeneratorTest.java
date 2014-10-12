@@ -4,7 +4,7 @@ import uk.org.fyodor.generators.Generator;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import static uk.org.fyodor.jodatime.generators.JodaRDG.localDate;
+import static uk.org.fyodor.jodatime.generators.RDG.localDate;
 import static uk.org.fyodor.jodatime.generators.Sampler.from;
 import static uk.org.fyodor.range.Range.closed;
 import static org.assertj.core.api.Assertions.assertThat;
