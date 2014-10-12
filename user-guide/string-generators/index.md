@@ -66,7 +66,7 @@ RDG.string(Range<Integer>, char[])
 {% endhighlight %}
 
 which will return a `StringGenerator` that takes the supplied `char`s as the underlying source. 
-For instance in Fyodor's `NINumberGenerator` the last character needs to be an A, B, C or D.  
+For instance in Fyodor's `NINumberGenerator` the last character needs to be an A, B, C or D.
 This is generated with 
 
 {% highlight java %}
@@ -172,10 +172,10 @@ Returns true for everything except double quotes, this is the default filter use
 specified.
 
 ###`LettersAndDigits`###
-Only returns true if {% highlight java %}Character.isLetterOrDigit(c){% endhighlight %} returns true.
+Only returns true if {% highlight java %}java.lang.Character.isLetterOrDigit(c){% endhighlight %} returns true.
 
 ###`LettersOnly`###
-Only returns true if {% highlight java %}Character.isLetter(c){% endhighlight %} returns true.
+Only returns true if {% highlight java %}java.lang.Character.isLetter(c){% endhighlight %} returns true.
 
 ###`DomainName`###
 Only returns true for letters, numbers or hyphens.
