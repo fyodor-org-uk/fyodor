@@ -20,7 +20,7 @@ LocalDate date = RDG.localDate().next();
 This will give you a date between 01/01/0000 and 31/12/2999 which isn't always very useful, so you can customise the range of possible dates using a `uk.org.fyodor.jodatime.range.LocalDateRange`:
 
 ```java
-LocalDate date = RDG.localDate(Range.closed(LocalDate.now().minusDays(14), LocalDate.now().plusDays(14))).next();
+LocalDate date = RDG.localDate(LocalDateRange.closed(LocalDate.now().minusDays(14), LocalDate.now().plusDays(14))).next();
 
 ```
 
@@ -63,7 +63,7 @@ LocalDate past = RDG.localDate(LocalDateRange.aged(Range.closed(Months.months(18
 LocalDate past = RDG.localDate(LocalDateRange.aged(Range.closed(Days.days(7), Days.days(14)))).next();
 ```
 
-The `Range.fixed` method works too, and allows you to create a date that is an exact number of years, months or days old
+The `LocalDateRange.fixed` method works too, and allows you to create a date that is an exact number of years, months or days old
 
 ```java
 LocalDate past = RDG.localDate(LocalDateRange.aged(Range.fixed(Years.years(1)))).next();
