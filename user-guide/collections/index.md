@@ -7,7 +7,7 @@ title: Collections
 
 #Fyodor User Guide - Collections#
 
-## Overview
+### Overview
 
 The collection generators allow you to generate collections/arrays of values that themselves are provided by generators.
 
@@ -20,9 +20,9 @@ List<Integer> integers = RDG.list(RDG.integer()).next();
 This will produce a list with 15 (default size when not specified) elements.
 
 Fyodor can currently generate Lists, Sets, Arrays and Maps, and each collection type may be generated without any size requirements. The default in this case is a collection of size 15.
-You may provide your own fixed integer size, or you may provide a size range which will be used to generate the size randomly.
+You may provide your own fixed integer size, or you may provide a size range which will be used to generate the size at random.
 
-### Arrays
+### `Array`
 
 The generator for arrays requires the raw type so we can create a new array instance. It is the only collection generator that has this requirement.
 
@@ -37,7 +37,7 @@ Example:
 Integer[] arrayOfIntegers = RDG.array(Integer.class, RDG.integer()).next();
 ```
 
-### Lists
+### `List`
 
 Generates a `java.util.LinkedList`
 
@@ -53,7 +53,7 @@ Example:
 List<Integer> listOfIntegers = list(RDG.integer()).next();
 ```
 
-### Sets
+### `Set`
 
 Generates a `java.util.HashSet`
 
@@ -72,7 +72,7 @@ Example:
 Set<Integer> setOfIntegers = RDG.set(RDG.integer()).next();
 ```
 
-### Maps
+### `Map`
 
 Generates a `java.util.HashMap`
 
@@ -108,18 +108,18 @@ class Employee extends Person {
 class Dilbert extends Employee {
 }
 
-class Manager extends Person {
+class PointyHairedBoss extends Employee {
 }
 ```
 
-`T` in the following example is `Person`, where `Employee`, `Dilbert` and `Manager` are sub-types:
+`T` in the following example is `Person`, where `Employee`, `Dilbert` and `PointyHairedBoss` are sub-types:
 
 ```java
-List<Person> people = RDG.list(MyRDG.<Person>employee()).next();
-
-List<Person> people = RDG.list(MyRDG.<Person>manager()).next();
+List<Person> employees = RDG.list(MyRDG.<Person>employee()).next();
 
 List<Person> dilberts = RDG.list(MyRDG.<Person>dilbert()).next();
+    
+List<Person> phbs = RDG.list(MyRDG.<Person>phb()).next();
 ```
 
 #### Generating complex collections
