@@ -1,23 +1,18 @@
 package uk.org.fyodor.jodatime.generators;
 
-import uk.org.fyodor.generators.Generator;
-import uk.org.fyodor.random.RandomValues;
-import uk.org.fyodor.range.Range;
 import org.joda.time.LocalDate;
-
-import static uk.org.fyodor.range.Range.closed;
+import uk.org.fyodor.generators.Generator;
+import uk.org.fyodor.jodatime.range.LocalDateRange;
+import uk.org.fyodor.random.RandomValues;
 
 final class LocalDateGenerator implements Generator<LocalDate> {
 
-    private static final LocalDate LOWER_BOUND = new LocalDate(0, 1, 1);
-    private static final LocalDate UPPER_BOUND = new LocalDate(2999, 12, 31);
-
     private final RandomValues randomValues;
-    private final Range<LocalDate> range;
+    private final LocalDateRange range;
 
-    LocalDateGenerator(final RandomValues randomValues, final Range<LocalDate> range) {
+    LocalDateGenerator(final RandomValues randomValues, final LocalDateRange range) {
         this.randomValues = randomValues;
-        this.range = range.limit(closed(LOWER_BOUND, UPPER_BOUND));
+        this.range = range.limit();
     }
 
     @Override

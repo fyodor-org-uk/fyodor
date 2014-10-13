@@ -1,11 +1,11 @@
 package uk.org.fyodor.range;
 
-public final class Range<T extends Comparable<? super T>> {
+public class Range<T extends Comparable<? super T>> {
 
     private final T lowerBound;
     private final T upperBound;
 
-    private Range(final T lowerBound, final T upperBound) {
+    protected Range(final T lowerBound, final T upperBound) {
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
     }
