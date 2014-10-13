@@ -63,7 +63,7 @@ LocalDate past = RDG.localDate(LocalDateRange.aged(Range.closed(Months.months(18
 LocalDate past = RDG.localDate(LocalDateRange.aged(Range.closed(Days.days(7), Days.days(14)))).next();
 ```
 
-The `LocalDateRange.fixed` method works too, and allows you to create a date that is an exact number of years, months or days old
+The `Range.fixed` method works for these periods too, and allows you to create a date that is an exact number of years, months or days old
 
 ```java
 LocalDate past = RDG.localDate(LocalDateRange.aged(Range.fixed(Years.years(1)))).next();
