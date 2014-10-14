@@ -164,4 +164,17 @@ https://www.xwx0pxTV4XekYZ9bIcldJ.ایران.ir
 https://cxAjBGLThKGJT3svYbDDDXvBwYq.網路.tw
 ```
 
+## RDG.currency() ##
+This returns a `Generator<java.util.Currency>`, the currency is selected at random from 
+`Currency.getAvailableCurrencies()`
+
+## RDG.locale() ##
+This returns a `Generator<java.util.Locale>`, the locale is selected at random from `Locale.getAvailableLocales()`
+
+## RDG.iso3Country() ##
+This returns a `Generator<String>` which generates a 3 letter ISO 3166-1 alpha-3 country code at random.  The 
+country code is taken from `Locale#getISO3Country()` called on a random Locale, if an empty string
+or a `MissingResourceException` is thrown then a new random Locale is tried (until a country code is 
+found or we run out of memory)
+
 Next Page: [Collection Generators]({{ site.baseurl }}/user-guide/collections)
