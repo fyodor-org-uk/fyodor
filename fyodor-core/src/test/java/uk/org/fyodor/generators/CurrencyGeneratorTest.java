@@ -11,7 +11,7 @@ public class CurrencyGeneratorTest extends BaseTestWithRule {
 
     @Test
     public void generateCurrencies(){
-        Generator<Currency> generator = RDG.currencies();
+        Generator<Currency> generator = RDG.currency();
         for (int i = 0; i < 1000; i++) {
             Currency currency = generator.next();
             assertThat(currency.getCurrencyCode()).hasSize(3);

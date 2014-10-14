@@ -5,7 +5,7 @@ import java.util.MissingResourceException;
 
 public class Iso3CountryGenerator implements Generator<String> {
 
-    Generator<Locale> localeGenerator = RDG.locales();
+    Generator<Locale> localeGenerator = RDG.locale();
 
     public String next() {
         String country;

@@ -10,7 +10,7 @@ public class LocaleGeneratorTest extends BaseTestWithRule {
     @Test
     public void generateLocales(){
 
-        Generator<Locale> generator = RDG.locales();
+        Generator<Locale> generator = RDG.locale();
         for (int i = 0; i < 1000; i++) {
             Locale locale = generator.next();
             print(locale);

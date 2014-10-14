@@ -319,15 +319,15 @@ public class RDG {
         return new PercentageChanceGenerator(chance);
     }
 
-    public static Generator<Currency> currencies() {
+    public static Generator<Currency> currency() {
         return new CurrencyGenerator();
     }
 
-    public static Generator<Locale> locales() {
+    public static Generator<Locale> locale() {
         return new LocaleGenerator();
     }
 
-    public static Generator<String> iso3Countries() {
+    public static Generator<String> iso3Country() {
         return new Iso3CountryGenerator();
     }
 }
