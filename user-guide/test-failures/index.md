@@ -1,5 +1,5 @@
 ---
-layout: user-guide
+layout: default
 tagline: “A man who lies to himself, and believes his own lies, becomes unable to recognize truth"
 image: dice-splash
 title: Reproducing Test Failures

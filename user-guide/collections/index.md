@@ -1,5 +1,5 @@
 ---
-layout: user-guide
+layout: default
 tagline: “Talking nonsense is the sole privilege mankind possesses over the other organisms. It's by talking nonsense that one gets to the truth! I talk nonsense, therefore I'm human”
 image: dice-splash
 title: Collections
@@ -145,3 +145,4 @@ List<Thundercat> thundercats = RDG.list(MyRDG.thundercat()).next();
 1. Lists are generated (including all elements) on each call to `next()`, be careful with the size of lists you choose the generate.
 2. Set and Map generators will try and achieve full-size, and will throw an exception if they cannot do so.
 
+Next Page: [Joda DateTime Generators]({{ site.baseurl }}/user-guide/joda-date-time)

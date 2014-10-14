@@ -1,5 +1,5 @@
 ---
-layout: user-guide
+layout: default
 tagline: "Above all, avoid falsehood, every kind of falsehood, especially falseness to yourself. Watch over your own deceitfulness and look into it every hour, every minute"
 image: dice-splash
 title: String Generators
@@ -201,3 +201,5 @@ Note: You can call `char[] getCharSet()` on any `StringGenerator` if it's easier
 underlying charset of an existing generator (this returns a copy of the array used by the 
 generator so you can add and remove characters without borking anything but it means you'll need 
 to create a new generator to use it).
+
+Next Page: [Other Generators]({{ site.baseurl }}/user-guide/other)
