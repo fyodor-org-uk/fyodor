@@ -1,5 +1,5 @@
 ---
-layout: user-guide
+layout: default
 tagline: "What terrible tragedies realism inflicts on people"
 image: dice-splash
 title: Introduction
@@ -83,5 +83,5 @@ WkNKrhV:VfqR\<-4:
 aqth37yvdm8[~&
 ```
 
-Next Page: <a href="{{ site.baseurl }}/user-guide/generators">Number Generators</a>
+Next Page: [Number Generators]({{ site.baseurl }}/user-guide/generators)
 

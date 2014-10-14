@@ -1,5 +1,5 @@
 ---
-layout: user-guide
+layout: default
 tagline: “Talking nonsense is the sole privilege mankind possesses over the other organisms. It's by talking nonsense that one gets to the truth! I talk nonsense, therefore I'm human”
 image: dice-splash
 title: Joda DateTime
@@ -75,3 +75,5 @@ LocalDate past = RDG.localDate(LocalDateRange.aged(Range.fixed(Days.days(7)))).n
 * Future dates greater than today always start tomorrow, and past dates less than today always end yesterday. When constructing ranges greater-then or less-than some date the difference *is always 1 day*.
 * The smallest date that can be generated is 01/01/0000 and the largest is 31/12/2999. A range outside of these bounds will be limited to these bounds.
 * `Years`, `Months` and `Days` cannot be mixed in a single range method as they cannot be compared to each other.
+
+Next Page: [Reproducing Test Failures]({{ site.baseurl }}/user-guide/test-failures)

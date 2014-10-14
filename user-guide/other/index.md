@@ -1,5 +1,5 @@
 ---
-layout: user-guide
+layout: default
 tagline: “Talking nonsense is the sole privilege mankind possesses over the other organisms. It's by talking nonsense that one gets to the truth! I talk nonsense, therefore I'm human”
 image: dice-splash
 title: Other Generators
@@ -163,3 +163,5 @@ http://www.fYToPUcTVIHO8CZ1uOU7ENhR-tj-HCWOIPdtNA.net.gt
 https://www.xwx0pxTV4XekYZ9bIcldJ.ایران.ir
 https://cxAjBGLThKGJT3svYbDDDXvBwYq.網路.tw
 ```
+
+Next Page: [Collection Generators]({{ site.baseurl }}/user-guide/collections)
