@@ -12,10 +12,7 @@ import uk.org.fyodor.range.Range;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -320,5 +317,17 @@ public class RDG {
 
     public static Generator<Boolean> percentageChanceOf(int chance) {
         return new PercentageChanceGenerator(chance);
+    }
+
+    public static Generator<Currency> currencies() {
+        return new CurrencyGenerator();
+    }
+
+    public static Generator<Locale> locales() {
+        return new LocaleGenerator();
+    }
+
+    public static Generator<String> iso3Countries() {
+        return new Iso3CountryGenerator();
     }
 }
