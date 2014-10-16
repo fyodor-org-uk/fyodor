@@ -43,8 +43,9 @@ PzjvT(:%+a09wlpA>8>;_i
 ```
 
 ##RDG class##
-The `RDG` class (it stands for Random Data Generators) is Fyodor's public API and what you should normally use to interact with it,
-it consists solely of static methods that return `Generator`s. The benefits of using this are
+The `RDG` class (it stands for Random Data Generators) is Fyodor's public API and what you should normally use to interact with it.
+it consists solely of static methods that return `Generator`s so in the example above I'd actuall call `RDG.string(22)`
+rather than `new StringGenerator(22)`. The benefits of using this are
 
 * using `RDG` instead of creating new instances of `Generator`s directly lets us manage changes to the underlying
 implementations without breaking the public API, as well as gracefully deprecating parts of the codebase as needed.
