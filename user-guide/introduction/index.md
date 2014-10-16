@@ -7,11 +7,7 @@ title: Introduction
 
 #Fyodor User Guide - Introduction#
 
-Fyodor is built on 3 main concepts
-
-- Generators
-- the RDG class
-- Ranges
+This chapter is a quick introduction to the basics of Fyodor.
 
 ##Generators##
 Random data is created by generators, in Fyodor these are objects implementing the `Generator` interface:
@@ -47,14 +43,20 @@ PzjvT(:%+a09wlpA>8>;_i
 ```
 
 ##RDG class##
-The `RDG` class (it stands for Random Data Generators) is Fyodor's public API and what you should 
-normally use to interact with it. It consists of static methods that return `Generator`s, the 
-main benefit of this instead of creating new instances of `Generator`s directly is that it lets us 
-manage changes to the underlying implementations without breaking the public 
-API, as well as gracefully deprecating parts of the codebase as needed. 
- 
-One of the other benefits of using `RDG` is that you can (and should)
-extend it to provide your own implementations of `Generator<T>` on top of those provided by Fyodor. 
+The `RDG` class (it stands for Random Data Generators) is Fyodor's public API and what you should normally use to interact with it,
+it consists solely of static methods that return `Generator`s. The benefits of using this are
+
+* using `RDG` instead of creating new instances of `Generator`s directly lets us manage changes to the underlying
+implementations without breaking the public API, as well as gracefully deprecating parts of the codebase as needed.
+* you can (and should) extend it to provide your own implementations of `Generator<T>` on top of those provided by Fyodor.
+* a cleaner and simpler way for libraries in other JVM languages to wrap Fyodor.
+
+##Reproducibility##
+Using a single framework to generate all your random data needs has the big benefit of being able to reproduce a single scenario
+by reporting and manipulating the seed used to initialise the source of randomness. Setting up a lot of test data at random is all well and
+good but if you find you're getting intermittent errors with obscure edge-cases you're going to be want to be able to reproduce them
+and if your data is being generated from all kinds of implementations of randomness that are independent from each other you're
+not going to be able to do that.
 
 ##Ranges##
 `Range<T>` is a Fyodor class that holds a lower and upper endpoint that is commonly used to create
