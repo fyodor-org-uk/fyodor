@@ -173,7 +173,7 @@ simpler, more readable and more meaningful:
 
 * We’ve overloaded `withPrice()` so you can supply a simple `Integer` 
 to avoid the boilerplate involved with using `BigDecimal`s in the test code
-* The `dateOfManufacture(LocalDate)` method is accompanied by an `age(Integer)` method so you can make your test code simpler and more readable by avoiding the boilerplate of massaging a `LocalDate`
+* The `setDateOfManufacture(LocalDate)` method is accompanied by an `aged(Range)` method so you can make your test code simpler and more readable by avoiding the boilerplate of massaging a `LocalDate`
 * You can provide multiple static constructor methods to convey meaning in your test code as well
  as standardising data set up for common scenarios, here we have an `expensiveCarBuilder()` as 
  well as the bog-standard `carBuilder()` 
@@ -193,7 +193,7 @@ public class CarBuilder {
     private String description = RDG.string(50).next();
     private String productCode = RDG.productCode().next();
     private Manufacturer manufacturer = RDG.values(Manufacturers.values());
-    private Date dateOfManufacture = RDG.localDate(LocalDate.now().minusYears(15), LocalDate.now().minusYears(3)).next();
+    private Date dateOfManufacture = RDG.localDate(aged(closed(years(3), years(15)))).next();
     private BigDecimal price = RDG.bigDecimal(50000).next();
     private Engine engine = EngineBuilder.engineBuilder().build();
     ...
