@@ -152,8 +152,9 @@ public final class DefaultRandomValuesTest extends BaseTestWithRule {
     @Test
     public void returnsRandomDoubleWithScale() {
         final double actualValue = randomValues.randomDouble(0.0, 100.0, 2);
-        assertThat(BigDecimal.valueOf(actualValue).scale())
-                .isEqualTo(2);
+        assertThat(scale(actualValue))
+                .describedAs("Scale should be 2dp, unless the second digit is zero (e.g 3.4056) when it will be 1dp (e.g 3.4)")
+                .isBetween(1, 2);
     }
 
     @Test
@@ -228,6 +229,10 @@ public final class DefaultRandomValuesTest extends BaseTestWithRule {
         randomValues.randomDouble(1.0, 0.0, anyScale);
     }
 
+    private static int scale(final double actualValue) {
+        return BigDecimal.valueOf(actualValue).scale();
+    }
+
     private static Generator<Long> randomLongs(final RandomValues randomValues, final long lower, final long upper) {
         return new Generator<Long>() {
             @Override
@@ -246,7 +251,7 @@ public final class DefaultRandomValuesTest extends BaseTestWithRule {
         };
     }
 
-    private Generator<Integer> randomIntegers(final RandomValues randomValues, final int maximum) {
+    private static Generator<Integer> randomIntegers(final RandomValues randomValues, final int maximum) {
         return new Generator<Integer>() {
             @Override
             public Integer next() {
@@ -255,7 +260,7 @@ public final class DefaultRandomValuesTest extends BaseTestWithRule {
         };
     }
 
-    private Generator<Double> randomDoubles(final RandomValues randomValues, final double lower, final double upper) {
+    private static Generator<Double> randomDoubles(final RandomValues randomValues, final double lower, final double upper) {
         return new Generator<Double>() {
             @Override
             public Double next() {
