@@ -89,15 +89,15 @@ public class RDG {
     }
 
     public static Generator<BigDecimal> bigDecimal(final double val) {
-        return bigDecimal(Range.fixed(BigDecimal.valueOf(val)));
+        return bigDecimal(Range.closed(BigDecimal.ZERO, BigDecimal.valueOf(val)));
     }
 
     public static Generator<BigDecimal> bigDecimal(final long val) {
-        return bigDecimal(Range.fixed(BigDecimal.valueOf(val)));
+        return bigDecimal(Range.closed(BigDecimal.ZERO, BigDecimal.valueOf(val)));
     }
 
     public static Generator<BigDecimal> bigDecimal(final BigDecimal val) {
-        return bigDecimal(Range.fixed(val));
+        return bigDecimal(Range.closed(BigDecimal.ZERO, val));
     }
 
     public static Generator<BigDecimal> bigDecimal(final Range<BigDecimal> range) {

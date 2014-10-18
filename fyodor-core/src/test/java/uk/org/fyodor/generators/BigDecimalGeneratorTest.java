@@ -1,5 +1,7 @@
 package uk.org.fyodor.generators;
 
+import com.google.common.collect.Iterators;
+import org.assertj.core.api.Condition;
 import org.junit.Test;
 import uk.org.fyodor.BaseTestWithRule;
 import uk.org.fyodor.Sampler;
@@ -21,12 +23,19 @@ public final class BigDecimalGeneratorTest extends BaseTestWithRule {
     public void generatesFixedBigDecimalWithZeroScale() {
         assertThat(from(RDG.bigDecimal(fixed(TEN))).sample(1000).unique())
                 .containsOnly(TEN);
+    }
+
+    @Test
+    public void generatesBetweenZeroAndMaxValue() {
         assertThat(from(RDG.bigDecimal(TEN)).sample(1000).unique())
-                .containsOnly(TEN);
+                .have(new ValuesBetweenZeroAndTenCondition())
+                .has(new SizeGreaterThanOneCondition());
         assertThat(from(RDG.bigDecimal(10d)).sample(1000).unique())
-                .containsOnly(BigDecimal.valueOf(10d));
+                .have(new ValuesBetweenZeroAndTenCondition())
+                .has(new SizeGreaterThanOneCondition());
         assertThat(from(RDG.bigDecimal(10l)).sample(1000).unique())
-                .containsOnly(BigDecimal.valueOf(10));
+                .have(new ValuesBetweenZeroAndTenCondition())
+                .has(new SizeGreaterThanOneCondition());
     }
 
     @Test
@@ -76,6 +85,12 @@ public final class BigDecimalGeneratorTest extends BaseTestWithRule {
                 .hasSize(100);
     }
 
+    @Test
+    public void generatesUniqueBigDecimalsWithMaxValue() {
+        assertThat(from(RDG.bigDecimal(BigDecimal.valueOf(1000000))).sample(100).unique())
+                .hasSize(100);
+    }
+
     private static Sampler.Sample<Integer> decimalPartsOnly(final Sampler.Sample<BigDecimal> sample) {
         final LinkedList<Integer> decimalParts = new LinkedList<Integer>();
         for (final BigDecimal bigDecimal : sample) {
@@ -85,5 +100,20 @@ public final class BigDecimalGeneratorTest extends BaseTestWithRule {
                     .intValue());
         }
         return new Sampler.Sample<Integer>(decimalParts);
+    }
+
+    private static class ValuesBetweenZeroAndTenCondition extends Condition<BigDecimal> {
+        @Override
+        public boolean matches(BigDecimal value) {
+            return value.compareTo(ZERO) >= 0 &&
+                    value.compareTo(TEN) <= 0;
+        }
+    }
+
+    private static class SizeGreaterThanOneCondition extends Condition<Iterable<BigDecimal>> {
+        @Override
+        public boolean matches(Iterable<BigDecimal> value) {
+            return Iterators.size(value.iterator()) > 1;
+        }
     }
 }
