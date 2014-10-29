@@ -1,3 +1,6 @@
 language: java
+jdk:
+  - openjdk7
+  - oraclejdk7
 notifications:
   slack: fyodor:I0AqYDXZzkuSHaUqPgIRd1WC
