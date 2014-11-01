@@ -8,7 +8,7 @@ import uk.org.fyodor.BaseTestWithRule;
 import uk.org.fyodor.FyodorAssertions;
 import uk.org.fyodor.range.Range;
 
-import static uk.org.fyodor.random.RandomValuesProvider.randomValues;
+import static uk.org.fyodor.random.RandomSourceProvider.sourceOfRandomness;
 
 public class VariableLengthStringGeneratorTest extends BaseTestWithRule {
 
@@ -18,8 +18,8 @@ public class VariableLengthStringGeneratorTest extends BaseTestWithRule {
     @Test
     public void variableLength() {
         generated = HashMultiset.create();
-        final Integer minSize = randomValues().randomInteger(5, 15);
-        final Integer maxSize = randomValues().randomInteger(20, 100);
+        final Integer minSize = sourceOfRandomness().randomInteger(5, 15);
+        final Integer maxSize = sourceOfRandomness().randomInteger(20, 100);
         generator = new StringGenerator(Range.closed(minSize, maxSize));
         for (int i = 0; i < 10000; i++) {
             String next = generator.next();

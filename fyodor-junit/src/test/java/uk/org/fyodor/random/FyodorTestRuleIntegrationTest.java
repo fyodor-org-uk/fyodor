@@ -7,7 +7,7 @@ import org.junit.rules.TestRule;
 
 import java.util.Random;
 
-import static uk.org.fyodor.random.RandomValuesProvider.seed;
+import static uk.org.fyodor.random.RandomSourceProvider.seed;
 import static uk.org.fyodor.random.ReportAssert.assertThat;
 import static uk.org.fyodor.random.TestFailureListener.testFailed;
 import static uk.org.fyodor.random.TestFinishedListener.testFinished;

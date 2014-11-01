@@ -3,7 +3,7 @@ package uk.org.fyodor.random;
 import java.util.Random;
 import java.util.Stack;
 
-public final class RandomValuesProvider {
+public final class RandomSourceProvider {
 
     private static final ThreadLocal<Seeder> seeder = new ThreadLocal<Seeder>() {
         @Override
@@ -12,7 +12,7 @@ public final class RandomValuesProvider {
         }
     };
 
-    public static RandomValues randomValues() {
+    public static RandomValues sourceOfRandomness() {
         return new DefaultRandomValues(seeder.get().random());
     }
 
@@ -20,7 +20,7 @@ public final class RandomValuesProvider {
         return seeder.get();
     }
 
-    private RandomValuesProvider() {
+    private RandomSourceProvider() {
     }
 
     public static final class Seeder {

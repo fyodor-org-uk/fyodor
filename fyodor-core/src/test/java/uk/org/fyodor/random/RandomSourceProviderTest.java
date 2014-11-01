@@ -15,13 +15,13 @@ import static uk.org.fyodor.Sampler.Sample;
 import static uk.org.fyodor.Sampler.from;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class RandomValuesProviderTest extends BaseTestWithRule {
+public final class RandomSourceProviderTest extends BaseTestWithRule {
 
     @Test
     public void consistentSequenceOfBooleansShouldBeReturnedForKnownSeed() {
         final long seed = new Random().nextLong();
 
-        RandomValuesProvider.seed().next(seed);
+        RandomSourceProvider.seed().next(seed);
 
         assertThat(from(randomValuesNextBoolean()).sample(100))
                 .containsExactlyElementsOf(expectedBooleansFor(seed));
@@ -29,51 +29,51 @@ public final class RandomValuesProviderTest extends BaseTestWithRule {
 
     @Test
     public void resettingTheSeedRevertsToTheInitialSeed() {
-        final long initialSeed = RandomValuesProvider.seed().current();
+        final long initialSeed = RandomSourceProvider.seed().current();
         final long nextSeed = new Random().nextLong();
 
-        RandomValuesProvider.seed().next(nextSeed);
-        assertThat(RandomValuesProvider.seed().current()).isEqualTo(nextSeed);
+        RandomSourceProvider.seed().next(nextSeed);
+        assertThat(RandomSourceProvider.seed().current()).isEqualTo(nextSeed);
 
-        RandomValuesProvider.seed().previous();
-        assertThat(RandomValuesProvider.seed().current()).isEqualTo(initialSeed);
+        RandomSourceProvider.seed().previous();
+        assertThat(RandomSourceProvider.seed().current()).isEqualTo(initialSeed);
     }
 
     @Test
     public void seedsCanBeSetAndRevertedInSequence() {
-        final long initialSeed = RandomValuesProvider.seed().current();
+        final long initialSeed = RandomSourceProvider.seed().current();
 
-        RandomValuesProvider.seed().next(1);
-        assertThat(RandomValuesProvider.seed().current()).isEqualTo(1);
+        RandomSourceProvider.seed().next(1);
+        assertThat(RandomSourceProvider.seed().current()).isEqualTo(1);
 
-        RandomValuesProvider.seed().next(2);
-        assertThat(RandomValuesProvider.seed().current()).isEqualTo(2);
+        RandomSourceProvider.seed().next(2);
+        assertThat(RandomSourceProvider.seed().current()).isEqualTo(2);
 
-        RandomValuesProvider.seed().next(3);
-        assertThat(RandomValuesProvider.seed().current()).isEqualTo(3);
+        RandomSourceProvider.seed().next(3);
+        assertThat(RandomSourceProvider.seed().current()).isEqualTo(3);
 
-        RandomValuesProvider.seed().previous();
-        assertThat(RandomValuesProvider.seed().current()).isEqualTo(2);
+        RandomSourceProvider.seed().previous();
+        assertThat(RandomSourceProvider.seed().current()).isEqualTo(2);
 
-        RandomValuesProvider.seed().previous();
-        assertThat(RandomValuesProvider.seed().current()).isEqualTo(1);
+        RandomSourceProvider.seed().previous();
+        assertThat(RandomSourceProvider.seed().current()).isEqualTo(1);
 
-        RandomValuesProvider.seed().previous();
-        assertThat(RandomValuesProvider.seed().current()).isEqualTo(initialSeed);
+        RandomSourceProvider.seed().previous();
+        assertThat(RandomSourceProvider.seed().current()).isEqualTo(initialSeed);
     }
 
     @Test
     public void revertingSeedProvidesConsistentSequenceOfBooleans() {
-        final long initialSeed = RandomValuesProvider.seed().current();
+        final long initialSeed = RandomSourceProvider.seed().current();
         final List<Boolean> expectedBooleansForInitialSeed = expectedBooleansFor(initialSeed);
 
         final long nextRandomSeed = new Random().nextLong();
-        RandomValuesProvider.seed().next(nextRandomSeed);
+        RandomSourceProvider.seed().next(nextRandomSeed);
 
         assertThat(from(randomValuesNextBoolean()).sample(100).asList())
                 .isNotEqualTo(expectedBooleansForInitialSeed);
 
-        RandomValuesProvider.seed().previous();
+        RandomSourceProvider.seed().previous();
         assertThat(from(randomValuesNextBoolean()).sample(100).asList())
                 .isEqualTo(expectedBooleansForInitialSeed);
     }
@@ -87,11 +87,11 @@ public final class RandomValuesProviderTest extends BaseTestWithRule {
             @Override
             public void run() {
                 holder.setSampleBefore(from(randomValuesNextBoolean()).sample(100));
-                holder.setStartingSeed(RandomValuesProvider.seed().current());
+                holder.setStartingSeed(RandomSourceProvider.seed().current());
 
-                RandomValuesProvider.seed().previous();
+                RandomSourceProvider.seed().previous();
 
-                holder.setSeed(RandomValuesProvider.seed().current());
+                holder.setSeed(RandomSourceProvider.seed().current());
                 holder.setSampleAfter(from(randomValuesNextBoolean()).sample(100));
             }
         }).get();
@@ -140,7 +140,7 @@ public final class RandomValuesProviderTest extends BaseTestWithRule {
         return new Generator<Boolean>() {
             @Override
             public Boolean next() {
-                return RandomValuesProvider.randomValues().randomBoolean();
+                return RandomSourceProvider.sourceOfRandomness().randomBoolean();
             }
         };
     }

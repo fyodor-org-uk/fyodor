@@ -3,7 +3,7 @@ package uk.org.fyodor.random;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunListener;
 
-import static uk.org.fyodor.random.RandomValuesProvider.seed;
+import static uk.org.fyodor.random.RandomSourceProvider.seed;
 
 final class TestStartedListener extends RunListener {
 

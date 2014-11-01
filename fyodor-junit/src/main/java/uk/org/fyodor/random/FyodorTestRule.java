@@ -3,7 +3,7 @@ package uk.org.fyodor.random;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
-import static uk.org.fyodor.random.RandomValuesProvider.seed;
+import static uk.org.fyodor.random.RandomSourceProvider.seed;
 
 public final class FyodorTestRule extends TestWatcher {
 
