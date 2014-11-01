@@ -23,8 +23,28 @@ import static uk.org.fyodor.range.Range.fixed;
 
 public class RDG {
 
+    private static final Generator<String> STRING_GENERATOR = string(30);
+    private static final Generator<Integer> INTEGER_GENERATOR = integer(closed(Integer.MIN_VALUE, Integer.MAX_VALUE));
+    private static final BooleanGenerator BOOLEAN_GENERATOR = new BooleanGenerator(randomValues());
+    private static final Generator<Long> LONG_GENERATOR = longVal(closed(Long.MIN_VALUE, Long.MAX_VALUE));
+    private static final Generator<Double> DOUBLE_GENERATOR = doubleVal(closed(Double.MIN_VALUE, Double.MAX_VALUE));
+    private static final Generator<BigDecimal> BIG_DECIMAL_GENERATOR = bigDecimal(closed(BigDecimal.valueOf(Double.MIN_VALUE), BigDecimal.valueOf(Double.MAX_VALUE)));
+    private static final DomainGenerator DOMAIN_GENERATOR = new DomainGenerator();
+    private static final SuffixGenerator SUFFIX_GENERATOR = new SuffixGenerator();
+    private static final UriGenerator URI_GENERATOR = new UriGenerator();
+    private static final EmailAddressGenerator EMAIL_ADDRESS_GENERATOR = new EmailAddressGenerator();
+    private static final NINumberGenerator NI_NUMBER_GENERATOR = new NINumberGenerator();
+    private static final PostcodeGenerator POSTCODE_GENERATOR = new PostcodeGenerator();
+    private static final CurrencyGenerator CURRENCY_GENERATOR = new CurrencyGenerator();
+    private static final LocaleGenerator LOCALE_GENERATOR = new LocaleGenerator();
+    private static final Iso3CountryGenerator ISO_3_COUNTRY_GENERATOR = new Iso3CountryGenerator();
+
+    public static Generator<Boolean> bool() {
+        return BOOLEAN_GENERATOR;
+    }
+
     public static Generator<Integer> integer() {
-        return integer(closed(Integer.MIN_VALUE, Integer.MAX_VALUE));
+        return INTEGER_GENERATOR;
     }
 
     public static Generator<Integer> integer(final int maximum) {
@@ -39,12 +59,8 @@ public class RDG {
         return new IntegerGenerator(randomValues(), range);
     }
 
-    public static Generator<Boolean> bool() {
-        return new BooleanGenerator(randomValues());
-    }
-
     public static Generator<Long> longVal() {
-        return longVal(closed(Long.MIN_VALUE, Long.MAX_VALUE));
+        return LONG_GENERATOR;
     }
 
     public static Generator<Long> longVal(final long maximum) {
@@ -60,7 +76,7 @@ public class RDG {
     }
 
     public static Generator<Double> doubleVal() {
-        return doubleVal(closed(Double.MIN_VALUE, Double.MAX_VALUE));
+        return DOUBLE_GENERATOR;
     }
 
     public static Generator<Double> doubleVal(final double maximum) {
@@ -82,10 +98,7 @@ public class RDG {
     }
 
     public static Generator<BigDecimal> bigDecimal() {
-        final BigDecimal min = BigDecimal.valueOf(Double.MIN_VALUE);
-        final BigDecimal max = BigDecimal.valueOf(Double.MAX_VALUE);
-
-        return bigDecimal(closed(min, max));
+        return BIG_DECIMAL_GENERATOR;
     }
 
     public static Generator<BigDecimal> bigDecimal(final double val) {
@@ -111,7 +124,9 @@ public class RDG {
         return new BigDecimalGenerator(randomValues(), range, scale);
     }
 
-    public static Generator<String> string = string(30);
+    public static Generator<String> string() {
+        return STRING_GENERATOR;
+    }
 
     public static Generator<String> string(Integer max) {
         return new StringGenerator(max);
@@ -184,6 +199,7 @@ public class RDG {
     public static Generator<String> string(Range<Integer> stringLength, CharacterSetRange... charSetRanges) {
         return new StringGenerator(stringLength, charSetRanges);
     }
+
     public static <T extends Enum<T>> Generator<T> value(final Class<T> classOfEnumT) {
         ensure(isNotNull(classOfEnumT), "enum class cannot be null");
 
@@ -196,7 +212,7 @@ public class RDG {
     public static <T> Generator<T> value(final T first, T... arrayOfTs) {
         ensure(isNotNull(arrayOfTs), "varargs array of values cannot be null");
 
-        final List<T> listOfTs = new ArrayList<T>(asList(arrayOfTs));
+        final List<T> listOfTs = new ArrayList<>(asList(arrayOfTs));
         listOfTs.add(0, first);
         return value(listOfTs);
     }
@@ -212,21 +228,23 @@ public class RDG {
         ensure(isNotNull(iterableOfT), "values cannot be null");
         ensure(iterableOfT.iterator().hasNext(), "there must be at-least one value");
 
-        return new ValueGenerator<T>(randomValues(), iterableOfT);
+        return new ValueGenerator<>(randomValues(), iterableOfT);
     }
 
-    public static Generator<URI> uri() {return new UriGenerator();}
+    public static Generator<URI> uri() {
+        return URI_GENERATOR;
+    }
 
     public static Generator<String> domainSuffix() {
-        return new SuffixGenerator();
+        return SUFFIX_GENERATOR;
     }
 
     public static Generator<String> emailAddress() {
-        return new EmailAddressGenerator();
+        return EMAIL_ADDRESS_GENERATOR;
     }
 
     public static Generator<String> domain() {
-        return new DomainGenerator();
+        return DOMAIN_GENERATOR;
     }
 
     public static Generator<String> domain(Range<Integer> range) {
@@ -246,7 +264,7 @@ public class RDG {
         ensure(isNotNull(generatorOfT), "generator cannot be null");
         ensure(isNotNull(sizeRange), "size range cannot be null");
 
-        return new ListGenerator<T>(randomValues(), generatorOfT, sizeRange);
+        return new ListGenerator<>(randomValues(), generatorOfT, sizeRange);
     }
 
     public static <T> Generator<T[]> array(final Class<? extends T> classOfT,
@@ -267,7 +285,7 @@ public class RDG {
         ensure(isNotNull(generatorOfT), "generator cannot be null");
         ensure(isNotNull(sizeRange), "size range cannot be null");
 
-        return new ArrayGenerator<T>(randomValues(), classOfT, generatorOfT, sizeRange);
+        return new ArrayGenerator<>(randomValues(), classOfT, generatorOfT, sizeRange);
     }
 
     public static <T> Generator<Set<T>> set(final Generator<? extends T> generatorOfT) {
@@ -283,7 +301,7 @@ public class RDG {
         ensure(isNotNull(generatorOfT), "generator cannot be null");
         ensure(isNotNull(sizeRange), "size range cannot be null");
 
-        return new SetGenerator<T>(randomValues(), generatorOfT, sizeRange);
+        return new SetGenerator<>(randomValues(), generatorOfT, sizeRange);
     }
 
     public static <K, V> Generator<Map<K, V>> map(final Generator<? extends K> generatorOfK,
@@ -304,15 +322,15 @@ public class RDG {
         ensure(isNotNull(generatorOfV), "value generator cannot be null");
         ensure(isNotNull(sizeRange), "size range cannot be null");
 
-        return new MapGenerator<K, V>(randomValues(), generatorOfK, generatorOfV, sizeRange);
+        return new MapGenerator<>(randomValues(), generatorOfK, generatorOfV, sizeRange);
     }
 
     public static Generator<String> niNumber() {
-        return new NINumberGenerator();
+        return NI_NUMBER_GENERATOR;
     }
 
     public static Generator<String> postcode() {
-        return new PostcodeGenerator();
+        return POSTCODE_GENERATOR;
     }
 
     public static Generator<Boolean> percentageChanceOf(int chance) {
@@ -320,14 +338,14 @@ public class RDG {
     }
 
     public static Generator<Currency> currency() {
-        return new CurrencyGenerator();
+        return CURRENCY_GENERATOR;
     }
 
     public static Generator<Locale> locale() {
-        return new LocaleGenerator();
+        return LOCALE_GENERATOR;
     }
 
     public static Generator<String> iso3Country() {
-        return new Iso3CountryGenerator();
+        return ISO_3_COUNTRY_GENERATOR;
     }
 }
