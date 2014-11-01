@@ -8,7 +8,7 @@ title: String Generators
 #Fyodor User Guide - String Generators#
 
 Fyodor has a simple default random string generator, 
-running `RDG.string.next();` right now returns 
+running `RDG.string().next();` right now returns 
                                                      
 ```
 2LWKjDK1o6}@ps9P>!^`B/VEq@4}B7
