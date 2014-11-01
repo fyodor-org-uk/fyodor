@@ -22,6 +22,7 @@ class StringGenerator implements Generator<String> {
         this(length, new CharacterSetGenerator(filter, CharacterSetRange.defaultLatinBasic));
     }
 
+    @SafeVarargs
     StringGenerator(Integer length, Range<Integer>... range) {
         this(length, new CharacterSetGenerator(CharacterSetFilter.AllExceptDoubleQuotes, range));
     }
@@ -50,6 +51,7 @@ class StringGenerator implements Generator<String> {
         this(stringRange, new CharacterSetGenerator(CharacterSetFilter.AllExceptDoubleQuotes, charsetRange));
     }
 
+    @SafeVarargs
     StringGenerator(Range<Integer> stringRange, Range<Integer>... charsetRange) {
         this(stringRange, new CharacterSetGenerator(CharacterSetFilter.AllExceptDoubleQuotes, charsetRange));
     }

@@ -92,14 +92,14 @@ public final class BigDecimalGeneratorTest extends BaseTestWithRule {
     }
 
     private static Sampler.Sample<Integer> decimalPartsOnly(final Sampler.Sample<BigDecimal> sample) {
-        final LinkedList<Integer> decimalParts = new LinkedList<Integer>();
+        final LinkedList<Integer> decimalParts = new LinkedList<>();
         for (final BigDecimal bigDecimal : sample) {
             decimalParts.add(bigDecimal
                     .remainder(ONE)
                     .movePointRight(bigDecimal.scale())
                     .intValue());
         }
-        return new Sampler.Sample<Integer>(decimalParts);
+        return new Sampler.Sample<>(decimalParts);
     }
 
     private static class ValuesBetweenZeroAndTenCondition extends Condition<BigDecimal> {

@@ -22,7 +22,7 @@ public final class ListGenerator<T> implements Generator<List<T>> {
     @Override
     public List<T> next() {
         final int size = randomValues.randomInteger(sizeRange.lowerBound(), sizeRange.upperBound());
-        final List<T> listOfTs = new LinkedList<T>();
+        final List<T> listOfTs = new LinkedList<>();
         for (int i = 0; i < size; i++) {
             listOfTs.add(generatorOfT.next());
         }

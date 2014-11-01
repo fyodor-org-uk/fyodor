@@ -12,7 +12,7 @@ final class ValueGenerator<T> implements Generator<T> {
 
     ValueGenerator(final RandomValues randomValues, final Iterable<T> iterableOfTs) {
         this.randomValues = randomValues;
-        this.listOfTs = new ArrayList<T>();
+        this.listOfTs = new ArrayList<>();
         for (final T t : iterableOfTs) {
             this.listOfTs.add(t);
         }

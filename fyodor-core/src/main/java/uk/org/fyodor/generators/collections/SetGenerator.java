@@ -24,7 +24,7 @@ public final class SetGenerator<T> implements Generator<Set<T>> {
     @Override
     public Set<T> next() {
         final int size = randomValues.randomInteger(sizeRange.lowerBound(), sizeRange.upperBound());
-        final Set<T> setOfT = new HashSet<T>();
+        final Set<T> setOfT = new HashSet<>();
         int missCount = 0;
         while (setOfT.size() < size) {
             final int sizeBefore = setOfT.size();

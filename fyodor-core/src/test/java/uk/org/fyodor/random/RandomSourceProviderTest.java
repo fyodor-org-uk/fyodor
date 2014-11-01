@@ -129,7 +129,7 @@ public final class RandomSourceProviderTest extends BaseTestWithRule {
 
     private static List<Boolean> expectedBooleansFor(final long seed) {
         final Random random = new Random(seed);
-        final List<Boolean> booleans = new LinkedList<Boolean>();
+        final List<Boolean> booleans = new LinkedList<>();
         for (int i = 0; i < 100; i++) {
             booleans.add(random.nextBoolean());
         }

@@ -18,7 +18,7 @@ import static java.util.Arrays.asList;
 final class TestRunner {
 
     private final List<RunListener> runListeners;
-    private final Map<Class<?>, Long> startingSeedByTestClass = new HashMap<Class<?>, Long>();
+    private final Map<Class<?>, Long> startingSeedByTestClass = new HashMap<>();
 
     TestRunner(final RunListener... runListeners) {
         this.runListeners = asList(runListeners);
@@ -41,7 +41,7 @@ final class TestRunner {
     }
 
     void runInParallel() {
-        final List<Runnable> runnableTestClasses = new LinkedList<Runnable>();
+        final List<Runnable> runnableTestClasses = new LinkedList<>();
         for (final Class<?> testClass : startingSeedByTestClass.keySet()) {
             runnableTestClasses.add(new Runnable() {
                 @Override

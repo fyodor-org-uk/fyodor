@@ -12,6 +12,7 @@ public class CharacterSetGenerator {
         this(CharacterSetFilter.AllExceptDoubleQuotes, CharacterSetRange.defaultLatinBasic);
     }
 
+    @SafeVarargs
     public CharacterSetGenerator(Range<Integer>... ranges) {
         this(CharacterSetFilter.AllExceptDoubleQuotes, ranges);
     }
@@ -28,6 +29,7 @@ public class CharacterSetGenerator {
         this(filter.getFilter(), characterSetRanges);
     }
 
+    @SafeVarargs
     public CharacterSetGenerator(CharacterSetFilter filter, Range<Integer>... ranges) {
         this(filter.getFilter(), ranges);
     }
@@ -40,12 +42,14 @@ public class CharacterSetGenerator {
         generateCharacterSet(filter, ranges);
     }
 
+    @SafeVarargs
     public CharacterSetGenerator(CharacterFilter filter, Range<Integer>... ranges) {
 
         generateCharacterSet(filter, ranges);
     }
 
-    private void generateCharacterSet(CharacterFilter filter, Range<Integer>... ranges) {
+    @SafeVarargs
+    private final void generateCharacterSet(CharacterFilter filter, Range<Integer>... ranges) {
         char[] charset = new char[getTotalSizeOfRanges(ranges)];
 
         int j = 0;

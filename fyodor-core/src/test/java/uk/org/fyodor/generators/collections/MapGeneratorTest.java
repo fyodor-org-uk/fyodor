@@ -80,7 +80,7 @@ public final class MapGeneratorTest extends BaseTestWithRule {
                 generator("a", "b", "c", "d", "e", "f"),
                 closed(1, 3));
 
-        final Set<Integer> setOfMapSizes = new HashSet<Integer>();
+        final Set<Integer> setOfMapSizes = new HashSet<>();
         for (final Map<Integer, String> map : from(generator).sample(100)) {
             setOfMapSizes.add(map.size());
         }

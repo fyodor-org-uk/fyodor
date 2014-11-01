@@ -5,7 +5,7 @@ import java.util.Map;
 
 final class Reporter {
 
-    private final Map<String, Report> seedReportByMethod = new HashMap<String, Report>();
+    private final Map<String, Report> seedReportByMethod = new HashMap<>();
 
     void seedBeforeTestStarts(final Class<?> testClass, final String methodName, final long seed) {
         final String fullMethodName = testClass.getName() + "." + methodName;

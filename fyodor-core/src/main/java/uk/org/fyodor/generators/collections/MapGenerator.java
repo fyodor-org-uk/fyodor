@@ -30,7 +30,7 @@ public final class MapGenerator<K, V> implements Generator<Map<K, V>> {
     @Override
     public Map<K, V> next() {
         final int size = randomValues.randomInteger(sizeRange.lowerBound(), sizeRange.upperBound());
-        final HashMap<K, V> map = new HashMap<K, V>();
+        final HashMap<K, V> map = new HashMap<>();
 
         int misses = 0;
         while (map.size() < size) {

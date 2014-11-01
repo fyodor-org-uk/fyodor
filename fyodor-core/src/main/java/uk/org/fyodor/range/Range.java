@@ -21,7 +21,7 @@ public class Range<T extends Comparable<? super T>> {
             throw new IllegalArgumentException("lower bound should be less-than-or-equal-to the upper bound");
         }
 
-        return new Range<T>(lowerBound, upperBound);
+        return new Range<>(lowerBound, upperBound);
     }
 
     public static <T extends Comparable<? super T>> Range<T> fixed(final T fixed) {
@@ -44,7 +44,7 @@ public class Range<T extends Comparable<? super T>> {
                 ? limit.upperBound
                 : (upperBound.compareTo(limit.lowerBound) < 0 ? limit.lowerBound : upperBound);
 
-        return new Range<T>(lower, upper);
+        return new Range<>(lower, upper);
     }
 
     public T lowerBound() {

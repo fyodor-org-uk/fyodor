@@ -109,7 +109,7 @@ public final class ListGeneratorTest extends BaseTestWithRule {
     public void generatedListsDoNotAlwaysHaveTheSameSizeForRange() {
         final Generator<List<Integer>> generator = RDG.list(randomIntegers(), Range.closed(1, 3));
 
-        final Set<Integer> setOfListSizes = new HashSet<Integer>();
+        final Set<Integer> setOfListSizes = new HashSet<>();
         for (final List<Integer> generatedList : from(generator).sample(1000)) {
             setOfListSizes.add(generatedList.size());
         }
@@ -121,7 +121,7 @@ public final class ListGeneratorTest extends BaseTestWithRule {
     public void generatedListsAlwaysHaveTheSameSizeForFixedRange() {
         final Generator<List<Integer>> generator = RDG.list(randomIntegers(), fixed(5));
 
-        final Set<Integer> setOfListSizes = new HashSet<Integer>();
+        final Set<Integer> setOfListSizes = new HashSet<>();
         for (final List<Integer> generatedList : from(generator).sample(1000)) {
             setOfListSizes.add(generatedList.size());
         }
@@ -133,7 +133,7 @@ public final class ListGeneratorTest extends BaseTestWithRule {
     public void generatedListWithoutSpecifiedSizeIsTheDefaultSize() {
         final Generator<List<Integer>> generator = RDG.list(randomIntegers());
 
-        final Set<Integer> setOfListSizes = new HashSet<Integer>();
+        final Set<Integer> setOfListSizes = new HashSet<>();
         for (final List<Integer> generatedList : from(generator).sample(1000)) {
             setOfListSizes.add(generatedList.size());
         }

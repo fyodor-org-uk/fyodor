@@ -25,7 +25,7 @@ public final class RandomSourceProvider {
 
     public static final class Seeder {
 
-        private final Stack<Long> seedStack = new Stack<Long>();
+        private final Stack<Long> seedStack = new Stack<>();
         private final Random random = new Random();
 
         private Seeder(final long initialSeed) {

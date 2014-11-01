@@ -152,10 +152,12 @@ public class RDG {
         return new StringGenerator(max, filter.getFilter());
     }
 
+    @SafeVarargs
     public static Generator<String> string(Integer max, CharacterFilter filter, Range<Integer>... ranges) {
         return new StringGenerator(max, new CharacterSetGenerator(filter, ranges));
     }
 
+    @SafeVarargs
     public static Generator<String> string(Integer max, CharacterSetFilter filter, Range<Integer>... ranges) {
         return new StringGenerator(max, new CharacterSetGenerator(filter.getFilter(), ranges));
     }
@@ -164,14 +166,17 @@ public class RDG {
         return new StringGenerator(range, filter.getFilter());
     }
 
+    @SafeVarargs
     public static Generator<String> string(Range<Integer> range, CharacterSetFilter filter, Range<Integer>... ranges) {
         return new StringGenerator(range, new CharacterSetGenerator(filter.getFilter(), ranges));
     }
 
+    @SafeVarargs
     public static Generator<String> string(Range<Integer> range, CharacterFilter filter, Range<Integer>... ranges) {
         return new StringGenerator(range, new CharacterSetGenerator(filter, ranges));
     }
 
+    @SafeVarargs
     public static Generator<String> string(Integer max, Range<Integer>... ranges) {
         return new StringGenerator(max, ranges);
     }
@@ -192,6 +197,7 @@ public class RDG {
         return new StringGenerator(range);
     }
 
+    @SafeVarargs
     public static Generator<String> string(Range<Integer> stringLength, Range<Integer>... charSetRanges) {
         return new StringGenerator(stringLength, charSetRanges);
     }
@@ -209,6 +215,7 @@ public class RDG {
         return value(enumConstants);
     }
 
+    @SafeVarargs
     public static <T> Generator<T> value(final T first, T... arrayOfTs) {
         ensure(isNotNull(arrayOfTs), "varargs array of values cannot be null");
 

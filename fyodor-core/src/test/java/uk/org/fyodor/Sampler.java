@@ -13,15 +13,15 @@ public final class Sampler<T> {
     }
 
     public Sample<T> sample(final int sampleSize) {
-        final List<T> samples = new LinkedList<T>();
+        final List<T> samples = new LinkedList<>();
         for (int i = 0; i < sampleSize; i++) {
             samples.add(generatorOfT.next());
         }
-        return new Sample<T>(samples);
+        return new Sample<>(samples);
     }
 
     public static <T> Sampler<T> from(final Generator<? extends T> generatorOfT) {
-        return new Sampler<T>(generatorOfT);
+        return new Sampler<>(generatorOfT);
     }
 
     public static <T extends Comparable<T>> T smallest(final Sample<? extends T> sampleOfT) {
@@ -56,7 +56,7 @@ public final class Sampler<T> {
         }
 
         public Set<T> unique() {
-            return new HashSet<T>(listOfT);
+            return new HashSet<>(listOfT);
         }
 
         public List<T> asList() {

@@ -6,6 +6,7 @@ import java.util.Random;
 
 final class GeneratorUtils {
 
+    @SafeVarargs
     static <T> Generator<T> generator(final T... arrayOfTs) {
         return new Generator<T>() {
 
