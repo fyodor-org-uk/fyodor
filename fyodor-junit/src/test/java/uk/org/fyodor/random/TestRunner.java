@@ -63,7 +63,7 @@ final class TestRunner {
     }
 
     private void executeSeededJunitTest(final Class<?> testClass, final long seed) {
-        RandomValuesProvider.seed().next(seed);
+        RandomSourceProvider.seed().next(seed);
         executeJunitTest(testClass);
     }
 

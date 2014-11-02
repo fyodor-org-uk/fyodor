@@ -3,7 +3,7 @@ package uk.org.fyodor.rule;
 import org.junit.runner.Description;
 import uk.org.fyodor.random.Seed;
 
-import static uk.org.fyodor.random.RandomValuesProvider.seed;
+import static uk.org.fyodor.random.RandomSourceProvider.seed;
 
 final class JunitTestSeeder {
 

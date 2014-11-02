@@ -6,7 +6,7 @@ import org.junit.runner.Description;
 import java.lang.annotation.Annotation;
 import java.util.Random;
 
-import static uk.org.fyodor.random.RandomValuesProvider.seed;
+import static uk.org.fyodor.random.RandomSourceProvider.seed;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.runner.Description.EMPTY;
 import static org.junit.runner.Description.createTestDescription;

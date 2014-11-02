@@ -11,7 +11,7 @@ import uk.org.fyodor.generators.characters.LettersAndDigitsFilter;
 import uk.org.fyodor.generators.characters.LettersOnlyFilter;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.org.fyodor.random.RandomValuesProvider.randomValues;
+import static uk.org.fyodor.random.RandomSourceProvider.sourceOfRandomness;
 
 public class StringGeneratorTest extends BaseTestWithRule {
 
@@ -54,7 +54,7 @@ public class StringGeneratorTest extends BaseTestWithRule {
     public void cannotChangeCharset() {
         StringGenerator generator = new StringGenerator(SIZE_OF_RANDOM_STRING);
         char[] chars = generator.getCharSet();
-        chars[randomValues().randomInteger(chars.length - 1)] = (char) randomValues().randomInteger(chars.length - 1);
+        chars[sourceOfRandomness().randomInteger(chars.length - 1)] = (char) sourceOfRandomness().randomInteger(chars.length - 1);
         assertThat(chars).isNotEqualTo(generator.getCharSet());
     }
 

@@ -7,7 +7,7 @@ import uk.org.fyodor.jodatime.range.LocalDateRange;
 import static uk.org.fyodor.generators.Validations.ensure;
 import static uk.org.fyodor.generators.Validations.isNotNull;
 import static uk.org.fyodor.jodatime.range.LocalDateRange.all;
-import static uk.org.fyodor.random.RandomValuesProvider.randomValues;
+import static uk.org.fyodor.random.RandomSourceProvider.sourceOfRandomness;
 
 public class RDG {
 
@@ -18,7 +18,7 @@ public class RDG {
     public static Generator<LocalDate> localDate(final LocalDateRange range) {
         ensure(isNotNull(range), "range cannot be null");
 
-        return new LocalDateGenerator(randomValues(), range);
+        return new LocalDateGenerator(sourceOfRandomness(), range);
     }
 
     private RDG() {
