@@ -5,11 +5,19 @@ tagline: “Much unhappiness has come into the world because of bewilderment and
 title: About
 ---
 
-We first worked on the idea of random data generators when we were colleagues at Capita Employee Benefits
+We first worked on the idea of random data generators when we were colleagues at [Capita Employee Benefits]
+(https://www.capitaemployeebenefits.co.uk/)
  in London in about 2011. Since then we've continued to work with the idea and have re-implemented it several times
- after successfully selling the idea to the different teams we've worked with. In all that time we've
+ after selling the idea to the different teams we've worked with. We've
   never come across an open source library we could use that did what we wanted so we thought it 
   was finally time to change that and Fyodor is the result.
   
-If you want to get in touch you can ping us on Twitter here and here. The code is on GitHub where you can raise issues, fork it
-and submit pull requests if you'd like to contribute, and there's a Google Group for questions, suggestions, complaints etc.
+If you want to get in touch you can [email us](mailto:hello@fyodor.org.uk), or ping us on Twitter ([here](https://twitter.com/IanEs)
+ and [here](https://twitter.com/karlwalsh) if that's more your thing. 
+The code is [on GitHub](https://github.com/IanEsling/fyodor) where you can raise issues, fork it and submit pull requests if you'd 
+like to contribute, and there's [a Google Group](https://groups.google.com/forum/#!forum/fyodor)
+ for questions, suggestions, complaints etc.
+
+Special thanks for help and ideas: [Paul](https://twitter.com/paulanthonywils), 
+[Simon](https://twitter.com/brunns), [Adolfo](https://github.com/caelwinner), [Miles](https://twitter.com/mileswilson), 
+[Mike](https://twitter.com/mikeholmesuk).
