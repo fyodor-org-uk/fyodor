@@ -6,6 +6,12 @@ title: Random Data Generators
 ---
 
 #Random Data Generators and Builders#
+
+*This article isn't really about Fyodor as such, it's about how a combination of random data generation
+with a builder pattern can improve your testing. The big benefit to using a library like Fyodor to produce 
+ the random data is that when you do get a failure due to some edge-case you are able to reproduce it 
+ quickly and easily and (hopefully) fix it.*
+
 Setting up fixtures - the objects and data you're testing against - for your tests can be difficult, time-consuming and error-prone
 especially in large Enterprise, legacy or unfamiliar (or all three!) systems.
 Once we start writing integration style tests where our objects may be persisted, (de)serialized or sent over the wire

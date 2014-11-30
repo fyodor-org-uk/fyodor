@@ -9,7 +9,7 @@ We first worked on the idea of random data generators when we were colleagues at
 (https://www.capitaemployeebenefits.co.uk/)
  in London in about 2011. Since then we've continued to work with the idea and have re-implemented it several times
  after selling the idea to the different teams we've worked with. We've
-  never come across an open source library we could use that did what we wanted so we thought it 
+  never come across a Java open source library that did what we wanted so decided it 
   was finally time to change that and Fyodor is the result.
   
 If you want to get in touch you can [email us](mailto:hello@fyodor.org.uk), or ping us on Twitter ([here](https://twitter.com/IanEs)
