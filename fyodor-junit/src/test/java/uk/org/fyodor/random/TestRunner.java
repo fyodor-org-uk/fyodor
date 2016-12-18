@@ -43,12 +43,7 @@ final class TestRunner {
     void runInParallel() {
         final List<Runnable> runnableTestClasses = new LinkedList<>();
         for (final Class<?> testClass : startingSeedByTestClass.keySet()) {
-            runnableTestClasses.add(new Runnable() {
-                @Override
-                public void run() {
-                    executeTest(testClass);
-                }
-            });
+            runnableTestClasses.add(() -> executeTest(testClass));
         }
         executeTestsAndWaitForThemToFinish(runnableTestClasses);
     }

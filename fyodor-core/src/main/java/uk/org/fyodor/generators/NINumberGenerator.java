@@ -7,8 +7,8 @@ rules for format taken from http://en.wikipedia.org/wiki/National_Insurance_numb
  */
 public class NINumberGenerator implements Generator<String> {
 
-    Generator<String> beginning = RDG.string(2, CharacterSetFilter.LettersOnly);
-    Generator<String> end = RDG.string(1, "ABCD");
+    private final Generator<String> beginning = RDG.string(2, CharacterSetFilter.LettersOnly);
+    private final Generator<String> end = RDG.string(1, "ABCD");
 
     @Override
     public String next() {

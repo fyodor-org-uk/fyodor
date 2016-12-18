@@ -1,20 +1,19 @@
 package uk.org.fyodor.generators.collections;
 
+import org.junit.Test;
 import uk.org.fyodor.BaseTestWithRule;
 import uk.org.fyodor.generators.Generator;
 import uk.org.fyodor.generators.RDG;
-import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static uk.org.fyodor.Sampler.from;
-import static uk.org.fyodor.generators.collections.GeneratorUtils.generator;
-import static uk.org.fyodor.generators.collections.GeneratorUtils.randomIntegers;
+import static uk.org.fyodor.generators.collections.GeneratorUtils.*;
 import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public final class MapGeneratorTest extends BaseTestWithRule {
 
@@ -23,8 +22,8 @@ public final class MapGeneratorTest extends BaseTestWithRule {
     @Test
     public void generatesMapWithTheDefaultSize() {
         final Generator<Map<Integer, String>> generator = RDG.map(
-                generator(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17),
-                generator("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q"));
+                generatingFrom(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17),
+                generatingFrom("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q"));
 
         assertThat(generator.next())
                 .hasSize(15)
@@ -48,8 +47,8 @@ public final class MapGeneratorTest extends BaseTestWithRule {
     @Test
     public void generatesMapWithFixedSize() {
         final Generator<Map<Integer, String>> generator = RDG.map(
-                generator(1, 2, 3, 4, 5),
-                generator("a", "b", "c", "d", "e", "f"),
+                generatingFrom(1, 2, 3, 4, 5),
+                generatingFrom("a", "b", "c", "d", "e", "f"),
                 3);
 
         assertThat(generator.next())
@@ -62,8 +61,8 @@ public final class MapGeneratorTest extends BaseTestWithRule {
     @Test
     public void generatesMapWithFixedSizeRange() {
         final Generator<Map<Integer, String>> generator = RDG.map(
-                generator(1, 2, 3, 4, 5),
-                generator("a", "b", "c", "d", "e", "f"),
+                generatingFrom(1, 2, 3, 4, 5),
+                generatingFrom("a", "b", "c", "d", "e", "f"),
                 fixed(3));
 
         assertThat(generator.next())
@@ -75,13 +74,13 @@ public final class MapGeneratorTest extends BaseTestWithRule {
 
     @Test
     public void generatesMapWithDifferentSizesWithinClosedRange() {
-        final Generator<Map<Integer, String>> generator = RDG.map(
-                generator(1, 2, 3, 4, 5),
-                generator("a", "b", "c", "d", "e", "f"),
+        final Generator<Map<Integer, Integer>> generator = RDG.map(
+                generatingRandomIntegers(),
+                generatingRandomIntegers(),
                 closed(1, 3));
 
         final Set<Integer> setOfMapSizes = new HashSet<>();
-        for (final Map<Integer, String> map : from(generator).sample(100)) {
+        for (final Map<Integer, Integer> map : from(generator).sample(100)) {
             setOfMapSizes.add(map.size());
         }
 
@@ -90,25 +89,25 @@ public final class MapGeneratorTest extends BaseTestWithRule {
 
     @Test
     public void generatesEmptyMapForNegativeFixedSize() {
-        final Generator<Map<Integer, Integer>> generator = RDG.map(randomIntegers(), randomIntegers(), -1);
+        final Generator<Map<Integer, Integer>> generator = RDG.map(generatingRandomIntegers(), generatingRandomIntegers(), -1);
         assertThat(generator.next()).isEmpty();
     }
 
     @Test
     public void generatesEmptyMapForNegativeFixedSizeRange() {
-        final Generator<Map<Integer, Integer>> generator = RDG.map(randomIntegers(), randomIntegers(), fixed(-1));
+        final Generator<Map<Integer, Integer>> generator = RDG.map(generatingRandomIntegers(), generatingRandomIntegers(), fixed(-1));
         assertThat(generator.next()).isEmpty();
     }
 
     @Test
     public void generatesEmptyMapForNegativeSizeRange() {
-        final Generator<Map<Integer, Integer>> generator = RDG.map(randomIntegers(), randomIntegers(), closed(-10, -1));
+        final Generator<Map<Integer, Integer>> generator = RDG.map(generatingRandomIntegers(), generatingRandomIntegers(), closed(-10, -1));
         assertThat(generator.next()).isEmpty();
     }
 
     @Test
     public void generatesMapThatIsAtLeastEmptyForRangeThatCrossesZero() {
-        final Generator<Map<Integer, Integer>> generator = RDG.map(randomIntegers(), randomIntegers(), closed(-2, 2));
+        final Generator<Map<Integer, Integer>> generator = RDG.map(generatingRandomIntegers(), generatingRandomIntegers(), closed(-2, 2));
         for (final Map<Integer, Integer> map : from(generator).sample(1000)) {
             assertThat(map.size()).isBetween(0, 2);
         }
@@ -116,15 +115,15 @@ public final class MapGeneratorTest extends BaseTestWithRule {
 
     @Test
     public void neverReturnsNullMap() {
-        final Generator<Map<Integer, Integer>> generator = RDG.map(randomIntegers(), randomIntegers(), 100);
+        final Generator<Map<Integer, Integer>> generator = RDG.map(generatingRandomIntegers(), generatingRandomIntegers(), 100);
         assertThat(from(generator).sample(MAX_SIZE)).doesNotContainNull();
     }
 
     @Test
     public void generatesMapOfFixedSizeEvenWhenGeneratedKeysContainDuplicates() {
         final Generator<Map<Integer, String>> generator = RDG.map(
-                generator(1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 5),
-                generator("a", "b", "c", "d", "e", "f"),
+                endlesslyGeneratingFrom(1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 5),
+                endlesslyGeneratingFrom("a", "b", "c", "d", "e", "f"),
                 3);
 
         for (final Map<Integer, String> map : from(generator).sample(100)) {
@@ -135,8 +134,8 @@ public final class MapGeneratorTest extends BaseTestWithRule {
     @Test
     public void generatesMapOfFixedSizeRangeEvenWhenGeneratedKeysContainDuplicates() {
         final Generator<Map<Integer, String>> generator = RDG.map(
-                generator(1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 5),
-                generator("a", "b", "c", "d", "e", "f"),
+                endlesslyGeneratingFrom(1, 2, 3, 4, 5),
+                endlesslyGeneratingFrom("a", "b", "c", "d", "e", "f"),
                 fixed(3));
 
         for (final Map<Integer, String> map : from(generator).sample(100)) {
@@ -147,8 +146,8 @@ public final class MapGeneratorTest extends BaseTestWithRule {
     @Test
     public void generatesMapOfClosedSizeRangeEvenWhenGeneratedKeysContainDuplicates() {
         final Generator<Map<Integer, String>> generator = RDG.map(
-                generator(1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 5),
-                generator("a", "b", "c", "d", "e", "f"),
+                endlesslyGeneratingFrom(1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 5),
+                endlesslyGeneratingFrom("a", "b", "c", "d", "e", "f"),
                 closed(2, 4));
 
         for (final Map<Integer, String> map : from(generator).sample(100)) {
@@ -158,9 +157,10 @@ public final class MapGeneratorTest extends BaseTestWithRule {
 
     @Test(expected = IllegalStateException.class)
     public void throwsAnExceptionWhenGeneratedKeysContainsTooManyDuplicatesAndFixedSizeCannotBeAchieved() {
+        final Generator<Integer> fixedValueGenerator = () -> 1;
         final Generator<Map<Integer, Integer>> generator = RDG.map(
-                generator(1),
-                randomIntegers(),
+                fixedValueGenerator,
+                generatingRandomIntegers(),
                 3);
 
         //Throws an exception because to attempt fulfilling set size would cause an infinite loop
@@ -170,8 +170,8 @@ public final class MapGeneratorTest extends BaseTestWithRule {
     @Test
     public void canGenerateMapWithMaximumSize() {
         final Generator<Map<Integer, Integer>> generator = RDG.map(
-                randomIntegers(),
-                randomIntegers(),
+                generatingRandomIntegers(),
+                generatingRandomIntegers(),
                 MAX_SIZE);
 
         assertThat(generator.next()).hasSize(MAX_SIZE);
@@ -180,8 +180,8 @@ public final class MapGeneratorTest extends BaseTestWithRule {
     @Test
     public void sizeWillNotExceedMaximumForFixedSizeExceedingTheMaximum() {
         final Generator<Map<Integer, Integer>> generator = RDG.map(
-                randomIntegers(),
-                randomIntegers(),
+                generatingRandomIntegers(),
+                generatingRandomIntegers(),
                 MAX_SIZE * 2);
 
         assertThat(generator.next()).hasSize(MAX_SIZE);
@@ -190,8 +190,8 @@ public final class MapGeneratorTest extends BaseTestWithRule {
     @Test
     public void sizeWillNotExceedMaximumForFixedSizeRangeExceedingTheMaximum() {
         final Generator<Map<Integer, Integer>> generator = RDG.map(
-                randomIntegers(),
-                randomIntegers(),
+                generatingRandomIntegers(),
+                generatingRandomIntegers(),
                 fixed(MAX_SIZE * 2));
 
         assertThat(generator.next()).hasSize(MAX_SIZE);
@@ -200,8 +200,8 @@ public final class MapGeneratorTest extends BaseTestWithRule {
     @Test(expected = NullPointerException.class)
     public void throwsExceptionWhenKeyGeneratorGeneratesNull() {
         final Generator<Map<Integer, Integer>> generator = RDG.map(
-                generator(1, 2, 3, null, 5, 6, 7),
-                randomIntegers(),
+                generatingFrom(1, 2, 3, null, 5, 6, 7),
+                generatingRandomIntegers(),
                 6);
         generator.next();
     }
@@ -221,49 +221,44 @@ public final class MapGeneratorTest extends BaseTestWithRule {
 
     @Test(expected = IllegalArgumentException.class)
     public void cannotGenerateMapWithNullKeyGenerator() {
-        RDG.map(null, randomIntegers());
+        RDG.map(null, generatingRandomIntegers());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void cannotGenerateMapWithNullValueGenerator() {
-        RDG.map(randomIntegers(), null);
+        RDG.map(generatingRandomIntegers(), null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void cannotGenerateMapWithNullKeyGeneratorAndValidFixedSize() {
-        RDG.map(null, randomIntegers(), 10);
+        RDG.map(null, generatingRandomIntegers(), 10);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void cannotGenerateMapWithNullValueGeneratorAndValidFixedSize() {
-        RDG.map(randomIntegers(), null, 15);
+        RDG.map(generatingRandomIntegers(), null, 15);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void cannotGenerateMapWithNullKeyGeneratorAndValidSizeRange() {
-        RDG.map(null, randomIntegers(), fixed(10));
+        RDG.map(null, generatingRandomIntegers(), fixed(10));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void cannotGenerateMapWithNullValueGeneratorAndValidSizeRange() {
-        RDG.map(randomIntegers(), null, fixed(15));
+        RDG.map(generatingRandomIntegers(), null, fixed(15));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void cannotGenerateMapForNullSizeRange() {
-        RDG.map(randomIntegers(), randomIntegers(), null);
+        RDG.map(generatingRandomIntegers(), generatingRandomIntegers(), null);
     }
 
     private static Generator<? extends Type> ofConcreteTypes() {
-        return new Generator<Type>() {
-            @Override
-            public Type next() {
-                return new ConcreteType();
-            }
-        };
+        return (Generator<Type>) ConcreteType::new;
     }
 
-    private static interface Type {
+    private interface Type {
     }
 
     private static final class ConcreteType implements Type {
