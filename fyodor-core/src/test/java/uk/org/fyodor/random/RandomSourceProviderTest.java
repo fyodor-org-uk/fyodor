@@ -1,8 +1,8 @@
 package uk.org.fyodor.random;
 
+import org.junit.Test;
 import uk.org.fyodor.BaseTestWithRule;
 import uk.org.fyodor.generators.Generator;
-import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -11,9 +11,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static uk.org.fyodor.Sampler.Sample;
 import static uk.org.fyodor.Sampler.from;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public final class RandomSourceProviderTest extends BaseTestWithRule {
 
@@ -83,17 +83,14 @@ public final class RandomSourceProviderTest extends BaseTestWithRule {
         final SeedHolder holder = new SeedHolder();
         //We need to run in a new thread so it has its own ThreadLocal random with an initial seed
         final ExecutorService executorService = Executors.newCachedThreadPool();
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                holder.setSampleBefore(from(randomValuesNextBoolean()).sample(100));
-                holder.setStartingSeed(RandomSourceProvider.seed().current());
+        executorService.submit(() -> {
+            holder.setSampleBefore(from(randomValuesNextBoolean()).sample(100));
+            holder.setStartingSeed(RandomSourceProvider.seed().current());
 
-                RandomSourceProvider.seed().previous();
+            RandomSourceProvider.seed().previous();
 
-                holder.setSeed(RandomSourceProvider.seed().current());
-                holder.setSampleAfter(from(randomValuesNextBoolean()).sample(100));
-            }
+            holder.setSeed(RandomSourceProvider.seed().current());
+            holder.setSampleAfter(from(randomValuesNextBoolean()).sample(100));
         }).get();
 
         //Seeds should be the same

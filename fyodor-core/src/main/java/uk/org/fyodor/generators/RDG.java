@@ -66,7 +66,7 @@ public class RDG {
     public static Generator<Long> longVal(final long maximum) {
         ensure(isNotNegative(maximum), "maximum cannot be negative");
 
-        return longVal(closed(0l, maximum));
+        return longVal(closed(0L, maximum));
     }
 
     public static Generator<Long> longVal(final Range<Long> range) {

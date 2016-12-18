@@ -2,7 +2,7 @@ package uk.org.fyodor.generators.characters;
 
 public class LettersOnlyFilter implements CharacterFilter {
 
-    private static CharacterFilter filter = new LettersOnlyFilter();
+    private static final CharacterFilter filter = new LettersOnlyFilter();
 
     private LettersOnlyFilter() {}
 

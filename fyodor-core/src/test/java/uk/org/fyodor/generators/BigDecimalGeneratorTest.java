@@ -30,10 +30,10 @@ public final class BigDecimalGeneratorTest extends BaseTestWithRule {
         assertThat(from(RDG.bigDecimal(TEN)).sample(1000).unique())
                 .have(new ValuesBetweenZeroAndTenCondition())
                 .has(new SizeGreaterThanOneCondition());
-        assertThat(from(RDG.bigDecimal(10d)).sample(1000).unique())
+        assertThat(from(RDG.bigDecimal(10D)).sample(1000).unique())
                 .have(new ValuesBetweenZeroAndTenCondition())
                 .has(new SizeGreaterThanOneCondition());
-        assertThat(from(RDG.bigDecimal(10l)).sample(1000).unique())
+        assertThat(from(RDG.bigDecimal(10L)).sample(1000).unique())
                 .have(new ValuesBetweenZeroAndTenCondition())
                 .has(new SizeGreaterThanOneCondition());
     }

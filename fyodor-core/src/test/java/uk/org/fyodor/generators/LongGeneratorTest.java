@@ -5,10 +5,10 @@ import uk.org.fyodor.BaseTestWithRule;
 
 import java.util.Random;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static uk.org.fyodor.Sampler.from;
 import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public final class LongGeneratorTest extends BaseTestWithRule {
 
@@ -57,7 +57,7 @@ public final class LongGeneratorTest extends BaseTestWithRule {
     public void returnsAtLeastZeroAndAtMostMaximum() {
         final Generator<Long> generator = RDG.longVal(1);
         assertThat(from(generator).sample(100).unique())
-                .containsOnly(0l, 1l);
+                .containsOnly(0L, 1L);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -82,6 +82,6 @@ public final class LongGeneratorTest extends BaseTestWithRule {
 
     @Test
     public void generatesLongAcrossZero() {
-        assertThat(from(RDG.longVal(closed(-1l, 1l))).sample(100).unique()).containsOnly(-1l, 0l, 1l);
+        assertThat(from(RDG.longVal(closed(-1L, 1L))).sample(100).unique()).containsOnly(-1L, 0L, 1L);
     }
 }

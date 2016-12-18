@@ -5,7 +5,7 @@ import uk.org.fyodor.range.Range;
 
 public class DomainGenerator implements Generator<String> {
 
-    Generator<String> domainGenerator;
+    private final Generator<String> domainGenerator;
 
     public DomainGenerator(){
         this(Range.closed(5, 40));

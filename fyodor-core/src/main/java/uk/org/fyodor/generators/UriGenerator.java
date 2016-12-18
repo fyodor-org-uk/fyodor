@@ -5,9 +5,9 @@ import java.net.URI;
 
 public class UriGenerator implements Generator<URI> {
 
-    Generator<String> protocolGenerator = RDG.value("http://", "https://", "http://www.", "https://www.");
-    Generator<String> domainGenerator = RDG.domain();
-    Generator<String> suffixGenerator = RDG.domainSuffix();
+    private final Generator<String> protocolGenerator = RDG.value("http://", "https://", "http://www.", "https://www.");
+    private final Generator<String> domainGenerator = RDG.domain();
+    private final Generator<String> suffixGenerator = RDG.domainSuffix();
 
     public URI next() {
         try {

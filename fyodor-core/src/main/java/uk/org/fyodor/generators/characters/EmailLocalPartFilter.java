@@ -2,7 +2,7 @@ package uk.org.fyodor.generators.characters;
 
 public class EmailLocalPartFilter extends RegExCharacterFilter {
 
-    private static EmailLocalPartFilter filter = new EmailLocalPartFilter();
+    private static final EmailLocalPartFilter filter = new EmailLocalPartFilter();
 
     private EmailLocalPartFilter(){
         super("[a-zA-Z0-9\\.\\!\\#\\$\\%\\&\\'\\*\\+\\-\\/\\=\\?\\^\\_\\`\\{\\|\\}\\~]");

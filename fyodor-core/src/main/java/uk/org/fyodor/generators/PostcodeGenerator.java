@@ -13,10 +13,10 @@ public class PostcodeGenerator implements Generator<String> {
     private Generator<OutwardCodeOptions> outwardCodeOptionsGenerator = RDG.value(OutwardCodeOptions.values());
 
     public String next() {
-        return  girobankChanceGenerator.next() ? "GIR 0AA" :
+        return girobankChanceGenerator.next() ? "GIR 0AA" :
                 outwardCodeOptionsGenerator.next().getGenerator().next() +
-                " " +
-                inwardCode.next();
+                        " " +
+                        inwardCode.next();
     }
 
     private enum OutwardCodeOptions {
@@ -48,14 +48,15 @@ public class PostcodeGenerator implements Generator<String> {
         abstract OutwardCodeOption getGenerator();
     }
 
+    private interface OutwardCodeOption extends Generator<String> {
+    }
+
     private static class InwardCodeGenerator implements Generator<String> {
         @Override
         public String next() {
             return number.next() + letter.next() + letter.next();
         }
     }
-
-    private static interface OutwardCodeOption extends Generator<String> {}
 
     private static class OneLetterOneNumberOneLetterOption implements OutwardCodeOption {
         @Override

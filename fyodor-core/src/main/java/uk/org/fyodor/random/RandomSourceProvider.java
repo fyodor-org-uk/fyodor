@@ -3,14 +3,11 @@ package uk.org.fyodor.random;
 import java.util.Random;
 import java.util.Stack;
 
+import static java.lang.ThreadLocal.withInitial;
+
 public final class RandomSourceProvider {
 
-    private static final ThreadLocal<Seeder> seeder = new ThreadLocal<Seeder>() {
-        @Override
-        protected Seeder initialValue() {
-            return new Seeder(System.currentTimeMillis());
-        }
-    };
+    private static final ThreadLocal<Seeder> seeder = withInitial(() -> new Seeder(System.currentTimeMillis()));
 
     public static RandomValues sourceOfRandomness() {
         return new DefaultRandomValues(seeder.get().random());
