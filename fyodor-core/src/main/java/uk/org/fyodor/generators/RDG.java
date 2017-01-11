@@ -8,10 +8,13 @@ import uk.org.fyodor.generators.collections.ArrayGenerator;
 import uk.org.fyodor.generators.collections.ListGenerator;
 import uk.org.fyodor.generators.collections.MapGenerator;
 import uk.org.fyodor.generators.collections.SetGenerator;
+import uk.org.fyodor.generators.time.LocalDateGenerator;
+import uk.org.fyodor.generators.time.LocalDateRange;
 import uk.org.fyodor.range.Range;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.*;
 
 import static java.lang.String.format;
@@ -38,6 +41,20 @@ public class RDG {
     private static final CurrencyGenerator CURRENCY_GENERATOR = new CurrencyGenerator();
     private static final LocaleGenerator LOCALE_GENERATOR = new LocaleGenerator();
     private static final Iso3CountryGenerator ISO_3_COUNTRY_GENERATOR = new Iso3CountryGenerator();
+
+    public static Generator<LocalDate> localDate() {
+        return localDate(LocalDateRange.all());
+    }
+
+    public static Generator<LocalDate> localDate(final LocalDateRange range) {
+        return localDate((Range<LocalDate>) range);
+    }
+
+    public static Generator<LocalDate> localDate(final Range<LocalDate> range) {
+        ensure(isNotNull(range), "date range cannot be null");
+        
+        return new LocalDateGenerator(sourceOfRandomness(), range);
+    }
 
     public static Generator<Boolean> bool() {
         return BOOLEAN_GENERATOR;
@@ -102,15 +119,15 @@ public class RDG {
     }
 
     public static Generator<BigDecimal> bigDecimal(final double val) {
-        return bigDecimal(Range.closed(BigDecimal.ZERO, BigDecimal.valueOf(val)));
+        return bigDecimal(closed(BigDecimal.ZERO, BigDecimal.valueOf(val)));
     }
 
     public static Generator<BigDecimal> bigDecimal(final long val) {
-        return bigDecimal(Range.closed(BigDecimal.ZERO, BigDecimal.valueOf(val)));
+        return bigDecimal(closed(BigDecimal.ZERO, BigDecimal.valueOf(val)));
     }
 
     public static Generator<BigDecimal> bigDecimal(final BigDecimal val) {
-        return bigDecimal(Range.closed(BigDecimal.ZERO, val));
+        return bigDecimal(closed(BigDecimal.ZERO, val));
     }
 
     public static Generator<BigDecimal> bigDecimal(final Range<BigDecimal> range) {
