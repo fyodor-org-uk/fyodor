@@ -12,8 +12,8 @@ import static uk.org.fyodor.random.RandomSourceProvider.sourceOfRandomness;
 
 public class VariableLengthStringGeneratorTest extends BaseTestWithRule {
 
-    Multiset<Integer> generated;
-    Generator<String> generator;
+    private Multiset<Integer> generated;
+    private Generator<String> generator;
 
     @Test
     public void variableLength() {
@@ -28,9 +28,9 @@ public class VariableLengthStringGeneratorTest extends BaseTestWithRule {
         }
         FyodorAssertions.assertThat(generated.elementSet())
                 .hasSize(maxSize - minSize + 1)
-                .has(new Condition<Iterable<Integer>>() {
+                .has(new Condition<Iterable<? extends Integer>>() {
                     @Override
-                    public boolean matches(Iterable<Integer> value) {
+                    public boolean matches(Iterable<? extends Integer> value) {
                         for (Integer val : value) {
                             if (val < minSize || val > maxSize) {
                                 return false;
