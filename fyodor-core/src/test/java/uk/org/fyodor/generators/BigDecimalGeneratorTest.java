@@ -110,9 +110,9 @@ public final class BigDecimalGeneratorTest extends BaseTestWithRule {
         }
     }
 
-    private static class SizeGreaterThanOneCondition extends Condition<Iterable<BigDecimal>> {
+    private static class SizeGreaterThanOneCondition extends Condition<Iterable<? extends BigDecimal>> {
         @Override
-        public boolean matches(Iterable<BigDecimal> value) {
+        public boolean matches(Iterable<? extends BigDecimal> value) {
             return Iterators.size(value.iterator()) > 1;
         }
     }
