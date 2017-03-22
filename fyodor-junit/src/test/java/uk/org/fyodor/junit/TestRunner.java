@@ -16,35 +16,35 @@ import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
 
-public final class TestRunner<T> {
+final class TestRunner<T> {
 
     private final List<RunListener> runListeners;
     private final Map<Class<?>, T> startingObjectByTestClass = new HashMap<>();
     private Consumer<T> whatToDoWithT = t -> {
     };
 
-    public TestRunner(final RunListener... runListeners) {
+    TestRunner(final RunListener... runListeners) {
         this.runListeners = asList(runListeners);
     }
 
-    public TestRunner<T> scheduleTestWithObject(final Class<?> testClass, final T startingObject, final Consumer<T> whatToDoWithT) {
+    TestRunner<T> scheduleTestWithObject(final Class<?> testClass, final T startingObject, final Consumer<T> whatToDoWithT) {
         this.whatToDoWithT = whatToDoWithT;
         this.startingObjectByTestClass.put(testClass, startingObject);
         return this;
     }
 
-    public TestRunner<T> scheduleTest(final Class<?> testClass) {
+    TestRunner<T> scheduleTest(final Class<?> testClass) {
         this.startingObjectByTestClass.put(testClass, null);
         return this;
     }
 
-    public void run() {
+    void run() {
         for (final Class<?> testClass : startingObjectByTestClass.keySet()) {
             executeTest(testClass);
         }
     }
 
-    public void runInParallel() {
+    void runInParallel() {
         final List<Runnable> runnableTestClasses = new LinkedList<>();
         for (final Class<?> testClass : startingObjectByTestClass.keySet()) {
             runnableTestClasses.add(() -> executeTest(testClass));

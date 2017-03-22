@@ -29,6 +29,10 @@ public final class Timekeeper {
         return currentInstant().atZone(ZoneOffset.UTC).toLocalTime();
     }
 
+    public static LocalDateTime currentDateTime() {
+        return currentInstant().atZone(ZoneOffset.UTC).toLocalDateTime();
+    }
+
     public static Instant currentInstant() {
         return currentClock().instant();
     }

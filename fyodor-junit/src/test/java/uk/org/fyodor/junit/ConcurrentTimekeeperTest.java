@@ -9,19 +9,20 @@ import uk.org.fyodor.generators.time.Timekeeper;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.function.Consumer;
 
 import static uk.org.fyodor.generators.RDG.instant;
 import static uk.org.fyodor.generators.time.InstantRange.now;
+import static uk.org.fyodor.junit.FyodorTestRule.fyodorTestRule;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
 import static uk.org.fyodor.junit.TestFailureListener.testFailed;
 import static uk.org.fyodor.junit.TestFinishedListener.testFinished;
 import static uk.org.fyodor.junit.TestStartedListener.testStarted;
+import static uk.org.fyodor.junit.TimeFactory.Instants.utcInstantOf;
 
-public final class ConcurrencyTest {
+public final class ConcurrentTimekeeperTest {
 
     private static final Reporter<Instant> reporter = reporter();
 
@@ -67,15 +68,6 @@ public final class ConcurrencyTest {
                 .whenTestHasFinished(third);
     }
 
-    private static Instant utcInstantOf(final int year, final int month, final int day) {
-        return LocalDate.of(year, month, day).atStartOfDay().toInstant(ZoneOffset.UTC);
-    }
-
-    private static Instant utcInstantOf(final int year, final int month, final int day,
-                                        final int hour, final int minute, final int second) {
-        return LocalDate.of(year, month, day).atTime(hour, minute, second, 0).toInstant(ZoneOffset.UTC);
-    }
-
     private static Consumer<Instant> configureTimekeeperFromInstant() {
         return instant -> Timekeeper.from(clockFrom(instant));
     }
@@ -89,7 +81,7 @@ public final class ConcurrencyTest {
     public static final class ClassLevelAnnotatedOnly {
 
         @Rule
-        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
+        public final FyodorTestRule rule = fyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();
@@ -103,7 +95,7 @@ public final class ConcurrencyTest {
     public static final class MethodLevelAnnotatedOnly {
 
         @Rule
-        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
+        public final FyodorTestRule rule = fyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();
@@ -121,7 +113,7 @@ public final class ConcurrencyTest {
     public static final class ClassLevelAndMethodLevelAnnotated {
 
         @Rule
-        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
+        public final FyodorTestRule rule = fyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();

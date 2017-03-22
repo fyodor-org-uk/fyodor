@@ -7,123 +7,91 @@ import uk.org.fyodor.generators.time.CurrentDate;
 import uk.org.fyodor.generators.time.CurrentTime;
 import uk.org.fyodor.generators.time.Timekeeper;
 
-import java.time.*;
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static java.time.ZoneOffset.UTC;
 
-public final class FyodorTimekeeperRule extends TestWatcher {
+final class FyodorTimekeeperRule extends TestWatcher {
 
     private final ThreadLocal<Boolean> timekeeperConfigured = ThreadLocal.withInitial(() -> false);
-    private final Generator<LocalDate> currentDate;
-    private final Generator<LocalTime> currentTime;
 
-    private FyodorTimekeeperRule(final Generator<LocalDate> currentDate, final Generator<LocalTime> currentTime) {
-        this.currentDate = currentDate;
-        this.currentTime = currentTime;
+    private final CurrentDateProvider currentDateProvider;
+    private final CurrentTimeProvider currentTimeProvider;
+
+    FyodorTimekeeperRule(final Generator<LocalDate> currentDate, final Generator<LocalTime> currentTime) {
+        this.currentDateProvider = new CurrentDateProvider(currentDate);
+        this.currentTimeProvider = new CurrentTimeProvider(currentTime);
     }
 
     @Override
-    protected void starting(final Description description) {
-        Timekeeper.from(clockOf(currentDateTime(description)));
+    public void starting(final Description description) {
+        final LocalDate currentDate = currentDateProvider.currentDateFor(description);
+        final LocalTime currentTime = currentTimeProvider.currentTimeFor(description);
+        Timekeeper.from(utcClockOf(currentDate.atTime(currentTime)));
         timekeeperConfigured.set(true);
     }
 
     @Override
-    protected void finished(final Description description) {
+    public void finished(final Description description) {
         if (timekeeperConfigured.get()) {
             Timekeeper.rollback();
         }
     }
 
-    public Instant currentInstant() {
-        return Timekeeper.currentInstant();
-    }
-
-    public Clock currentClock() {
-        return Timekeeper.currentClock();
-    }
-
-    public LocalDate currentDate() {
-        return Timekeeper.currentDate();
-    }
-
-    public LocalTime currentTime() {
-        return Timekeeper.currentTime();
-    }
-
-    private LocalDateTime currentDateTime(final Description description) {
-        return currentDateFor(description).atTime(currentTimeFor(description));
-    }
-
-    private LocalDate currentDateFor(final Description description) {
-        final CurrentDate methodAnnotation = description.getAnnotation(CurrentDate.class);
-        if (methodAnnotation != null) {
-            final String dateString = methodAnnotation.value();
-            return LocalDate.parse(dateString);
-        }
-
-        final CurrentDate classAnnotation = description.getTestClass().getAnnotation(CurrentDate.class);
-        if (classAnnotation != null) {
-            final String dateString = classAnnotation.value();
-            return LocalDate.parse(dateString);
-        }
-
-        return currentDate.next();
-    }
-
-    private LocalTime currentTimeFor(final Description description) {
-        final CurrentTime methodAnnotation = description.getAnnotation(CurrentTime.class);
-        if (methodAnnotation != null) {
-            final String timeString = methodAnnotation.value();
-            return LocalTime.parse(timeString);
-        }
-
-        final CurrentTime classAnnotation = description.getTestClass().getAnnotation(CurrentTime.class);
-        if (classAnnotation != null) {
-            final String timeString = classAnnotation.value();
-            return LocalTime.parse(timeString);
-        }
-
-        return currentTime.next();
-    }
-
-    private static Clock clockOf(final LocalDateTime dateTime) {
+    private static Clock utcClockOf(final LocalDateTime dateTime) {
         return Clock.fixed(dateTime.toInstant(UTC), UTC);
     }
 
-    public static FyodorTimekeeperRule timekeeper() {
-        return new FyodorTimekeeperRule(Timekeeper::currentDate, Timekeeper::currentTime);
+    private static final class CurrentDateProvider {
+
+        private final Generator<LocalDate> currentDate;
+
+        private CurrentDateProvider(final Generator<LocalDate> currentDate) {
+            this.currentDate = currentDate;
+        }
+
+        private LocalDate currentDateFor(final Description description) {
+            final CurrentDate methodAnnotation = description.getAnnotation(CurrentDate.class);
+            if (methodAnnotation != null) {
+                final String dateString = methodAnnotation.value();
+                return LocalDate.parse(dateString);
+            }
+
+            final CurrentDate classAnnotation = description.getTestClass().getAnnotation(CurrentDate.class);
+            if (classAnnotation != null) {
+                final String dateString = classAnnotation.value();
+                return LocalDate.parse(dateString);
+            }
+
+            return currentDate.next();
+        }
     }
 
-    public static FyodorTimekeeperRule from(final Clock clock) {
-        return new FyodorTimekeeperRule(
-                () -> clock.instant().atZone(UTC).toLocalDate(),
-                () -> clock.instant().atZone(UTC).toLocalTime());
-    }
+    private static final class CurrentTimeProvider {
 
-    public static FyodorTimekeeperRule withCurrentDate(final LocalDate currentDate) {
-        return withCurrentDate(() -> currentDate);
-    }
+        private final Generator<LocalTime> currentTime;
 
-    public static FyodorTimekeeperRule withCurrentDate(final Generator<LocalDate> currentDate) {
-        return new FyodorTimekeeperRule(currentDate, Timekeeper::currentTime);
-    }
+        private CurrentTimeProvider(final Generator<LocalTime> currentTime) {
+            this.currentTime = currentTime;
+        }
 
-    public static FyodorTimekeeperRule withCurrentTime(final LocalTime currentTime) {
-        return withCurrentTime(() -> currentTime);
-    }
+        private LocalTime currentTimeFor(final Description description) {
+            final CurrentTime methodAnnotation = description.getAnnotation(CurrentTime.class);
+            if (methodAnnotation != null) {
+                final String timeString = methodAnnotation.value();
+                return LocalTime.parse(timeString);
+            }
 
-    public static FyodorTimekeeperRule withCurrentTime(final Generator<LocalTime> currentTime) {
-        return new FyodorTimekeeperRule(Timekeeper::currentDate, currentTime);
-    }
+            final CurrentTime classAnnotation = description.getTestClass().getAnnotation(CurrentTime.class);
+            if (classAnnotation != null) {
+                final String timeString = classAnnotation.value();
+                return LocalTime.parse(timeString);
+            }
 
-    public static FyodorTimekeeperRule withCurrentDateAndTime(final LocalDateTime currentDateTime) {
-        return withCurrentDateAndTime(() -> currentDateTime);
-    }
-
-    public static FyodorTimekeeperRule withCurrentDateAndTime(final Generator<LocalDateTime> currentDateTime) {
-        return new FyodorTimekeeperRule(
-                () -> currentDateTime.next().toLocalDate(),
-                () -> currentDateTime.next().toLocalTime());
+            return currentTime.next();
+        }
     }
 }

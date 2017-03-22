@@ -2,13 +2,13 @@ package uk.org.fyodor.junit;
 
 import org.assertj.core.api.AbstractAssert;
 
-public final class ReportAssert<T> extends AbstractAssert<ReportAssert<T>, Report<T>> {
+final class ReportAssert<T> extends AbstractAssert<ReportAssert<T>, Report<T>> {
 
     private ReportAssert(final Report<T> actual) {
         super(actual, ReportAssert.class);
     }
 
-    public ReportAssert<T> beforeTestStarts(final T expectedObject) {
+    ReportAssert<T> beforeTestStarts(final T expectedObject) {
         isNotNull();
         org.assertj.core.api.Assertions.assertThat(actual.getObjectWhenTestStarts())
                 .describedAs("object before the test starts")
@@ -16,7 +16,7 @@ public final class ReportAssert<T> extends AbstractAssert<ReportAssert<T>, Repor
         return this;
     }
 
-    public ReportAssert<T> whenTestHasFinished(final T expectedObject) {
+    ReportAssert<T> whenTestHasFinished(final T expectedObject) {
         isNotNull();
         org.assertj.core.api.Assertions.assertThat(actual.getObjectWhenTestFinishes())
                 .describedAs("object after the test finishes")
@@ -24,7 +24,7 @@ public final class ReportAssert<T> extends AbstractAssert<ReportAssert<T>, Repor
         return this;
     }
 
-    public ReportAssert<T> whenFailed(final T expectedObject) {
+    ReportAssert<T> whenFailed(final T expectedObject) {
         isNotNull();
 
         org.assertj.core.api.Assertions.assertThat(actual.getObjectReportedInTestFailure())
@@ -33,7 +33,7 @@ public final class ReportAssert<T> extends AbstractAssert<ReportAssert<T>, Repor
         return this;
     }
 
-    public ReportAssert<T> duringTest(final T expectedObject) {
+    ReportAssert<T> duringTest(final T expectedObject) {
         isNotNull();
 
         org.assertj.core.api.Assertions.assertThat(actual.getObjectDuringTest())
@@ -43,7 +43,7 @@ public final class ReportAssert<T> extends AbstractAssert<ReportAssert<T>, Repor
         return this;
     }
 
-    public ReportAssert<T> failedBecauseOf(final Class<? extends Throwable> classOfCause) {
+    ReportAssert<T> failedBecauseOf(final Class<? extends Throwable> classOfCause) {
         isNotNull();
 
         org.assertj.core.api.Assertions.assertThat(actual.getCauseOfFailure())
@@ -53,7 +53,7 @@ public final class ReportAssert<T> extends AbstractAssert<ReportAssert<T>, Repor
         return this;
     }
 
-    public ReportAssert<T> didNotFail() {
+    ReportAssert<T> didNotFail() {
         isNotNull();
 
         org.assertj.core.api.Assertions.assertThat(actual.getCauseOfFailure())
@@ -63,7 +63,7 @@ public final class ReportAssert<T> extends AbstractAssert<ReportAssert<T>, Repor
         return this;
     }
 
-    public static <T> ReportAssert<T> assertThat(final Report<T> actual) {
+    static <T> ReportAssert<T> assertThat(final Report<T> actual) {
         return new ReportAssert<>(actual);
     }
 }

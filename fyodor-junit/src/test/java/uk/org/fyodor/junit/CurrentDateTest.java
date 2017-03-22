@@ -6,19 +6,18 @@ import org.junit.rules.TestName;
 import uk.org.fyodor.generators.time.CurrentDate;
 import uk.org.fyodor.generators.time.Timekeeper;
 
-import java.time.*;
+import java.time.DateTimeException;
+import java.time.LocalDate;
 
 import static java.time.LocalDate.of;
-import static org.junit.Assert.assertTrue;
 import static uk.org.fyodor.generators.RDG.localDate;
 import static uk.org.fyodor.generators.time.LocalDateRange.today;
-import static uk.org.fyodor.junit.FyodorTimekeeperRule.withCurrentDate;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
 import static uk.org.fyodor.junit.TestFailureListener.testFailed;
 import static uk.org.fyodor.junit.TestFinishedListener.testFinished;
 import static uk.org.fyodor.junit.TestStartedListener.testStarted;
-import static uk.org.fyodor.range.Range.fixed;
+import static uk.org.fyodor.junit.TimeFactory.Clocks.utcClockOf;
 
 @SuppressWarnings("ConstantConditions")
 public final class CurrentDateTest {
@@ -31,43 +30,39 @@ public final class CurrentDateTest {
             testFinished(reporter, Timekeeper::currentDate));
 
     @Test
-    public void usesCurrentDateWhenTestIsNotAnnotated() {
-        final LocalDate today = localDate().next();
-        Timekeeper.from(clockFrom(today));
+    public void noAnnotationsWithDefaultRule() {
+        final LocalDate initialDate = localDate().next();
 
-        testRunner.scheduleTest(TestClassWithNoAnnotations.class).run();
+        Timekeeper.from(utcClockOf(initialDate));
 
-        assertThat(reporter.reportFor(TestClassWithNoAnnotations.class, "first"))
+        testRunner.scheduleTest(NoAnnotationsWithDefaultRule.class).run();
+
+        assertThat(reporter.reportFor(NoAnnotationsWithDefaultRule.class, "first"))
                 .didNotFail()
-                .beforeTestStarts(today)
-                .duringTest(today)
-                .whenTestHasFinished(today);
+                .beforeTestStarts(initialDate)
+                .duringTest(initialDate)
+                .whenTestHasFinished(initialDate);
 
-        assertThat(reporter.reportFor(TestClassWithNoAnnotations.class, "second"))
+        assertThat(reporter.reportFor(NoAnnotationsWithDefaultRule.class, "second"))
                 .didNotFail()
-                .beforeTestStarts(today)
-                .duringTest(today)
-                .whenTestHasFinished(today);
-
-        assertThat(reporter.reportFor(TestClassWithNoAnnotations.class, "third"))
-                .didNotFail()
-                .beforeTestStarts(today)
-                .duringTest(today)
-                .whenTestHasFinished(today);
+                .beforeTestStarts(initialDate)
+                .duringTest(initialDate)
+                .whenTestHasFinished(initialDate);
     }
 
     @Test
-    public void ruleConfiguredWithCurrentDate() {
-        final LocalDate today = localDate().next();
-        Timekeeper.from(clockFrom(today));
+    public void dateConfiguredWithRule() {
+        final LocalDate initialDate = localDate().next();
 
-        testRunner.scheduleTest(RuleConfiguredWithCurrentDate.class).run();
+        Timekeeper.from(utcClockOf(initialDate));
 
-        assertThat(reporter.reportFor(RuleConfiguredWithCurrentDate.class, "first"))
+        testRunner.scheduleTest(DateConfiguredWithRule.class).run();
+
+        assertThat(reporter.reportFor(DateConfiguredWithRule.class, "first"))
                 .didNotFail()
-                .beforeTestStarts(today)
+                .beforeTestStarts(initialDate)
                 .duringTest(of(1999, 12, 31))
-                .whenTestHasFinished(today);
+                .whenTestHasFinished(initialDate);
     }
 
     @Test
@@ -75,225 +70,64 @@ public final class CurrentDateTest {
         final LocalDate today = localDate().next();
         final LocalDate yesterday = today.minusDays(1);
 
-        Timekeeper.from(clockFrom(yesterday));
-        Timekeeper.from(clockFrom(today));
+        Timekeeper.from(utcClockOf(yesterday));
+        Timekeeper.from(utcClockOf(today));
 
-        testRunner.scheduleTest(TestClassWithDateSpecificationOnClass.class).run();
+        testRunner.scheduleTest(WithAnnotations.class).run();
 
-        assertThat(reporter.reportFor(TestClassWithDateSpecificationOnClass.class, "greenTest"))
+        assertThat(reporter.reportFor(WithAnnotations.class, "first"))
                 .didNotFail()
                 .beforeTestStarts(today)
                 .duringTest(of(2011, 4, 13))
                 .whenTestHasFinished(today);
 
-        assertThat(reporter.reportFor(TestClassWithDateSpecificationOnClass.class, "redTest"))
-                .beforeTestStarts(today)
-                .whenFailed(today)
-                .whenTestHasFinished(today);
-    }
-
-    @Test
-    public void dateMayBeConfiguredPerTestMethod() {
-        final LocalDate today = localDate().next();
-        Timekeeper.from(clockFrom(today));
-
-        testRunner
-                .scheduleTest(TestClassWithDatedMethods.class)
-                .run();
-
-        assertThat(reporter.reportFor(TestClassWithDatedMethods.class, "greenTest"))
+        assertThat(reporter.reportFor(WithAnnotations.class, "second"))
                 .didNotFail()
                 .beforeTestStarts(today)
-                .duringTest(of(2016, 11, 25))
-                .whenTestHasFinished(today);
-    }
-
-    @Test
-    public void dateMayBeConfiguredPerClass() {
-        final LocalDate today = LocalDate.parse("2017-06-21");
-        Timekeeper.from(clockFrom(today));
-
-        testRunner
-                .scheduleTest(TestClassWithDateSpecificationOnClass.class)
-                .run();
-
-        assertThat(reporter.reportFor(TestClassWithDateSpecificationOnClass.class, "greenTest"))
-                .didNotFail()
-                .beforeTestStarts(today)
-                .duringTest(of(2011, 4, 13))
-                .whenTestHasFinished(today);
-    }
-
-    @Test
-    public void methodLevelDateAnnotationsTakePriorityOverClassLevelAnnotations() {
-        final LocalDate today = localDate().next();
-        Timekeeper.from(clockFrom(today));
-
-        testRunner
-                .scheduleTest(TestClassWithDateSpecificationOnClassAndMethod.class)
-                .run();
-
-        assertThat(reporter.reportFor(TestClassWithDateSpecificationOnClassAndMethod.class, "firstTestMethodUsingClassAnnotation"))
-                .didNotFail()
-                .beforeTestStarts(today)
-                .duringTest(of(2050, 1, 1))
-                .whenTestHasFinished(today);
-
-        assertThat(reporter.reportFor(TestClassWithDateSpecificationOnClassAndMethod.class, "secondTestMethodUsingClassAnnotation"))
-                .didNotFail()
-                .beforeTestStarts(today)
-                .duringTest(of(2050, 1, 1))
-                .whenTestHasFinished(today);
-
-        assertThat(reporter.reportFor(TestClassWithDateSpecificationOnClassAndMethod.class, "firstTestMethodUsingMethodAnnotation"))
-                .didNotFail()
-                .beforeTestStarts(today)
-                .duringTest(of(2013, 7, 11))
-                .whenTestHasFinished(today);
-
-        assertThat(reporter.reportFor(TestClassWithDateSpecificationOnClassAndMethod.class, "secondTestMethodUsingMethodAnnotation"))
-                .didNotFail()
-                .beforeTestStarts(today)
-                .duringTest(of(1999, 12, 31))
+                .duringTest(of(2015, 9, 18))
                 .whenTestHasFinished(today);
     }
 
     @Test
     public void testFailsWhenDateStringCannotBeParsed() {
-        final LocalDate today = localDate().next();
-        Timekeeper.from(clockFrom(today));
+        final LocalDate initialDate = localDate().next();
 
-        testRunner.scheduleTest(TestWithBadDateString.class).run();
+        Timekeeper.from(utcClockOf(initialDate));
 
-        assertThat(reporter.reportFor(TestWithBadDateString.class, "testWithBadDateString"))
-                .beforeTestStarts(today)
-                .whenTestHasFinished(today)
-                .whenFailed(today)
+        testRunner.scheduleTest(BadDateString.class).run();
+
+        assertThat(reporter.reportFor(BadDateString.class, "testWithBadDateString"))
+                .beforeTestStarts(initialDate)
+                .whenTestHasFinished(initialDate)
+                .whenFailed(initialDate)
                 .failedBecauseOf(DateTimeException.class);
     }
 
-    @Test
-    public void testCanUseCurrentDateFromRule() {
-        final LocalDate today = localDate().next();
-        Timekeeper.from(clockFrom(today));
+    public static final class WithAnnotations {
 
-        testRunner.scheduleTest(TestClassUsingCurrentDateFromRule.class).run();
-
-        assertThat(reporter.reportFor(TestClassUsingCurrentDateFromRule.class, "currentDateFromRule"))
-                .duringTest(of(2016, 11, 25));
-    }
-
-    private static Clock clockFrom(final LocalDate date) {
-        final Instant utcInstant = date.atTime(12, 0, 0).toInstant(ZoneOffset.UTC);
-        return Clock.fixed(utcInstant, ZoneOffset.UTC);
-    }
-
-    public static final class TestClassUsingCurrentDateFromRule {
         @Rule
-        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
+        public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();
 
         @Test
-        @CurrentDate("2016-11-25")
-        public void currentDateFromRule() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.currentDate());
+        @CurrentDate("2011-04-13")
+        public void first() {
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
+        }
+
+        @Test
+        @CurrentDate("2015-09-18")
+        public void second() {
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
         }
     }
 
-    public static final class TestClassWithDatedMethods {
+    public static final class BadDateString {
 
         @Rule
-        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
-
-        @Rule
-        public final TestName testName = new TestName();
-
-        @Test
-        @CurrentDate("2016-11-25")
-        public void greenTest() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
-        }
-
-        @Test
-        @CurrentDate("-128291386-06-21")
-        public void redTest() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
-            assertTrue(false);
-        }
-    }
-
-    @CurrentDate("2011-04-13")
-    public static final class TestClassWithDateSpecificationOnClass {
-
-        @Rule
-        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
-
-        @Rule
-        public final TestName testName = new TestName();
-
-        @Test
-        public void greenTest() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
-        }
-
-        @Test
-        public void redTest() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
-            assertTrue(false);
-        }
-    }
-
-    @CurrentDate("2050-01-01")
-    public static final class TestClassWithDateSpecificationOnClassAndMethod {
-
-        @Rule
-        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
-
-        @Rule
-        public final TestName testName = new TestName();
-
-        @Test
-        public void firstTestMethodUsingClassAnnotation() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
-        }
-
-        @Test
-        @CurrentDate("2013-07-11")
-        public void firstTestMethodUsingMethodAnnotation() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
-        }
-
-        @Test
-        public void secondTestMethodUsingClassAnnotation() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
-        }
-
-        @Test
-        @CurrentDate("1999-12-31")
-        public void secondTestMethodUsingMethodAnnotation() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
-        }
-
-        @Test
-        public void failingTestMethodUsingClassAnnotation() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
-            assertTrue(false);
-        }
-
-        @Test
-        @CurrentDate("2016-11-25")
-        public void failingTestMethodUsingMethodAnnotation() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
-            assertTrue(false);
-        }
-    }
-
-    public static final class TestWithBadDateString {
-
-        @Rule
-        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
+        public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
 
         @Test
         @CurrentDate("this-is-not-a-date")
@@ -301,10 +135,10 @@ public final class CurrentDateTest {
         }
     }
 
-    public static final class TestClassWithNoAnnotations {
+    public static final class NoAnnotationsWithDefaultRule {
 
         @Rule
-        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
+        public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();
@@ -318,17 +152,12 @@ public final class CurrentDateTest {
         public void second() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
         }
-
-        @Test
-        public void third() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
-        }
     }
 
-    public static final class RuleConfiguredWithCurrentDate {
+    public static final class DateConfiguredWithRule {
 
         @Rule
-        public final FyodorTimekeeperRule rule = withCurrentDate(localDate(fixed(of(1999, 12, 31))));
+        public final FyodorTestRule rule = FyodorTestRule.withCurrentDate(of(1999, 12, 31));
 
         @Rule
         public final TestName testName = new TestName();
