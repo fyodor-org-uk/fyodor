@@ -17,6 +17,7 @@ import uk.org.fyodor.range.Range;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -71,6 +72,17 @@ public class RDG {
         ensure(isNotNull(range), "date range cannot be null");
 
         return new LocalDateGenerator(sourceOfRandomness(), range);
+    }
+
+    public static Generator<LocalDateTime> localDateTime() {
+        return localDateTime(LocalDateRange.all(), LocalTimeRange.all());
+    }
+
+    public static Generator<LocalDateTime> localDateTime(final Range<LocalDate> dateRange,
+                                                         final Range<LocalTime> timeRange) {
+        final Generator<LocalDate> date = localDate(dateRange);
+        final Generator<LocalTime> time = localTime(timeRange);
+        return () -> date.next().atTime(time.next());
     }
 
     public static Generator<Boolean> bool() {
