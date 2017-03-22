@@ -8,14 +8,12 @@ import uk.org.fyodor.generators.collections.ArrayGenerator;
 import uk.org.fyodor.generators.collections.ListGenerator;
 import uk.org.fyodor.generators.collections.MapGenerator;
 import uk.org.fyodor.generators.collections.SetGenerator;
-import uk.org.fyodor.generators.time.LocalDateGenerator;
-import uk.org.fyodor.generators.time.LocalDateRange;
-import uk.org.fyodor.generators.time.LocalTimeGenerator;
-import uk.org.fyodor.generators.time.LocalTimeRange;
+import uk.org.fyodor.generators.time.*;
 import uk.org.fyodor.range.Range;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -45,6 +43,20 @@ public class RDG {
     private static final CurrencyGenerator CURRENCY_GENERATOR = new CurrencyGenerator();
     private static final LocaleGenerator LOCALE_GENERATOR = new LocaleGenerator();
     private static final Iso3CountryGenerator ISO_3_COUNTRY_GENERATOR = new Iso3CountryGenerator();
+
+    public static Generator<Instant> instant() {
+        return instant(InstantRange.all());
+    }
+
+    public static Generator<Instant> instant(final InstantRange range) {
+        return instant((Range<Instant>) range);
+    }
+
+    public static Generator<Instant> instant(final Range<Instant> range) {
+        ensure(isNotNull(range), "instant range cannot be null");
+
+        return new InstantGenerator(sourceOfRandomness(), range);
+    }
 
     public static Generator<LocalTime> localTime() {
         return localTime(LocalTimeRange.all());
