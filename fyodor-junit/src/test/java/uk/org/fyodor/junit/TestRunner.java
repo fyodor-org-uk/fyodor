@@ -1,4 +1,4 @@
-package uk.org.fyodor.random;
+package uk.org.fyodor.junit;
 
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
@@ -12,53 +12,57 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
 
-final class TestRunner {
+public final class TestRunner<T> {
 
     private final List<RunListener> runListeners;
-    private final Map<Class<?>, Long> startingSeedByTestClass = new HashMap<>();
+    private final Map<Class<?>, T> startingObjectByTestClass = new HashMap<>();
+    private Consumer<T> whatToDoWithT = t -> {
+    };
 
-    TestRunner(final RunListener... runListeners) {
+    public TestRunner(final RunListener... runListeners) {
         this.runListeners = asList(runListeners);
     }
 
-    TestRunner scheduleTestWithInitialSeed(final Class<?> testClass, final long startingSeed) {
-        startingSeedByTestClass.put(testClass, startingSeed);
+    public TestRunner<T> scheduleTestWithObject(final Class<?> testClass, final T startingObject, final Consumer<T> whatToDoWithT) {
+        this.whatToDoWithT = whatToDoWithT;
+        this.startingObjectByTestClass.put(testClass, startingObject);
         return this;
     }
 
-    TestRunner scheduleTest(final Class<?> testClass) {
-        startingSeedByTestClass.put(testClass, null);
+    public TestRunner<T> scheduleTest(final Class<?> testClass) {
+        this.startingObjectByTestClass.put(testClass, null);
         return this;
     }
 
-    void run() {
-        for (final Class<?> testClass : startingSeedByTestClass.keySet()) {
+    public void run() {
+        for (final Class<?> testClass : startingObjectByTestClass.keySet()) {
             executeTest(testClass);
         }
     }
 
-    void runInParallel() {
+    public void runInParallel() {
         final List<Runnable> runnableTestClasses = new LinkedList<>();
-        for (final Class<?> testClass : startingSeedByTestClass.keySet()) {
+        for (final Class<?> testClass : startingObjectByTestClass.keySet()) {
             runnableTestClasses.add(() -> executeTest(testClass));
         }
         executeTestsAndWaitForThemToFinish(runnableTestClasses);
     }
 
     private void executeTest(final Class<?> testClass) {
-        final Long seed = startingSeedByTestClass.get(testClass);
-        if (seed == null) {
+        final T object = startingObjectByTestClass.get(testClass);
+        if (object == null) {
             executeJunitTest(testClass);
         } else {
-            executeSeededJunitTest(testClass, seed);
+            executeJunitTestWithSpecificObject(testClass, object);
         }
     }
 
-    private void executeSeededJunitTest(final Class<?> testClass, final long seed) {
-        RandomSourceProvider.seed().next(seed);
+    private void executeJunitTestWithSpecificObject(final Class<?> testClass, final T object) {
+        whatToDoWithT.accept(object);
         executeJunitTest(testClass);
     }
 
