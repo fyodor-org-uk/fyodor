@@ -8,17 +8,17 @@ import uk.org.fyodor.generators.time.CurrentTime;
 import uk.org.fyodor.generators.time.Timekeeper;
 
 import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDate;
 
 import static java.time.ZoneOffset.UTC;
 import static uk.org.fyodor.generators.RDG.*;
-import static uk.org.fyodor.junit.FyodorTimekeeperRule.from;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
 import static uk.org.fyodor.junit.TestFailureListener.testFailed;
 import static uk.org.fyodor.junit.TestFinishedListener.testFinished;
 import static uk.org.fyodor.junit.TestStartedListener.testStarted;
+import static uk.org.fyodor.junit.TimeFactory.Clocks.utcClockOf;
+import static uk.org.fyodor.junit.TimeFactory.Instants.utcInstantOf;
 
 public final class CurrentClockTest {
 
@@ -30,72 +30,66 @@ public final class CurrentClockTest {
             testFinished(reporter, Timekeeper::currentClock));
 
     @Test
-    public void usesCurrentDateAndTimeWhenTestIsNotAnnotated() {
-        final Instant todayAsInstant = instant().next();
-        final Clock today = clockFrom(todayAsInstant);
+    public void noAnnotationsWithDefaultRule() {
+        final Clock initialClock = utcClockOf(instant().next());
 
-        Timekeeper.from(today);
+        Timekeeper.from(initialClock);
 
-        testRunner.scheduleTest(TestClassWithNoAnnotations.class).run();
+        testRunner.scheduleTest(NoAnnotationsWithDefaultRule.class).run();
 
-        assertThat(reporter.reportFor(TestClassWithNoAnnotations.class, "first"))
+        assertThat(reporter.reportFor(NoAnnotationsWithDefaultRule.class, "first"))
                 .didNotFail()
-                .beforeTestStarts(today)
-                .duringTest(today)
-                .whenTestHasFinished(today);
+                .beforeTestStarts(initialClock)
+                .duringTest(initialClock)
+                .whenTestHasFinished(initialClock);
 
-        assertThat(reporter.reportFor(TestClassWithNoAnnotations.class, "second"))
+        assertThat(reporter.reportFor(NoAnnotationsWithDefaultRule.class, "second"))
                 .didNotFail()
-                .beforeTestStarts(today)
-                .duringTest(today)
-                .whenTestHasFinished(today);
-
-        assertThat(reporter.reportFor(TestClassWithNoAnnotations.class, "third"))
-                .didNotFail()
-                .beforeTestStarts(today)
-                .duringTest(today)
-                .whenTestHasFinished(today);
+                .beforeTestStarts(initialClock)
+                .duringTest(initialClock)
+                .whenTestHasFinished(initialClock);
     }
 
     @Test
-    public void ruleConfiguredWithClock() {
-        final Clock todaysClock = clockFrom(localDate().next().atTime(localTime().next()).toInstant(UTC));
+    public void clockConfiguredWithRule() {
+        final Clock initialClock = utcClockOf(localDate().next().atTime(localTime().next()).toInstant(UTC));
 
-        Timekeeper.from(todaysClock);
+        Timekeeper.from(initialClock);
 
         testRunner.scheduleTest(RuleConfiguredWithClock.class).run();
 
         assertThat(reporter.reportFor(RuleConfiguredWithClock.class, "first"))
                 .didNotFail()
-                .beforeTestStarts(todaysClock)
-                .duringTest(clockFrom(utcInstantOf(1999, 12, 31, 23, 59, 59)))
-                .whenTestHasFinished(todaysClock);
+                .beforeTestStarts(initialClock)
+                .duringTest(utcClockOf(utcInstantOf(1999, 12, 31, 23, 59, 59)))
+                .whenTestHasFinished(initialClock);
     }
 
     @Test
     public void annotationsOverrideRuleConfiguredWithClock() {
-        final Clock todaysClock = clockFrom(localDate().next().atTime(localTime().next()).toInstant(UTC));
+        final Clock initialClock = utcClockOf(localDate().next().atTime(localTime().next()).toInstant(UTC));
 
-        Timekeeper.from(todaysClock);
+        Timekeeper.from(initialClock);
 
-        testRunner.scheduleTest(DateAndTimeAnnotationsAndRuleConfiguredWithClock.class).run();
+        testRunner.scheduleTest(AnnotatedAndRuleConfiguredWithClock.class).run();
 
-        assertThat(reporter.reportFor(DateAndTimeAnnotationsAndRuleConfiguredWithClock.class, "annotatedClass"))
+        assertThat(reporter.reportFor(AnnotatedAndRuleConfiguredWithClock.class, "annotatedClass"))
                 .didNotFail()
-                .beforeTestStarts(todaysClock)
-                .duringTest(clockFrom(utcInstantOf(1999, 12, 31, 23, 59, 59)))
-                .whenTestHasFinished(todaysClock);
+                .beforeTestStarts(initialClock)
+                .duringTest(utcClockOf(utcInstantOf(1999, 12, 31, 23, 59, 59)))
+                .whenTestHasFinished(initialClock);
 
-        assertThat(reporter.reportFor(DateAndTimeAnnotationsAndRuleConfiguredWithClock.class, "annotatedMethod"))
+        assertThat(reporter.reportFor(AnnotatedAndRuleConfiguredWithClock.class, "annotatedMethod"))
                 .didNotFail()
-                .beforeTestStarts(todaysClock)
-                .duringTest(clockFrom(utcInstantOf(2010, 1, 1, 12, 0, 0)))
-                .whenTestHasFinished(todaysClock);
+                .beforeTestStarts(initialClock)
+                .duringTest(utcClockOf(utcInstantOf(2010, 1, 1, 12, 0, 0)))
+                .whenTestHasFinished(initialClock);
     }
 
     @Test
     public void clockConfiguredWithDateAndTimeAnnotations() {
-        final Clock initialClock = clockFrom(instant().next());
+        final Clock initialClock = utcClockOf(instant().next());
+
         Timekeeper.from(initialClock);
 
         testRunner.scheduleTest(TestClassWithAnnotations.class).run();
@@ -103,35 +97,26 @@ public final class CurrentClockTest {
         assertThat(reporter.reportFor(TestClassWithAnnotations.class, "methodWithDate"))
                 .didNotFail()
                 .beforeTestStarts(initialClock)
-                .duringTest(clockFrom(utcInstantOf(2015, 11, 24, 11, 59, 59)))
+                .duringTest(utcClockOf(utcInstantOf(2015, 11, 24, 11, 59, 59)))
                 .whenTestHasFinished(initialClock);
 
         assertThat(reporter.reportFor(TestClassWithAnnotations.class, "methodWithTime"))
                 .didNotFail()
                 .beforeTestStarts(initialClock)
-                .duringTest(clockFrom(utcInstantOf(2014, 5, 1, 12, 0, 0)))
+                .duringTest(utcClockOf(utcInstantOf(2014, 5, 1, 12, 0, 0)))
                 .whenTestHasFinished(initialClock);
 
         assertThat(reporter.reportFor(TestClassWithAnnotations.class, "classAnnotationsOnly"))
                 .didNotFail()
                 .beforeTestStarts(initialClock)
-                .duringTest(clockFrom(utcInstantOf(2014, 5, 1, 11, 59, 59)))
+                .duringTest(utcClockOf(utcInstantOf(2014, 5, 1, 11, 59, 59)))
                 .whenTestHasFinished(initialClock);
     }
 
-    private static Clock clockFrom(final Instant instant) {
-        return Clock.fixed(instant, UTC);
-    }
-
-    private static Instant utcInstantOf(final int year, final int month, final int day,
-                                        final int hour, final int minute, final int second) {
-        return LocalDate.of(year, month, day).atTime(hour, minute, second, 0).toInstant(UTC);
-    }
-
-    public static final class TestClassWithNoAnnotations {
+    public static final class NoAnnotationsWithDefaultRule {
 
         @Rule
-        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
+        public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();
@@ -145,18 +130,13 @@ public final class CurrentClockTest {
         public void second() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.currentClock());
         }
-
-        @Test
-        public void third() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.currentClock());
-        }
     }
 
     @CurrentDate("2014-05-01")
     @CurrentTime("11:59:59")
     public static final class TestClassWithAnnotations {
         @Rule
-        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
+        public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();
@@ -182,7 +162,7 @@ public final class CurrentClockTest {
     public static final class RuleConfiguredWithClock {
 
         @Rule
-        public final FyodorTimekeeperRule rule = from(
+        public final FyodorTestRule rule = FyodorTestRule.from(
                 Clock.fixed(LocalDate.of(1999, 12, 31).atTime(23, 59, 59).toInstant(UTC), UTC));
 
         @Rule
@@ -196,10 +176,10 @@ public final class CurrentClockTest {
 
     @CurrentDate("1999-12-31")
     @CurrentTime("23:59:59")
-    public static final class DateAndTimeAnnotationsAndRuleConfiguredWithClock {
+    public static final class AnnotatedAndRuleConfiguredWithClock {
 
         @Rule
-        public final FyodorTimekeeperRule rule = from(
+        public final FyodorTestRule rule = FyodorTestRule.from(
                 Clock.fixed(LocalDate.of(2003, 6, 15).atTime(0, 0, 0).toInstant(UTC), UTC));
 
         @Rule

@@ -3,7 +3,7 @@ package uk.org.fyodor.junit;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class Reporter<T> {
+final class Reporter<T> {
 
     private final Map<String, Report<T>> objectReportByMethod = new ConcurrentHashMap<>();
 
@@ -15,7 +15,7 @@ public final class Reporter<T> {
                 new Report<T>().setObjectWhenTestStarts(object));
     }
 
-    public void objectDuringTest(final Class<?> testClass, final String testMethod, final T object) {
+    void objectDuringTest(final Class<?> testClass, final String testMethod, final T object) {
         final String testName = testName(testClass, testMethod);
 
         objectReportByMethod.get(testName)
@@ -37,12 +37,12 @@ public final class Reporter<T> {
                 .setFailureCause(cause);
     }
 
-    public Report<T> reportFor(final Class<?> testClass, final String methodName) {
+    Report<T> reportFor(final Class<?> testClass, final String methodName) {
         final String fullMethodName = testName(testClass, methodName);
         return objectReportByMethod.get(fullMethodName);
     }
 
-    public static <T> Reporter<T> reporter() {
+    static <T> Reporter<T> reporter() {
         return new Reporter<>();
     }
 

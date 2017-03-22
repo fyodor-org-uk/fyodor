@@ -1,6 +1,6 @@
 package uk.org.fyodor.junit;
 
-public final class Report<T> {
+final class Report<T> {
 
     private T objectWhenTestStarts;
     private T objectDuringTest;

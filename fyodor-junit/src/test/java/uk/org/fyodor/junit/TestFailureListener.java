@@ -4,7 +4,7 @@ import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
-public final class TestFailureListener<T> extends RunListener {
+final class TestFailureListener<T> extends RunListener {
 
     private final Reporter<T> reporter;
     private final ObjectDuringFailureSupplier<T> obtainObject;
@@ -24,11 +24,11 @@ public final class TestFailureListener<T> extends RunListener {
                 failure.getException());
     }
 
-    public static <T> RunListener testFailed(final Reporter<T> reporter, final ObjectDuringFailureSupplier<T> obtainObject) {
+    static <T> RunListener testFailed(final Reporter<T> reporter, final ObjectDuringFailureSupplier<T> obtainObject) {
         return new TestFailureListener<>(reporter, obtainObject);
     }
 
-    public interface ObjectDuringFailureSupplier<T> {
+    interface ObjectDuringFailureSupplier<T> {
         T objectDuringFailure(Failure failure);
     }
 }
