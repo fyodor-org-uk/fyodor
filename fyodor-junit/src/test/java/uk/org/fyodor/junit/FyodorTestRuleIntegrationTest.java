@@ -1,12 +1,11 @@
-package uk.org.fyodor.random;
+package uk.org.fyodor.junit;
 
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.rules.TestRule;
-import uk.org.fyodor.junit.Reporter;
-import uk.org.fyodor.junit.TestRunner;
+import uk.org.fyodor.random.Seed;
 
 import java.util.Random;
 
@@ -23,9 +22,9 @@ public final class FyodorTestRuleIntegrationTest {
     private static final Reporter<Long> reporter = reporter();
 
     private final TestRunner<Long> testRunner = new TestRunner<>(
-            testStarted(reporter, () -> RandomSourceProvider.seed().current()),
+            testStarted(reporter, () -> seed().current()),
             testFailed(reporter, (failure) -> ((FailedWithSeedException) failure.getException().getCause()).seed()),
-            testFinished(reporter, () -> RandomSourceProvider.seed().current()));
+            testFinished(reporter, () -> seed().current()));
 
     @Test
     public void setsTheSeedBeforeEachTestMethodAndThenResetsTheSeedAfterEachTestMethod() {
@@ -33,7 +32,7 @@ public final class FyodorTestRuleIntegrationTest {
 
         final Class<?> testClass = SeededTestClass.class;
 
-        testRunner.scheduleTestWithObject(testClass, initialSeed, seed -> RandomSourceProvider.seed().next(seed)).run();
+        testRunner.scheduleTestWithObject(testClass, initialSeed, seed -> seed().next(seed)).run();
 
         assertThat(reporter.reportFor(testClass, "redTest"))
                 .beforeTestStarts(initialSeed)
@@ -70,7 +69,7 @@ public final class FyodorTestRuleIntegrationTest {
         final long initialSeed = new Random().nextLong();
         final Class<?> testClass = TestClassWithSeededTestMethods.class;
 
-        testRunner.scheduleTestWithObject(testClass, initialSeed, seed -> RandomSourceProvider.seed().next(seed)).run();
+        testRunner.scheduleTestWithObject(testClass, initialSeed, seed -> seed().next(seed)).run();
 
         assertThat(reporter.reportFor(testClass, "redTest"))
                 .beforeTestStarts(initialSeed)
@@ -89,7 +88,7 @@ public final class FyodorTestRuleIntegrationTest {
         final long initialSeed = new Random().nextLong();
         final Class<?> testClass = NonSeededTestClass.class;
 
-        testRunner.scheduleTestWithObject(testClass, initialSeed, seed -> RandomSourceProvider.seed().next(seed)).run();
+        testRunner.scheduleTestWithObject(testClass, initialSeed, seed -> seed().next(seed)).run();
 
         assertThat(reporter.reportFor(testClass, "redTest"))
                 .whenFailed(initialSeed);
@@ -101,7 +100,7 @@ public final class FyodorTestRuleIntegrationTest {
 
         final Class<?> testClass = SeededTestClassWithSeededTestMethods.class;
 
-        testRunner.scheduleTestWithObject(testClass, initialSeed, seed -> RandomSourceProvider.seed().next(seed)).run();
+        testRunner.scheduleTestWithObject(testClass, initialSeed, seed -> seed().next(seed)).run();
 
         assertThat(reporter.reportFor(testClass, "redTest"))
                 .beforeTestStarts(initialSeed)
@@ -117,9 +116,9 @@ public final class FyodorTestRuleIntegrationTest {
 
     @Test
     public void seedsForParallelTestsDoNotInterfereWithEachOther() {
-        testRunner.scheduleTestWithObject(SeededTestClass.class, 0L, seed -> RandomSourceProvider.seed().next(seed))
-                .scheduleTestWithObject(SeededTestClassWithSeededTestMethods.class, 1L, seed -> RandomSourceProvider.seed().next(seed))
-                .scheduleTestWithObject(TestClassWithSeededTestMethods.class, 2L, seed -> RandomSourceProvider.seed().next(seed))
+        testRunner.scheduleTestWithObject(SeededTestClass.class, 0L, seed -> seed().next(seed))
+                .scheduleTestWithObject(SeededTestClassWithSeededTestMethods.class, 1L, seed -> seed().next(seed))
+                .scheduleTestWithObject(TestClassWithSeededTestMethods.class, 2L, seed -> seed().next(seed))
                 .runInParallel();
 
         assertThat(reporter.reportFor(SeededTestClass.class, "redTest"))

@@ -1,21 +1,23 @@
-package uk.org.fyodor.time;
+package uk.org.fyodor.junit;
 
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import uk.org.fyodor.generators.Generator;
+import uk.org.fyodor.generators.time.CurrentDate;
+import uk.org.fyodor.generators.time.CurrentTime;
 import uk.org.fyodor.generators.time.Timekeeper;
 
 import java.time.*;
 
 import static java.time.ZoneOffset.UTC;
 
-public final class FyodorTimekeeper extends TestWatcher {
+public final class FyodorTimekeeperRule extends TestWatcher {
 
     private final ThreadLocal<Boolean> timekeeperConfigured = ThreadLocal.withInitial(() -> false);
     private final Generator<LocalDate> currentDate;
     private final Generator<LocalTime> currentTime;
 
-    private FyodorTimekeeper(final Generator<LocalDate> currentDate, final Generator<LocalTime> currentTime) {
+    private FyodorTimekeeperRule(final Generator<LocalDate> currentDate, final Generator<LocalTime> currentTime) {
         this.currentDate = currentDate;
         this.currentTime = currentTime;
     }
@@ -89,38 +91,38 @@ public final class FyodorTimekeeper extends TestWatcher {
         return Clock.fixed(dateTime.toInstant(UTC), UTC);
     }
 
-    public static FyodorTimekeeper timekeeper() {
-        return new FyodorTimekeeper(Timekeeper::currentDate, Timekeeper::currentTime);
+    public static FyodorTimekeeperRule timekeeper() {
+        return new FyodorTimekeeperRule(Timekeeper::currentDate, Timekeeper::currentTime);
     }
 
-    public static FyodorTimekeeper from(final Clock clock) {
-        return new FyodorTimekeeper(
+    public static FyodorTimekeeperRule from(final Clock clock) {
+        return new FyodorTimekeeperRule(
                 () -> clock.instant().atZone(UTC).toLocalDate(),
                 () -> clock.instant().atZone(UTC).toLocalTime());
     }
 
-    public static FyodorTimekeeper withCurrentDate(final LocalDate currentDate) {
+    public static FyodorTimekeeperRule withCurrentDate(final LocalDate currentDate) {
         return withCurrentDate(() -> currentDate);
     }
 
-    public static FyodorTimekeeper withCurrentDate(final Generator<LocalDate> currentDate) {
-        return new FyodorTimekeeper(currentDate, Timekeeper::currentTime);
+    public static FyodorTimekeeperRule withCurrentDate(final Generator<LocalDate> currentDate) {
+        return new FyodorTimekeeperRule(currentDate, Timekeeper::currentTime);
     }
 
-    public static FyodorTimekeeper withCurrentTime(final LocalTime currentTime) {
+    public static FyodorTimekeeperRule withCurrentTime(final LocalTime currentTime) {
         return withCurrentTime(() -> currentTime);
     }
 
-    public static FyodorTimekeeper withCurrentTime(final Generator<LocalTime> currentTime) {
-        return new FyodorTimekeeper(Timekeeper::currentDate, currentTime);
+    public static FyodorTimekeeperRule withCurrentTime(final Generator<LocalTime> currentTime) {
+        return new FyodorTimekeeperRule(Timekeeper::currentDate, currentTime);
     }
 
-    public static FyodorTimekeeper withCurrentDateAndTime(final LocalDateTime currentDateTime) {
+    public static FyodorTimekeeperRule withCurrentDateAndTime(final LocalDateTime currentDateTime) {
         return withCurrentDateAndTime(() -> currentDateTime);
     }
 
-    public static FyodorTimekeeper withCurrentDateAndTime(final Generator<LocalDateTime> currentDateTime) {
-        return new FyodorTimekeeper(
+    public static FyodorTimekeeperRule withCurrentDateAndTime(final Generator<LocalDateTime> currentDateTime) {
+        return new FyodorTimekeeperRule(
                 () -> currentDateTime.next().toLocalDate(),
                 () -> currentDateTime.next().toLocalTime());
     }

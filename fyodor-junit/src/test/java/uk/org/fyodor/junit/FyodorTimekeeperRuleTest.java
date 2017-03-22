@@ -1,4 +1,4 @@
-package uk.org.fyodor.time;
+package uk.org.fyodor.junit;
 
 import org.junit.Test;
 import uk.org.fyodor.generators.RDG;
@@ -10,7 +10,7 @@ import static java.time.ZoneOffset.UTC;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.runner.Description.createTestDescription;
 
-public class FyodorTimekeeperTest {
+public class FyodorTimekeeperRuleTest {
 
     @Test
     public void startingWithCurrentDateGenerator() {
@@ -18,8 +18,8 @@ public class FyodorTimekeeperTest {
         final LocalTime currentTime = LocalTime.now();
         Timekeeper.from(clock(today.atTime(currentTime)));
 
-        FyodorTimekeeper.withCurrentDate(() -> LocalDate.of(1999, 12, 31))
-                .starting(createTestDescription(FyodorTimekeeperTest.class, "test"));
+        FyodorTimekeeperRule.withCurrentDate(() -> LocalDate.of(1999, 12, 31))
+                .starting(createTestDescription(FyodorTimekeeperRuleTest.class, "test"));
 
         assertThat(Timekeeper.currentInstant()).isEqualTo(utcInstantOf(1999, 12, 31, currentTime));
     }
@@ -30,8 +30,8 @@ public class FyodorTimekeeperTest {
         final LocalTime currentTime = LocalTime.now();
         Timekeeper.from(clock(today.atTime(currentTime)));
 
-        FyodorTimekeeper.withCurrentDate(LocalDate.of(1999, 12, 31))
-                .starting(createTestDescription(FyodorTimekeeperTest.class, "test"));
+        FyodorTimekeeperRule.withCurrentDate(LocalDate.of(1999, 12, 31))
+                .starting(createTestDescription(FyodorTimekeeperRuleTest.class, "test"));
 
         assertThat(Timekeeper.currentInstant()).isEqualTo(utcInstantOf(1999, 12, 31, currentTime));
     }
@@ -42,8 +42,8 @@ public class FyodorTimekeeperTest {
         final LocalTime currentTime = LocalTime.now();
         Timekeeper.from(clock(today.atTime(currentTime)));
 
-        FyodorTimekeeper.withCurrentTime(() -> LocalTime.of(3, 4, 5))
-                .starting(createTestDescription(FyodorTimekeeperTest.class, "test"));
+        FyodorTimekeeperRule.withCurrentTime(() -> LocalTime.of(3, 4, 5))
+                .starting(createTestDescription(FyodorTimekeeperRuleTest.class, "test"));
 
         assertThat(Timekeeper.currentInstant()).isEqualTo(utcInstantOf(today, 3, 4, 5));
     }
@@ -54,8 +54,8 @@ public class FyodorTimekeeperTest {
         final LocalTime currentTime = LocalTime.now();
         Timekeeper.from(clock(today.atTime(currentTime)));
 
-        FyodorTimekeeper.withCurrentTime(LocalTime.of(3, 4, 5))
-                .starting(createTestDescription(FyodorTimekeeperTest.class, "test"));
+        FyodorTimekeeperRule.withCurrentTime(LocalTime.of(3, 4, 5))
+                .starting(createTestDescription(FyodorTimekeeperRuleTest.class, "test"));
 
         assertThat(Timekeeper.currentInstant()).isEqualTo(utcInstantOf(today, 3, 4, 5));
     }
@@ -66,8 +66,8 @@ public class FyodorTimekeeperTest {
         final LocalTime currentTime = LocalTime.now();
         Timekeeper.from(clock(today.atTime(currentTime)));
 
-        FyodorTimekeeper.withCurrentDateAndTime(() -> LocalDateTime.of(1999, 12, 31, 23, 59, 59))
-                .starting(createTestDescription(FyodorTimekeeperTest.class, "test"));
+        FyodorTimekeeperRule.withCurrentDateAndTime(() -> LocalDateTime.of(1999, 12, 31, 23, 59, 59))
+                .starting(createTestDescription(FyodorTimekeeperRuleTest.class, "test"));
 
         assertThat(Timekeeper.currentInstant())
                 .isEqualTo(utcInstantOf(1999, 12, 31, 23, 59, 59));
@@ -79,8 +79,8 @@ public class FyodorTimekeeperTest {
         final LocalTime currentTime = LocalTime.now();
         Timekeeper.from(clock(today.atTime(currentTime)));
 
-        FyodorTimekeeper.withCurrentDateAndTime(LocalDateTime.of(1999, 12, 31, 23, 59, 59))
-                .starting(createTestDescription(FyodorTimekeeperTest.class, "test"));
+        FyodorTimekeeperRule.withCurrentDateAndTime(LocalDateTime.of(1999, 12, 31, 23, 59, 59))
+                .starting(createTestDescription(FyodorTimekeeperRuleTest.class, "test"));
 
         assertThat(Timekeeper.currentInstant())
                 .isEqualTo(utcInstantOf(1999, 12, 31, 23, 59, 59));
@@ -90,8 +90,8 @@ public class FyodorTimekeeperTest {
     public void startingFromClock() {
         Timekeeper.from(clock(RDG.localDateTime().next()));
 
-        FyodorTimekeeper.from(clock(LocalDateTime.of(1999, 12, 31, 23, 59, 59)))
-                .starting(createTestDescription(FyodorTimekeeperTest.class, "test"));
+        FyodorTimekeeperRule.from(clock(LocalDateTime.of(1999, 12, 31, 23, 59, 59)))
+                .starting(createTestDescription(FyodorTimekeeperRuleTest.class, "test"));
 
         assertThat(Timekeeper.currentInstant())
                 .isEqualTo(utcInstantOf(1999, 12, 31, 23, 59, 59));

@@ -1,4 +1,4 @@
-package uk.org.fyodor.random;
+package uk.org.fyodor.junit;
 
 final class FailedWithSeedException extends RuntimeException {
 

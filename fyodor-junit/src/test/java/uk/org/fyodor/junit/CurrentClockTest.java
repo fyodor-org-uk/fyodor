@@ -1,11 +1,11 @@
-package uk.org.fyodor.time;
+package uk.org.fyodor.junit;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
+import uk.org.fyodor.generators.time.CurrentDate;
+import uk.org.fyodor.generators.time.CurrentTime;
 import uk.org.fyodor.generators.time.Timekeeper;
-import uk.org.fyodor.junit.Reporter;
-import uk.org.fyodor.junit.TestRunner;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -13,12 +13,12 @@ import java.time.LocalDate;
 
 import static java.time.ZoneOffset.UTC;
 import static uk.org.fyodor.generators.RDG.*;
+import static uk.org.fyodor.junit.FyodorTimekeeperRule.from;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
 import static uk.org.fyodor.junit.TestFailureListener.testFailed;
 import static uk.org.fyodor.junit.TestFinishedListener.testFinished;
 import static uk.org.fyodor.junit.TestStartedListener.testStarted;
-import static uk.org.fyodor.time.FyodorTimekeeper.from;
 
 public final class CurrentClockTest {
 
@@ -131,7 +131,7 @@ public final class CurrentClockTest {
     public static final class TestClassWithNoAnnotations {
 
         @Rule
-        public final FyodorTimekeeper rule = FyodorTimekeeper.timekeeper();
+        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
 
         @Rule
         public final TestName testName = new TestName();
@@ -156,7 +156,7 @@ public final class CurrentClockTest {
     @CurrentTime("11:59:59")
     public static final class TestClassWithAnnotations {
         @Rule
-        public final FyodorTimekeeper rule = FyodorTimekeeper.timekeeper();
+        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
 
         @Rule
         public final TestName testName = new TestName();
@@ -182,7 +182,7 @@ public final class CurrentClockTest {
     public static final class RuleConfiguredWithClock {
 
         @Rule
-        public final FyodorTimekeeper rule = from(
+        public final FyodorTimekeeperRule rule = from(
                 Clock.fixed(LocalDate.of(1999, 12, 31).atTime(23, 59, 59).toInstant(UTC), UTC));
 
         @Rule
@@ -199,7 +199,7 @@ public final class CurrentClockTest {
     public static final class DateAndTimeAnnotationsAndRuleConfiguredWithClock {
 
         @Rule
-        public final FyodorTimekeeper rule = from(
+        public final FyodorTimekeeperRule rule = from(
                 Clock.fixed(LocalDate.of(2003, 6, 15).atTime(0, 0, 0).toInstant(UTC), UTC));
 
         @Rule

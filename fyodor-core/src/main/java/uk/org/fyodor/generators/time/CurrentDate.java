@@ -1,4 +1,4 @@
-package uk.org.fyodor.time;
+package uk.org.fyodor.generators.time;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

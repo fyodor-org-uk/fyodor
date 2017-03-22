@@ -1,13 +1,12 @@
-package uk.org.fyodor.time;
+package uk.org.fyodor.junit;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import uk.org.fyodor.generators.RDG;
+import uk.org.fyodor.generators.time.CurrentDate;
+import uk.org.fyodor.generators.time.CurrentTime;
 import uk.org.fyodor.generators.time.Timekeeper;
-import uk.org.fyodor.junit.Report;
-import uk.org.fyodor.junit.Reporter;
-import uk.org.fyodor.junit.TestRunner;
 
 import java.time.*;
 
@@ -16,13 +15,13 @@ import static java.time.ZoneOffset.UTC;
 import static org.junit.Assert.assertTrue;
 import static uk.org.fyodor.generators.RDG.*;
 import static uk.org.fyodor.generators.time.InstantRange.now;
+import static uk.org.fyodor.junit.FyodorTimekeeperRule.*;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
 import static uk.org.fyodor.junit.TestFailureListener.testFailed;
 import static uk.org.fyodor.junit.TestFinishedListener.testFinished;
 import static uk.org.fyodor.junit.TestStartedListener.testStarted;
 import static uk.org.fyodor.range.Range.fixed;
-import static uk.org.fyodor.time.FyodorTimekeeper.*;
 
 @SuppressWarnings("ConstantConditions")
 public final class CurrentDateTimeTest {
@@ -235,7 +234,7 @@ public final class CurrentDateTimeTest {
     public static final class TestClassWithDateTimeAnnotationAtMethodLevel {
 
         @Rule
-        public final FyodorTimekeeper rule = FyodorTimekeeper.timekeeper();
+        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
 
         @Rule
         public final TestName testName = new TestName();
@@ -261,7 +260,7 @@ public final class CurrentDateTimeTest {
     public static final class TestClassWithDateTimeSpecificationOnClass {
 
         @Rule
-        public final FyodorTimekeeper rule = FyodorTimekeeper.timekeeper();
+        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
 
         @Rule
         public final TestName testName = new TestName();
@@ -281,7 +280,7 @@ public final class CurrentDateTimeTest {
     @CurrentDate("2000-01-01")
     public static final class TestClassWithClassLevelDateAndMethodLevelTime {
         @Rule
-        public final FyodorTimekeeper rule = FyodorTimekeeper.timekeeper();
+        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
 
         @Rule
         public final TestName testName = new TestName();
@@ -308,7 +307,7 @@ public final class CurrentDateTimeTest {
     @CurrentTime("23:59:59")
     public static final class TestClassWithClassLevelTimeAndMethodLevelDate {
         @Rule
-        public final FyodorTimekeeper rule = FyodorTimekeeper.timekeeper();
+        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
 
         @Rule
         public final TestName testName = new TestName();
@@ -335,7 +334,7 @@ public final class CurrentDateTimeTest {
     public static final class RuleConfiguredWithTime {
 
         @Rule
-        public final FyodorTimekeeper rule = withCurrentTime(localTime(fixed(of(10, 30, 45))));
+        public final FyodorTimekeeperRule rule = withCurrentTime(localTime(fixed(of(10, 30, 45))));
 
         @Rule
         public final TestName testName = new TestName();
@@ -349,7 +348,7 @@ public final class CurrentDateTimeTest {
     public static final class RuleConfiguredWithDate {
 
         @Rule
-        public final FyodorTimekeeper rule = withCurrentDate(localDate(fixed(LocalDate.of(1999, 12, 31))));
+        public final FyodorTimekeeperRule rule = withCurrentDate(localDate(fixed(LocalDate.of(1999, 12, 31))));
 
         @Rule
         public final TestName testName = new TestName();
@@ -363,7 +362,7 @@ public final class CurrentDateTimeTest {
     public static final class RuleConfiguredWithDateAndTime {
 
         @Rule
-        public final FyodorTimekeeper rule = withCurrentDateAndTime(localDateTime(
+        public final FyodorTimekeeperRule rule = withCurrentDateAndTime(localDateTime(
                 fixed(LocalDate.of(1999, 12, 31)), fixed(LocalTime.of(23, 59, 59))));
 
         @Rule
@@ -380,7 +379,7 @@ public final class CurrentDateTimeTest {
     public static final class DateAndTimeConfiguredInAnnotationsAndRule {
 
         @Rule
-        public final FyodorTimekeeper rule = withCurrentDateAndTime(localDateTime(
+        public final FyodorTimekeeperRule rule = withCurrentDateAndTime(localDateTime(
                 fixed(LocalDate.of(1999, 12, 31)), fixed(LocalTime.of(23, 59, 59))));
 
         @Rule

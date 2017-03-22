@@ -1,6 +1,7 @@
-package uk.org.fyodor.random;
+package uk.org.fyodor.junit;
 
 import org.junit.runner.Description;
+import uk.org.fyodor.random.Seed;
 
 import static uk.org.fyodor.random.RandomSourceProvider.seed;
 
