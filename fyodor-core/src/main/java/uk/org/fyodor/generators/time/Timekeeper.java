@@ -2,6 +2,7 @@ package uk.org.fyodor.generators.time;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 
 public final class Timekeeper {
@@ -17,6 +18,10 @@ public final class Timekeeper {
 
     public static LocalDate currentDate() {
         return clock.get().instant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    public static LocalTime currentTime() {
+        return clock.get().instant().atZone(ZoneId.systemDefault()).toLocalTime();
     }
 
 }

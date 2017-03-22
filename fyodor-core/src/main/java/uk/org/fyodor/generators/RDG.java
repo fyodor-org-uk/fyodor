@@ -10,11 +10,14 @@ import uk.org.fyodor.generators.collections.MapGenerator;
 import uk.org.fyodor.generators.collections.SetGenerator;
 import uk.org.fyodor.generators.time.LocalDateGenerator;
 import uk.org.fyodor.generators.time.LocalDateRange;
+import uk.org.fyodor.generators.time.LocalTimeGenerator;
+import uk.org.fyodor.generators.time.LocalTimeRange;
 import uk.org.fyodor.range.Range;
 
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 import static java.lang.String.format;
@@ -42,6 +45,20 @@ public class RDG {
     private static final LocaleGenerator LOCALE_GENERATOR = new LocaleGenerator();
     private static final Iso3CountryGenerator ISO_3_COUNTRY_GENERATOR = new Iso3CountryGenerator();
 
+    public static Generator<LocalTime> localTime() {
+        return localTime(LocalTimeRange.all());
+    }
+
+    public static Generator<LocalTime> localTime(final LocalTimeRange range) {
+        return localTime((Range<LocalTime>) range);
+    }
+
+    public static Generator<LocalTime> localTime(final Range<LocalTime> range) {
+        ensure(isNotNull(range), "time range cannot be null");
+
+        return new LocalTimeGenerator(sourceOfRandomness(), range);
+    }
+
     public static Generator<LocalDate> localDate() {
         return localDate(LocalDateRange.all());
     }
@@ -52,7 +69,7 @@ public class RDG {
 
     public static Generator<LocalDate> localDate(final Range<LocalDate> range) {
         ensure(isNotNull(range), "date range cannot be null");
-        
+
         return new LocalDateGenerator(sourceOfRandomness(), range);
     }
 
@@ -372,4 +389,5 @@ public class RDG {
     public static Generator<String> iso3Country() {
         return ISO_3_COUNTRY_GENERATOR;
     }
+
 }
