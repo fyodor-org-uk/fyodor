@@ -3,24 +3,29 @@ package uk.org.fyodor.random;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.junit.rules.TestRule;
+import uk.org.fyodor.junit.Reporter;
+import uk.org.fyodor.junit.TestRunner;
 
 import java.util.Random;
 
+import static uk.org.fyodor.junit.ReportAssert.assertThat;
+import static uk.org.fyodor.junit.Reporter.reporter;
+import static uk.org.fyodor.junit.TestFailureListener.testFailed;
+import static uk.org.fyodor.junit.TestFinishedListener.testFinished;
+import static uk.org.fyodor.junit.TestStartedListener.testStarted;
 import static uk.org.fyodor.random.RandomSourceProvider.seed;
-import static uk.org.fyodor.random.ReportAssert.assertThat;
-import static uk.org.fyodor.random.TestFailureListener.testFailed;
-import static uk.org.fyodor.random.TestFinishedListener.testFinished;
-import static uk.org.fyodor.random.TestStartedListener.testStarted;
 
+@SuppressWarnings("ConstantConditions")
 public final class FyodorTestRuleIntegrationTest {
 
-    private static final Reporter reporter = new Reporter();
+    private static final Reporter<Long> reporter = reporter();
 
-    private final TestRunner testRunner = new TestRunner(
-            testStarted(reporter),
-            testFailed(reporter),
-            testFinished(reporter));
+    private final TestRunner<Long> testRunner = new TestRunner<>(
+            testStarted(reporter, () -> RandomSourceProvider.seed().current()),
+            testFailed(reporter, (failure) -> ((FailedWithSeedException) failure.getException().getCause()).seed()),
+            testFinished(reporter, () -> RandomSourceProvider.seed().current()));
 
     @Test
     public void setsTheSeedBeforeEachTestMethodAndThenResetsTheSeedAfterEachTestMethod() {
@@ -28,18 +33,18 @@ public final class FyodorTestRuleIntegrationTest {
 
         final Class<?> testClass = SeededTestClass.class;
 
-        testRunner.scheduleTestWithInitialSeed(testClass, initialSeed).run();
+        testRunner.scheduleTestWithObject(testClass, initialSeed, seed -> RandomSourceProvider.seed().next(seed)).run();
 
         assertThat(reporter.reportFor(testClass, "redTest"))
-                .seedBeforeTestStarts(initialSeed)
-                .seedDuringTest(1334)
-                .seedWhenTestHasFinished(initialSeed)
-                .seedReportedInTestFailure(1334);
+                .beforeTestStarts(initialSeed)
+                .duringTest(1334L)
+                .whenTestHasFinished(initialSeed)
+                .whenFailed(1334L);
 
         assertThat(reporter.reportFor(testClass, "greenTest"))
-                .seedBeforeTestStarts(initialSeed)
-                .seedDuringTest(1334)
-                .seedWhenTestHasFinished(initialSeed);
+                .beforeTestStarts(initialSeed)
+                .duringTest(1334L)
+                .whenTestHasFinished(initialSeed);
     }
 
     @Test
@@ -50,14 +55,14 @@ public final class FyodorTestRuleIntegrationTest {
         testRunner.scheduleTest(testClass).run();
 
         assertThat(reporter.reportFor(testClass, "redTest"))
-                .seedBeforeTestStarts(initialSeed)
-                .seedDuringTest(1334)
-                .seedWhenTestHasFinished(initialSeed);
+                .beforeTestStarts(initialSeed)
+                .duringTest(1334L)
+                .whenTestHasFinished(initialSeed);
 
         assertThat(reporter.reportFor(testClass, "greenTest"))
-                .seedBeforeTestStarts(initialSeed)
-                .seedDuringTest(1334)
-                .seedWhenTestHasFinished(initialSeed);
+                .beforeTestStarts(initialSeed)
+                .duringTest(1334L)
+                .whenTestHasFinished(initialSeed);
     }
 
     @Test
@@ -65,18 +70,18 @@ public final class FyodorTestRuleIntegrationTest {
         final long initialSeed = new Random().nextLong();
         final Class<?> testClass = TestClassWithSeededTestMethods.class;
 
-        testRunner.scheduleTestWithInitialSeed(testClass, initialSeed).run();
+        testRunner.scheduleTestWithObject(testClass, initialSeed, seed -> RandomSourceProvider.seed().next(seed)).run();
 
         assertThat(reporter.reportFor(testClass, "redTest"))
-                .seedBeforeTestStarts(initialSeed)
-                .seedDuringTest(9876)
-                .seedWhenTestHasFinished(initialSeed)
-                .seedReportedInTestFailure(9876);
+                .beforeTestStarts(initialSeed)
+                .duringTest(9876L)
+                .whenTestHasFinished(initialSeed)
+                .whenFailed(9876L);
 
         assertThat(reporter.reportFor(testClass, "greenTest"))
-                .seedBeforeTestStarts(initialSeed)
-                .seedDuringTest(9371)
-                .seedWhenTestHasFinished(initialSeed);
+                .beforeTestStarts(initialSeed)
+                .duringTest(9371L)
+                .whenTestHasFinished(initialSeed);
     }
 
     @Test
@@ -84,10 +89,10 @@ public final class FyodorTestRuleIntegrationTest {
         final long initialSeed = new Random().nextLong();
         final Class<?> testClass = NonSeededTestClass.class;
 
-        testRunner.scheduleTestWithInitialSeed(testClass, initialSeed).run();
+        testRunner.scheduleTestWithObject(testClass, initialSeed, seed -> RandomSourceProvider.seed().next(seed)).run();
 
         assertThat(reporter.reportFor(testClass, "redTest"))
-                .seedReportedInTestFailure(initialSeed);
+                .whenFailed(initialSeed);
     }
 
     @Test
@@ -96,59 +101,59 @@ public final class FyodorTestRuleIntegrationTest {
 
         final Class<?> testClass = SeededTestClassWithSeededTestMethods.class;
 
-        testRunner.scheduleTestWithInitialSeed(testClass, initialSeed).run();
+        testRunner.scheduleTestWithObject(testClass, initialSeed, seed -> RandomSourceProvider.seed().next(seed)).run();
 
         assertThat(reporter.reportFor(testClass, "redTest"))
-                .seedBeforeTestStarts(initialSeed)
-                .seedDuringTest(3891)
-                .seedWhenTestHasFinished(initialSeed)
-                .seedReportedInTestFailure(3891);
+                .beforeTestStarts(initialSeed)
+                .duringTest(3891L)
+                .whenTestHasFinished(initialSeed)
+                .whenFailed(3891L);
 
         assertThat(reporter.reportFor(testClass, "greenTest"))
-                .seedBeforeTestStarts(initialSeed)
-                .seedDuringTest(1357)
-                .seedWhenTestHasFinished(initialSeed);
+                .beforeTestStarts(initialSeed)
+                .duringTest(1357L)
+                .whenTestHasFinished(initialSeed);
     }
 
     @Test
     public void seedsForParallelTestsDoNotInterfereWithEachOther() {
-        testRunner.scheduleTestWithInitialSeed(SeededTestClass.class, 0)
-                .scheduleTestWithInitialSeed(SeededTestClassWithSeededTestMethods.class, 1)
-                .scheduleTestWithInitialSeed(TestClassWithSeededTestMethods.class, 2)
+        testRunner.scheduleTestWithObject(SeededTestClass.class, 0L, seed -> RandomSourceProvider.seed().next(seed))
+                .scheduleTestWithObject(SeededTestClassWithSeededTestMethods.class, 1L, seed -> RandomSourceProvider.seed().next(seed))
+                .scheduleTestWithObject(TestClassWithSeededTestMethods.class, 2L, seed -> RandomSourceProvider.seed().next(seed))
                 .runInParallel();
 
         assertThat(reporter.reportFor(SeededTestClass.class, "redTest"))
-                .seedBeforeTestStarts(0)
-                .seedDuringTest(1334)
-                .seedWhenTestHasFinished(0)
-                .seedReportedInTestFailure(1334);
+                .beforeTestStarts(0L)
+                .duringTest(1334L)
+                .whenTestHasFinished(0L)
+                .whenFailed(1334L);
 
         assertThat(reporter.reportFor(SeededTestClass.class, "greenTest"))
-                .seedBeforeTestStarts(0)
-                .seedDuringTest(1334)
-                .seedWhenTestHasFinished(0);
+                .beforeTestStarts(0L)
+                .duringTest(1334L)
+                .whenTestHasFinished(0L);
 
         assertThat(reporter.reportFor(SeededTestClassWithSeededTestMethods.class, "redTest"))
-                .seedBeforeTestStarts(1)
-                .seedDuringTest(3891)
-                .seedWhenTestHasFinished(1)
-                .seedReportedInTestFailure(3891);
+                .beforeTestStarts(1L)
+                .duringTest(3891L)
+                .whenTestHasFinished(1L)
+                .whenFailed(3891L);
 
         assertThat(reporter.reportFor(SeededTestClassWithSeededTestMethods.class, "greenTest"))
-                .seedBeforeTestStarts(1)
-                .seedDuringTest(1357)
-                .seedWhenTestHasFinished(1);
+                .beforeTestStarts(1L)
+                .duringTest(1357L)
+                .whenTestHasFinished(1L);
 
         assertThat(reporter.reportFor(TestClassWithSeededTestMethods.class, "redTest"))
-                .seedBeforeTestStarts(2)
-                .seedDuringTest(9876)
-                .seedWhenTestHasFinished(2)
-                .seedReportedInTestFailure(9876);
+                .beforeTestStarts(2L)
+                .duringTest(9876L)
+                .whenTestHasFinished(2L)
+                .whenFailed(9876L);
 
         assertThat(reporter.reportFor(TestClassWithSeededTestMethods.class, "greenTest"))
-                .seedBeforeTestStarts(2)
-                .seedDuringTest(9371)
-                .seedWhenTestHasFinished(2);
+                .beforeTestStarts(2L)
+                .duringTest(9371L)
+                .whenTestHasFinished(2L);
     }
 
     @Seed(1334)
@@ -157,15 +162,18 @@ public final class FyodorTestRuleIntegrationTest {
         @Rule
         public final TestRule rule = new FyodorTestRule();
 
+        @Rule
+        public final TestName testName = new TestName();
+
         @Test
         public void redTest() {
-            reporter.seedDuringTest(this.getClass(), "redTest", seed().current());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
             Assert.assertTrue(false);
         }
 
         @Test
         public void greenTest() {
-            reporter.seedDuringTest(this.getClass(), "greenTest", seed().current());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
             Assert.assertTrue(true);
         }
     }
@@ -176,17 +184,20 @@ public final class FyodorTestRuleIntegrationTest {
         @Rule
         public final TestRule rule = new FyodorTestRule();
 
+        @Rule
+        public final TestName testName = new TestName();
+
         @Test
         @Seed(3891)
         public void redTest() {
-            reporter.seedDuringTest(this.getClass(), "redTest", seed().current());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
             Assert.assertTrue(false);
         }
 
         @Test
         @Seed(1357)
         public void greenTest() {
-            reporter.seedDuringTest(this.getClass(), "greenTest", seed().current());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
             Assert.assertTrue(true);
         }
     }
@@ -196,17 +207,20 @@ public final class FyodorTestRuleIntegrationTest {
         @Rule
         public final TestRule rule = new FyodorTestRule();
 
+        @Rule
+        public final TestName testName = new TestName();
+
         @Test
         @Seed(9876)
         public void redTest() {
-            reporter.seedDuringTest(this.getClass(), "redTest", seed().current());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
             Assert.assertTrue(false);
         }
 
         @Test
         @Seed(9371)
         public void greenTest() {
-            reporter.seedDuringTest(this.getClass(), "greenTest", seed().current());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
             Assert.assertTrue(true);
         }
     }
@@ -216,15 +230,18 @@ public final class FyodorTestRuleIntegrationTest {
         @Rule
         public final TestRule rule = new FyodorTestRule();
 
+        @Rule
+        public final TestName testName = new TestName();
+
         @Test
         public void redTest() {
-            reporter.seedDuringTest(this.getClass(), "redTest", seed().current());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
             Assert.assertTrue(false);
         }
 
         @Test
         public void greenTest() {
-            reporter.seedDuringTest(this.getClass(), "greenTest", seed().current());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
             Assert.assertTrue(true);
         }
     }

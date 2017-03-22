@@ -18,7 +18,7 @@ public final class InstantRange extends Range<Instant> {
     }
 
     public static InstantRange now() {
-        final Instant now = Timekeeper.instant();
+        final Instant now = Timekeeper.currentInstant();
         return new InstantRange(now, now);
     }
 
@@ -53,7 +53,7 @@ public final class InstantRange extends Range<Instant> {
     }
 
     public static InstantRange inTheFuture() {
-        final Instant now = Timekeeper.instant();
+        final Instant now = Timekeeper.currentInstant();
 
         if (now.equals(Instant.MAX)) {
             throw new IllegalArgumentException("range cannot be in the future because today is the max instant");
@@ -63,7 +63,7 @@ public final class InstantRange extends Range<Instant> {
     }
 
     public static InstantRange inThePast() {
-        final Instant now = Timekeeper.instant();
+        final Instant now = Timekeeper.currentInstant();
 
         if (now.equals(Instant.MIN)) {
             throw new IllegalArgumentException("range cannot be in the past because today is the min instant");
