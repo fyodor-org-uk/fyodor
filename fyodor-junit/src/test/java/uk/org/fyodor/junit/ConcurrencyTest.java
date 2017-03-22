@@ -1,11 +1,11 @@
-package uk.org.fyodor.time;
+package uk.org.fyodor.junit;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
+import uk.org.fyodor.generators.time.CurrentDate;
+import uk.org.fyodor.generators.time.CurrentTime;
 import uk.org.fyodor.generators.time.Timekeeper;
-import uk.org.fyodor.junit.Reporter;
-import uk.org.fyodor.junit.TestRunner;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -89,7 +89,7 @@ public final class ConcurrencyTest {
     public static final class ClassLevelAnnotatedOnly {
 
         @Rule
-        public final FyodorTimekeeper rule = FyodorTimekeeper.timekeeper();
+        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
 
         @Rule
         public final TestName testName = new TestName();
@@ -103,7 +103,7 @@ public final class ConcurrencyTest {
     public static final class MethodLevelAnnotatedOnly {
 
         @Rule
-        public final FyodorTimekeeper rule = FyodorTimekeeper.timekeeper();
+        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
 
         @Rule
         public final TestName testName = new TestName();
@@ -121,7 +121,7 @@ public final class ConcurrencyTest {
     public static final class ClassLevelAndMethodLevelAnnotated {
 
         @Rule
-        public final FyodorTimekeeper rule = FyodorTimekeeper.timekeeper();
+        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
 
         @Rule
         public final TestName testName = new TestName();

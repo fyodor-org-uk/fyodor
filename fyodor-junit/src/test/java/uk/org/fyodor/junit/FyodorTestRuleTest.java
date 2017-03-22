@@ -1,15 +1,16 @@
-package uk.org.fyodor.random;
+package uk.org.fyodor.junit;
 
 import org.junit.Test;
 import org.junit.runner.Description;
+import uk.org.fyodor.random.Seed;
 
 import java.lang.annotation.Annotation;
 import java.util.Random;
 
-import static uk.org.fyodor.random.RandomSourceProvider.seed;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.runner.Description.EMPTY;
 import static org.junit.runner.Description.createTestDescription;
+import static uk.org.fyodor.random.RandomSourceProvider.seed;
 
 public final class FyodorTestRuleTest {
 
@@ -91,7 +92,7 @@ public final class FyodorTestRuleTest {
     }
 
     private static Description test(final Class<?> testClass, final long seedForTestMethod) {
-        return createTestDescription(testClass, "test", seedAnnotation(seedForTestMethod));
+        return Description.createTestDescription(testClass, "test", seedAnnotation(seedForTestMethod));
     }
 
     private static Seed seedAnnotation(final long seed) {

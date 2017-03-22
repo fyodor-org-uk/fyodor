@@ -1,11 +1,10 @@
-package uk.org.fyodor.time;
+package uk.org.fyodor.junit;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
+import uk.org.fyodor.generators.time.CurrentTime;
 import uk.org.fyodor.generators.time.Timekeeper;
-import uk.org.fyodor.junit.Reporter;
-import uk.org.fyodor.junit.TestRunner;
 
 import java.time.*;
 
@@ -13,13 +12,13 @@ import static java.time.LocalTime.of;
 import static org.junit.Assert.assertTrue;
 import static uk.org.fyodor.generators.RDG.localTime;
 import static uk.org.fyodor.generators.time.LocalTimeRange.now;
+import static uk.org.fyodor.junit.FyodorTimekeeperRule.withCurrentTime;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
 import static uk.org.fyodor.junit.TestFailureListener.testFailed;
 import static uk.org.fyodor.junit.TestFinishedListener.testFinished;
 import static uk.org.fyodor.junit.TestStartedListener.testStarted;
 import static uk.org.fyodor.range.Range.fixed;
-import static uk.org.fyodor.time.FyodorTimekeeper.withCurrentTime;
 
 @SuppressWarnings("ConstantConditions")
 public final class CurrentTimeTest {
@@ -191,7 +190,7 @@ public final class CurrentTimeTest {
 
     public static final class TestClassUsingCurrentTimeFromRule {
         @Rule
-        public final FyodorTimekeeper rule = FyodorTimekeeper.timekeeper();
+        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
 
         @Rule
         public final TestName testName = new TestName();
@@ -206,7 +205,7 @@ public final class CurrentTimeTest {
     public static final class TestClassWithDatedMethods {
 
         @Rule
-        public final FyodorTimekeeper rule = FyodorTimekeeper.timekeeper();
+        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
 
         @Rule
         public final TestName testName = new TestName();
@@ -229,7 +228,7 @@ public final class CurrentTimeTest {
     public static final class TestClassWithTimeSpecificationOnClass {
 
         @Rule
-        public final FyodorTimekeeper rule = FyodorTimekeeper.timekeeper();
+        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
 
         @Rule
         public final TestName testName = new TestName();
@@ -250,7 +249,7 @@ public final class CurrentTimeTest {
     public static final class TestClassWithTimeSpecificationOnClassAndMethod {
 
         @Rule
-        public final FyodorTimekeeper rule = FyodorTimekeeper.timekeeper();
+        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
 
         @Rule
         public final TestName testName = new TestName();
@@ -294,7 +293,7 @@ public final class CurrentTimeTest {
     public static final class TestWithBadTimeString {
 
         @Rule
-        public final FyodorTimekeeper rule = FyodorTimekeeper.timekeeper();
+        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
 
         @Test
         @CurrentTime("this-is-not-a-time")
@@ -305,7 +304,7 @@ public final class CurrentTimeTest {
     public static final class TestClassWithNoAnnotations {
 
         @Rule
-        public final FyodorTimekeeper rule = FyodorTimekeeper.timekeeper();
+        public final FyodorTimekeeperRule rule = FyodorTimekeeperRule.timekeeper();
 
         @Rule
         public final TestName testName = new TestName();
@@ -329,7 +328,7 @@ public final class CurrentTimeTest {
     public static final class RuleConfiguredWithCurrentTime {
 
         @Rule
-        public final FyodorTimekeeper rule = withCurrentTime(localTime(fixed(of(10, 30, 45))));
+        public final FyodorTimekeeperRule rule = withCurrentTime(localTime(fixed(of(10, 30, 45))));
 
         @Rule
         public final TestName testName = new TestName();
