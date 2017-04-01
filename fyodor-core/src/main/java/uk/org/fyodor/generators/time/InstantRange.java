@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 import static java.time.ZoneOffset.UTC;
+import static uk.org.fyodor.generators.time.Timekeeper.current;
 
 public final class InstantRange extends Range<Instant> {
 
@@ -18,12 +19,12 @@ public final class InstantRange extends Range<Instant> {
     }
 
     public static InstantRange now() {
-        final Instant now = Timekeeper.currentInstant();
+        final Instant now = current().instant();
         return new InstantRange(now, now);
     }
 
     public static InstantRange today() {
-        return atDate(Timekeeper.currentDate());
+        return atDate(current().date());
     }
 
     public static InstantRange atDate(final LocalDate date) {
@@ -53,7 +54,7 @@ public final class InstantRange extends Range<Instant> {
     }
 
     public static InstantRange inTheFuture() {
-        final Instant now = Timekeeper.currentInstant();
+        final Instant now = current().instant();
 
         if (now.equals(Instant.MAX)) {
             throw new IllegalArgumentException("range cannot be in the future because today is the max instant");
@@ -63,7 +64,7 @@ public final class InstantRange extends Range<Instant> {
     }
 
     public static InstantRange inThePast() {
-        final Instant now = Timekeeper.currentInstant();
+        final Instant now = current().instant();
 
         if (now.equals(Instant.MIN)) {
             throw new IllegalArgumentException("range cannot be in the past because today is the min instant");

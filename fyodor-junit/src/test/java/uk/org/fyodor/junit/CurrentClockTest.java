@@ -12,6 +12,7 @@ import java.time.LocalDate;
 
 import static java.time.ZoneOffset.UTC;
 import static uk.org.fyodor.generators.RDG.*;
+import static uk.org.fyodor.generators.time.Timekeeper.current;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
 import static uk.org.fyodor.junit.TestFailureListener.testFailed;
@@ -25,9 +26,9 @@ public final class CurrentClockTest {
     private static final Reporter<Clock> reporter = reporter();
 
     private final TestRunner<Clock> testRunner = new TestRunner<>(
-            testStarted(reporter, Timekeeper::currentClock),
-            testFailed(reporter, (failure) -> Timekeeper.currentClock()),
-            testFinished(reporter, Timekeeper::currentClock));
+            testStarted(reporter, () -> current().clock()),
+            testFailed(reporter, (failure) -> current().clock()),
+            testFinished(reporter, () -> current().clock()));
 
     @Test
     public void noAnnotationsWithDefaultRule() {
@@ -123,12 +124,12 @@ public final class CurrentClockTest {
 
         @Test
         public void first() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.currentClock());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.current().clock());
         }
 
         @Test
         public void second() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.currentClock());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.current().clock());
         }
     }
 
@@ -144,18 +145,18 @@ public final class CurrentClockTest {
         @Test
         @CurrentDate("2015-11-24")
         public void methodWithDate() {
-            reporter.objectDuringTest(TestClassWithAnnotations.class, testName.getMethodName(), rule.currentClock());
+            reporter.objectDuringTest(TestClassWithAnnotations.class, testName.getMethodName(), rule.current().clock());
         }
 
         @Test
         @CurrentTime("12:00:00")
         public void methodWithTime() {
-            reporter.objectDuringTest(TestClassWithAnnotations.class, testName.getMethodName(), rule.currentClock());
+            reporter.objectDuringTest(TestClassWithAnnotations.class, testName.getMethodName(), rule.current().clock());
         }
 
         @Test
         public void classAnnotationsOnly() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.currentClock());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.current().clock());
         }
     }
 
@@ -170,7 +171,7 @@ public final class CurrentClockTest {
 
         @Test
         public void first() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.currentClock());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.current().clock());
         }
     }
 
@@ -187,14 +188,14 @@ public final class CurrentClockTest {
 
         @Test
         public void annotatedClass() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.currentClock());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.current().clock());
         }
 
         @Test
         @CurrentDate("2010-01-01")
         @CurrentTime("12:00:00")
         public void annotatedMethod() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.currentClock());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.current().clock());
         }
     }
 }

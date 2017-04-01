@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 import static uk.org.fyodor.generators.RDG.instant;
 import static uk.org.fyodor.generators.RDG.localTime;
 import static uk.org.fyodor.generators.time.InstantRange.now;
+import static uk.org.fyodor.generators.time.Timekeeper.current;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
 import static uk.org.fyodor.junit.TestFailureListener.testFailed;
@@ -29,9 +30,9 @@ public final class CurrentDateTimeTest {
     private static final Reporter<Instant> reporter = reporter();
 
     private final TestRunner<Instant> testRunner = new TestRunner<>(
-            testStarted(reporter, Timekeeper::currentInstant),
-            testFailed(reporter, (failure) -> Timekeeper.currentInstant()),
-            testFinished(reporter, Timekeeper::currentInstant));
+            testStarted(reporter, () -> current().instant()),
+            testFailed(reporter, (failure) -> current().instant()),
+            testFinished(reporter, () -> current().instant()));
 
     @Test
     public void noAnnotationsWithDefaultRule() {

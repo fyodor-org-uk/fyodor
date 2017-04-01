@@ -18,23 +18,24 @@ import static uk.org.fyodor.generators.time.LocalDateRange.today;
 public class TimekeeperTest {
 
     @Test
-    public void todayCanBeConfiguredFromSystemClock() {
+    public void currentDateCanBeConfiguredFromSystemClock() {
         Timekeeper.from(Clock.systemDefaultZone());
 
         final LocalDate systemDate = LocalDate.now();
-        final LocalDate today = Timekeeper.currentDate();
+
+        final LocalDate today = Timekeeper.current().date();
 
         assertThat(today).isEqualTo(systemDate);
     }
 
     @Test
-    public void todayCanBeConfiguredByCustomClock() {
+    public void currentDateCanBeConfiguredByCustomClock() {
         final LocalDate systemDate = LocalDate.now();
         final Instant systemDateAsInstant = systemDate.atStartOfDay().toInstant(ZoneOffset.ofHours(0));
 
         Timekeeper.from(Clock.fixed(systemDateAsInstant, ZoneId.systemDefault()));
 
-        final LocalDate today = Timekeeper.currentDate();
+        final LocalDate today = Timekeeper.current().date();
 
         assertThat(today).isEqualTo(systemDate);
     }

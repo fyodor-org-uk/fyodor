@@ -14,6 +14,7 @@ import java.util.function.Consumer;
 
 import static uk.org.fyodor.generators.RDG.instant;
 import static uk.org.fyodor.generators.time.InstantRange.now;
+import static uk.org.fyodor.generators.time.Timekeeper.current;
 import static uk.org.fyodor.junit.FyodorTestRule.fyodorTestRule;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
@@ -27,9 +28,9 @@ public final class ConcurrentTimekeeperTest {
     private static final Reporter<Instant> reporter = reporter();
 
     private final TestRunner<Instant> testRunner = new TestRunner<>(
-            testStarted(reporter, Timekeeper::currentInstant),
-            testFailed(reporter, (failure) -> Timekeeper.currentInstant()),
-            testFinished(reporter, Timekeeper::currentInstant));
+            testStarted(reporter, () -> current().instant()),
+            testFailed(reporter, (failure) -> current().instant()),
+            testFinished(reporter, () -> current().instant()));
 
     @Test
     public void testsRunInParallelCanHaveTheirOwnTimekeeperDateAndTimes() {
@@ -88,7 +89,7 @@ public final class ConcurrentTimekeeperTest {
 
         @Test
         public void classLevelAnnotated() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.currentInstant());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.current().instant());
         }
     }
 
@@ -104,7 +105,7 @@ public final class ConcurrentTimekeeperTest {
         @CurrentDate("2013-07-11")
         @CurrentTime("12:15:25")
         public void methodLevelAnnotated() {
-            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.currentInstant());
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.current().instant());
         }
     }
 
