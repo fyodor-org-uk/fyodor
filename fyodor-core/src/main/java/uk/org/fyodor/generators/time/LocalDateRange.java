@@ -5,6 +5,8 @@ import uk.org.fyodor.range.Range;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 
+import static uk.org.fyodor.generators.time.Timekeeper.current;
+
 public final class LocalDateRange extends Range<LocalDate> {
 
     private static final LocalDate MINIMUM = LocalDate.MIN;
@@ -15,7 +17,7 @@ public final class LocalDateRange extends Range<LocalDate> {
     }
 
     public static LocalDateRange tomorrow() {
-        final LocalDate tomorrow = Timekeeper.currentDate().plusDays(1);
+        final LocalDate tomorrow = current().date().plusDays(1);
         return new LocalDateRange(tomorrow, tomorrow);
     }
 
@@ -24,12 +26,12 @@ public final class LocalDateRange extends Range<LocalDate> {
     }
 
     public static LocalDateRange today() {
-        final LocalDate today = Timekeeper.currentDate();
+        final LocalDate today = current().date();
         return new LocalDateRange(today, today);
     }
 
     public static LocalDateRange inTheFuture() {
-        final LocalDate today = Timekeeper.currentDate();
+        final LocalDate today = current().date();
         if (today.equals(MAXIMUM)) {
             throw new IllegalArgumentException("Date range cannot be in the future because today is the maximum date");
         }
@@ -37,7 +39,7 @@ public final class LocalDateRange extends Range<LocalDate> {
     }
 
     public static LocalDateRange inThePast() {
-        final LocalDate today = Timekeeper.currentDate();
+        final LocalDate today = current().date();
         if (today.equals(MINIMUM)) {
             throw new IllegalArgumentException("Date range cannot be in the past because today is the minimum date");
         }
@@ -58,8 +60,8 @@ public final class LocalDateRange extends Range<LocalDate> {
         return new LocalDateRange(MINIMUM, date.minusDays(1));
     }
 
-    public static LocalDateRange aged(final Range<? extends ChronoAmount> range) {
-        final LocalDate today = Timekeeper.currentDate();
+    public static LocalDateRange aged(final Range<ChronoAmount> range) {
+        final LocalDate today = current().date();
 
         validateAgeRangeAgainst(range, today);
 

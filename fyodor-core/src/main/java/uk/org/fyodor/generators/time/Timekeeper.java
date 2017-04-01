@@ -5,59 +5,73 @@ import java.util.Stack;
 
 import static java.lang.ThreadLocal.withInitial;
 import static java.time.Clock.systemDefaultZone;
+import static java.time.ZoneOffset.UTC;
 
 public final class Timekeeper {
 
-    private static final ThreadLocal<Clocks> clocks = withInitial(() -> new Clocks(systemDefaultZone()));
+    private static final ThreadLocal<Temporalities> temporalities = withInitial(() -> new Temporalities(temporalityFrom(systemDefaultZone())));
 
     private Timekeeper() {
     }
 
     public static void from(final Clock clock) {
-        clocks.get().next(clock);
+        temporalities.get().next(temporalityFrom(clock));
     }
 
     public static void rollback() {
-        clocks.get().previous();
+        temporalities.get().previous();
     }
 
-    public static LocalDate currentDate() {
-        return currentInstant().atZone(ZoneOffset.UTC).toLocalDate();
+    public static Temporality current() {
+        return temporalities.get().current();
     }
 
-    public static LocalTime currentTime() {
-        return currentInstant().atZone(ZoneOffset.UTC).toLocalTime();
+    private static Temporality temporalityFrom(final Clock clock) {
+        return new Temporality() {
+            @Override
+            public LocalDate date() {
+                return instant().atZone(UTC).toLocalDate();
+            }
+
+            @Override
+            public LocalTime time() {
+                return instant().atZone(UTC).toLocalTime();
+            }
+
+            @Override
+            public LocalDateTime dateTime() {
+                return instant().atZone(UTC).toLocalDateTime();
+            }
+
+            @Override
+            public Instant instant() {
+                return clock().instant();
+            }
+
+            @Override
+            public Clock clock() {
+                return clock;
+            }
+        };
     }
 
-    public static LocalDateTime currentDateTime() {
-        return currentInstant().atZone(ZoneOffset.UTC).toLocalDateTime();
-    }
+    private static final class Temporalities {
+        private final Stack<Temporality> temporalityStack = new Stack<>();
 
-    public static Instant currentInstant() {
-        return currentClock().instant();
-    }
-
-    public static Clock currentClock() {
-        return clocks.get().current();
-    }
-
-    private static final class Clocks {
-        private final Stack<Clock> clockStack = new Stack<>();
-
-        private Clocks(final Clock initialClock) {
-            this.clockStack.push(initialClock);
+        private Temporalities(final Temporality temporality) {
+            this.temporalityStack.push(temporality);
         }
 
-        private Clock current() {
-            return clockStack.peek();
+        private Temporality current() {
+            return temporalityStack.peek();
         }
 
         void previous() {
-            clockStack.pop();
+            temporalityStack.pop();
         }
 
-        void next(final Clock nextClock) {
-            clockStack.push(nextClock);
+        void next(final Temporality nextTemporality) {
+            temporalityStack.push(nextTemporality);
         }
     }
 }

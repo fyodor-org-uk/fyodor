@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import static java.time.LocalDate.of;
 import static uk.org.fyodor.generators.RDG.localDate;
 import static uk.org.fyodor.generators.time.LocalDateRange.today;
+import static uk.org.fyodor.generators.time.Timekeeper.current;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
 import static uk.org.fyodor.junit.TestFailureListener.testFailed;
@@ -25,9 +26,9 @@ public final class CurrentDateTest {
     private static final Reporter<LocalDate> reporter = reporter();
 
     private final TestRunner<LocalDate> testRunner = new TestRunner<>(
-            testStarted(reporter, Timekeeper::currentDate),
-            testFailed(reporter, (failure) -> Timekeeper.currentDate()),
-            testFinished(reporter, Timekeeper::currentDate));
+            testStarted(reporter, () -> current().date()),
+            testFailed(reporter, (failure) -> current().date()),
+            testFinished(reporter, () -> current().date()));
 
     @Test
     public void noAnnotationsWithDefaultRule() {

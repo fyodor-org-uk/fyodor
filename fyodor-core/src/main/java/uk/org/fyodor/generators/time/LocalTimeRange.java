@@ -5,6 +5,7 @@ import uk.org.fyodor.range.Range;
 import java.time.LocalTime;
 
 import static java.time.LocalTime.*;
+import static uk.org.fyodor.generators.time.Timekeeper.current;
 
 public final class LocalTimeRange extends Range<LocalTime> {
 
@@ -44,7 +45,7 @@ public final class LocalTimeRange extends Range<LocalTime> {
     }
 
     public static LocalTimeRange now() {
-        final LocalTime now = Timekeeper.currentTime();
+        final LocalTime now = current().time();
         return new LocalTimeRange(now, now);
     }
 

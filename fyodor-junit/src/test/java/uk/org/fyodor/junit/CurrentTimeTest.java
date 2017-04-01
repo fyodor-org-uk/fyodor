@@ -12,6 +12,7 @@ import java.time.LocalTime;
 import static java.time.LocalTime.of;
 import static uk.org.fyodor.generators.RDG.localTime;
 import static uk.org.fyodor.generators.time.LocalTimeRange.now;
+import static uk.org.fyodor.generators.time.Timekeeper.current;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
 import static uk.org.fyodor.junit.TestFailureListener.testFailed;
@@ -25,9 +26,9 @@ public final class CurrentTimeTest {
     private static final Reporter<LocalTime> reporter = reporter();
 
     private final TestRunner<LocalTime> testRunner = new TestRunner<>(
-            testStarted(reporter, Timekeeper::currentTime),
-            testFailed(reporter, (failure) -> Timekeeper.currentTime()),
-            testFinished(reporter, Timekeeper::currentTime));
+            testStarted(reporter, () -> current().time()),
+            testFailed(reporter, (failure) -> current().time()),
+            testFinished(reporter, () -> current().time()));
 
     @Test
     public void noAnnotationsAndDefaultRule() {
