@@ -13,19 +13,19 @@ import uk.org.fyodor.range.Range;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.*;
 
 import static java.lang.String.format;
+import static java.time.ZoneId.getAvailableZoneIds;
 import static java.util.Arrays.asList;
 import static uk.org.fyodor.generators.Validations.*;
+import static uk.org.fyodor.generators.time.Timekeeper.current;
 import static uk.org.fyodor.random.RandomSourceProvider.sourceOfRandomness;
 import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
 
+@SuppressWarnings("WeakerAccess")
 public class RDG {
 
     private static final Generator<String> STRING_GENERATOR = string(30);
@@ -43,6 +43,7 @@ public class RDG {
     private static final CurrencyGenerator CURRENCY_GENERATOR = new CurrencyGenerator();
     private static final LocaleGenerator LOCALE_GENERATOR = new LocaleGenerator();
     private static final Iso3CountryGenerator ISO_3_COUNTRY_GENERATOR = new Iso3CountryGenerator();
+    private static final Generator<String> REGION_BASED_ZONE_ID_GENERATOR = value(getAvailableZoneIds());
 
     public static Generator<Instant> instant() {
         return instant(InstantRange.all());
@@ -86,8 +87,28 @@ public class RDG {
         return new LocalDateGenerator(sourceOfRandomness(), range);
     }
 
+    public static Generator<ZonedDateTime> zonedDateTime() {
+        return zonedDateTime(LocalDateRange.all(), LocalTimeRange.all());
+    }
+
+    public static Generator<ZonedDateTime> zonedDateTime(final LocalDateRange dateRange,
+                                                         final LocalTimeRange timeRange) {
+        return zonedDateTime(dateRange, (Range<LocalTime>) timeRange);
+    }
+
+    public static Generator<ZonedDateTime> zonedDateTime(final Range<LocalDate> dateRange,
+                                                         final Range<LocalTime> timeRange) {
+        final Generator<LocalDateTime> dateTimeGenerator = localDateTime(dateRange, timeRange);
+        return () -> dateTimeGenerator.next().atZone(current().zone());
+    }
+
     public static Generator<LocalDateTime> localDateTime() {
         return localDateTime(LocalDateRange.all(), LocalTimeRange.all());
+    }
+
+    public static Generator<LocalDateTime> localDateTime(final LocalDateRange dateRange,
+                                                         final LocalTimeRange timeRange) {
+        return localDateTime(dateRange, (Range<LocalTime>) timeRange);
     }
 
     public static Generator<LocalDateTime> localDateTime(final Range<LocalDate> dateRange,
@@ -95,6 +116,10 @@ public class RDG {
         final Generator<LocalDate> date = localDate(dateRange);
         final Generator<LocalTime> time = localTime(timeRange);
         return () -> date.next().atTime(time.next());
+    }
+
+    public static Generator<ZoneId> zoneId() {
+        return () -> ZoneId.of(REGION_BASED_ZONE_ID_GENERATOR.next());
     }
 
     public static Generator<Boolean> bool() {

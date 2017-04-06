@@ -33,7 +33,6 @@ public final class CurrentTimeTest {
     @Test
     public void noAnnotationsAndDefaultRule() {
         final LocalTime initialTime = localTime().next();
-
         Timekeeper.from(utcClockOf(initialTime));
 
         testRunner.scheduleTest(NoAnnotationsAndDefaultRule.class).run();
@@ -54,12 +53,11 @@ public final class CurrentTimeTest {
     @Test
     public void timeConfiguredWithRule() {
         final LocalTime initialTime = localTime().next();
-
         Timekeeper.from(utcClockOf(initialTime));
 
-        testRunner.scheduleTest(RuleConfiguredWithCurrentTime.class).run();
+        testRunner.scheduleTest(NoAnnotationsAndConfiguredRule.class).run();
 
-        assertThat(reporter.reportFor(RuleConfiguredWithCurrentTime.class, "first"))
+        assertThat(reporter.reportFor(NoAnnotationsAndConfiguredRule.class, "first"))
                 .didNotFail()
                 .beforeTestStarts(initialTime)
                 .duringTest(of(10, 30, 45))
@@ -67,22 +65,19 @@ public final class CurrentTimeTest {
     }
 
     @Test
-    public void resetsTimeAfterEachTestMethod() {
+    public void annotatedTestMethods() {
         final LocalTime now = localTime().next();
-        final LocalTime anHourAgo = now.minusHours(1);
-
-        Timekeeper.from(utcClockOf(anHourAgo));
         Timekeeper.from(utcClockOf(now));
 
-        testRunner.scheduleTest(WithAnnotations.class).run();
+        testRunner.scheduleTest(WithCurrentTimeMethodAnnotations.class).run();
 
-        assertThat(reporter.reportFor(WithAnnotations.class, "first"))
+        assertThat(reporter.reportFor(WithCurrentTimeMethodAnnotations.class, "first"))
                 .didNotFail()
                 .beforeTestStarts(now)
                 .duringTest(of(23, 59, 59))
                 .whenTestHasFinished(now);
 
-        assertThat(reporter.reportFor(WithAnnotations.class, "second"))
+        assertThat(reporter.reportFor(WithCurrentTimeMethodAnnotations.class, "second"))
                 .didNotFail()
                 .beforeTestStarts(now)
                 .duringTest(of(0, 0, 0))
@@ -104,8 +99,7 @@ public final class CurrentTimeTest {
                 .failedBecauseOf(DateTimeException.class);
     }
 
-
-    public static final class WithAnnotations {
+    public static final class WithCurrentTimeMethodAnnotations {
 
         @Rule
         public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
@@ -156,7 +150,7 @@ public final class CurrentTimeTest {
         }
     }
 
-    public static final class RuleConfiguredWithCurrentTime {
+    public static final class NoAnnotationsAndConfiguredRule {
 
         @Rule
         public final FyodorTestRule rule = FyodorTestRule.withCurrentTime(of(10, 30, 45));

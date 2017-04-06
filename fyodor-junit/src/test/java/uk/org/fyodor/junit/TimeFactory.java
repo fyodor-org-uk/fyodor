@@ -11,6 +11,10 @@ final class TimeFactory {
             return utcInstantOf(date.atTime(hour, minute, second));
         }
 
+        static Instant utcInstantOf(final LocalDate date, final LocalTime time) {
+            return utcInstantOf(date.atTime(time));
+        }
+
         static Instant utcInstantOf(final int year, final int month, final int dayOfMonth, final LocalTime time) {
             return utcInstantOf(LocalDate.of(year, month, dayOfMonth).atTime(time));
         }
@@ -44,6 +48,10 @@ final class TimeFactory {
 
         static Clock utcClockOf(final Instant instant) {
             return Clock.fixed(instant, UTC);
+        }
+
+        static Clock clockOf(final ZonedDateTime zonedDateTime) {
+            return Clock.fixed(zonedDateTime.toInstant(), zonedDateTime.getZone());
         }
     }
 }

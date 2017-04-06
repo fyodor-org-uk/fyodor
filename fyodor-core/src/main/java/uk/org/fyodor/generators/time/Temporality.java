@@ -12,4 +12,8 @@ public interface Temporality {
     Instant instant();
 
     Clock clock();
+
+    ZonedDateTime zonedDateTime();
+
+    ZoneId zone();
 }

@@ -11,11 +11,49 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static java.time.ZoneOffset.UTC;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.org.fyodor.generators.RDG.localDate;
 import static uk.org.fyodor.generators.time.LocalDateRange.today;
+import static uk.org.fyodor.generators.time.Timekeeper.current;
 
 public class TimekeeperTest {
+
+    @Test
+    public void dateTimeIsAtClockZone() {
+        final LocalDateTime bstDateTime = LocalDateTime.of(2017, 4, 3, 23, 59);
+        final ZoneId zone = ZoneId.of("Australia/Sydney");
+        final ZoneOffset offset = zone.getRules().getOffset(bstDateTime);
+
+        Timekeeper.from(zonedClock(bstDateTime, zone));
+
+        final LocalDateTime actual = current().dateTime();
+        assertThat(actual).isEqualTo(bstDateTime.plusSeconds(offset.getTotalSeconds()));
+    }
+
+    @Test
+    public void dateIsAtClockZone() {
+        final LocalDateTime bstDateTime = LocalDateTime.of(2017, 1, 1, 23, 59);
+        final ZoneId zone = ZoneId.of("Asia/Tokyo");
+        final ZoneOffset offset = zone.getRules().getOffset(bstDateTime);
+
+        Timekeeper.from(zonedClock(bstDateTime, zone));
+
+        final LocalDate actual = current().date();
+        assertThat(actual).isEqualTo(bstDateTime.plusSeconds(offset.getTotalSeconds()).toLocalDate());
+    }
+
+    @Test
+    public void timeIsAtClockZone() {
+        final LocalDateTime bstDateTime = LocalDateTime.of(2017, 6, 15, 23, 59);
+        final ZoneId zone = ZoneId.of("Pacific/Apia");
+        final ZoneOffset offset = zone.getRules().getOffset(bstDateTime);
+
+        Timekeeper.from(zonedClock(bstDateTime, zone));
+
+        final LocalTime actual = current().time();
+        assertThat(actual).isEqualTo(bstDateTime.plusSeconds(offset.getTotalSeconds()).toLocalTime());
+    }
 
     @Test
     public void currentDateCanBeConfiguredFromSystemClock() {
@@ -23,7 +61,7 @@ public class TimekeeperTest {
 
         final LocalDate systemDate = LocalDate.now();
 
-        final LocalDate today = Timekeeper.current().date();
+        final LocalDate today = current().date();
 
         assertThat(today).isEqualTo(systemDate);
     }
@@ -35,7 +73,7 @@ public class TimekeeperTest {
 
         Timekeeper.from(Clock.fixed(systemDateAsInstant, ZoneId.systemDefault()));
 
-        final LocalDate today = Timekeeper.current().date();
+        final LocalDate today = current().date();
 
         assertThat(today).isEqualTo(systemDate);
     }
@@ -72,6 +110,14 @@ public class TimekeeperTest {
             final LocalDate today = localDate(today()).next();
             resultHolder.addResult(today);
         };
+    }
+
+    private static Clock zonedClock(final LocalDateTime dateTime, final ZoneId zone) {
+        return Clock.fixed(dateTime.toInstant(UTC), zone);
+    }
+
+    private static Clock zonedClock(final LocalDate date, final ZoneId zone) {
+        return Clock.fixed(date.atStartOfDay().toInstant(UTC), zone);
     }
 
     private static Clock fixedClock(final LocalDate today) {

@@ -46,24 +46,6 @@ public final class CurrentSeedTest {
     }
 
     @Test
-    public void resetsTheSeedToDefaultAfterEachTestMethod() {
-        final long initialSeed = seed().current();
-
-        testRunner.scheduleTest(SeededTestClass.class).run();
-
-        assertThat(reporter.reportFor(SeededTestClass.class, "redTest"))
-                .beforeTestStarts(initialSeed)
-                .duringTest(1334L)
-                .whenTestHasFinished(initialSeed);
-
-        assertThat(reporter.reportFor(SeededTestClass.class, "greenTest"))
-                .didNotFail()
-                .beforeTestStarts(initialSeed)
-                .duringTest(1334L)
-                .whenTestHasFinished(initialSeed);
-    }
-
-    @Test
     public void setsTheSeedBeforeEachAnnotatedTestMethodAndThenResetsTheSeedAfterEachTestMethod() {
         final long initialSeed = new Random().nextLong();
 
