@@ -5,33 +5,47 @@ import org.junit.runner.Description;
 import uk.org.fyodor.generators.Generator;
 import uk.org.fyodor.generators.time.CurrentDate;
 import uk.org.fyodor.generators.time.CurrentTime;
+import uk.org.fyodor.generators.time.CurrentZone;
 import uk.org.fyodor.generators.time.Timekeeper;
 
-import java.time.Clock;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.lang.annotation.Annotation;
+import java.time.*;
+import java.util.Optional;
 
-import static java.time.ZoneOffset.UTC;
+import static java.time.Clock.fixed;
+import static java.util.Optional.empty;
 
 final class FyodorTimekeeperRule extends TestWatcher {
 
     private final ThreadLocal<Boolean> timekeeperConfigured = ThreadLocal.withInitial(() -> false);
 
-    private final CurrentDateProvider currentDateProvider;
-    private final CurrentTimeProvider currentTimeProvider;
+    private final Generator<ZonedDateTime> currentDateTime;
 
-    FyodorTimekeeperRule(final Generator<LocalDate> currentDate, final Generator<LocalTime> currentTime) {
-        this.currentDateProvider = new CurrentDateProvider(currentDate);
-        this.currentTimeProvider = new CurrentTimeProvider(currentTime);
+    FyodorTimekeeperRule(final Generator<ZonedDateTime> currentDateTime) {
+        this.currentDateTime = currentDateTime;
     }
 
     @Override
     public void starting(final Description description) {
-        final LocalDate currentDate = currentDateProvider.currentDateFor(description);
-        final LocalTime currentTime = currentTimeProvider.currentTimeFor(description);
-        Timekeeper.from(utcClockOf(currentDate.atTime(currentTime)));
-        timekeeperConfigured.set(true);
+        final FyodorTest fyodorTest = new FyodorTest(description);
+
+        final ZonedDateTime defaultDateTimeAndZone = currentDateTime.next();
+
+        final LocalDate currentDate = fyodorTest.currentDateAnnotation()
+                .map(date -> LocalDate.parse(date.value()))
+                .orElseGet(defaultDateTimeAndZone::toLocalDate);
+
+        final LocalTime currentTime = fyodorTest.currentTimeAnnotation()
+                .map(time -> LocalTime.parse(time.value()))
+                .orElseGet(defaultDateTimeAndZone::toLocalTime);
+
+        final ZoneId currentZone = fyodorTest.currentZoneAnnotation()
+                .map(zone -> ZoneId.of(zone.value()))
+                .orElseGet(defaultDateTimeAndZone::getZone);
+
+        final Clock currentClock = fixedClockOf(currentDate.atTime(currentTime).atZone(currentZone));
+
+        configureTimekeeper(currentClock);
     }
 
     @Override
@@ -41,57 +55,48 @@ final class FyodorTimekeeperRule extends TestWatcher {
         }
     }
 
-    private static Clock utcClockOf(final LocalDateTime dateTime) {
-        return Clock.fixed(dateTime.toInstant(UTC), UTC);
+    private void configureTimekeeper(final Clock currentClock) {
+        Timekeeper.from(currentClock);
+        timekeeperConfigured.set(true);
     }
 
-    private static final class CurrentDateProvider {
-
-        private final Generator<LocalDate> currentDate;
-
-        private CurrentDateProvider(final Generator<LocalDate> currentDate) {
-            this.currentDate = currentDate;
-        }
-
-        private LocalDate currentDateFor(final Description description) {
-            final CurrentDate methodAnnotation = description.getAnnotation(CurrentDate.class);
-            if (methodAnnotation != null) {
-                final String dateString = methodAnnotation.value();
-                return LocalDate.parse(dateString);
-            }
-
-            final CurrentDate classAnnotation = description.getTestClass().getAnnotation(CurrentDate.class);
-            if (classAnnotation != null) {
-                final String dateString = classAnnotation.value();
-                return LocalDate.parse(dateString);
-            }
-
-            return currentDate.next();
-        }
+    private static Clock fixedClockOf(final ZonedDateTime currentDateTimeAndZone) {
+        return fixed(currentDateTimeAndZone.toInstant(), currentDateTimeAndZone.getZone());
     }
 
-    private static final class CurrentTimeProvider {
+    private static final class FyodorTest {
 
-        private final Generator<LocalTime> currentTime;
+        private final Description description;
 
-        private CurrentTimeProvider(final Generator<LocalTime> currentTime) {
-            this.currentTime = currentTime;
+        private FyodorTest(final Description description) {
+            this.description = description;
         }
 
-        private LocalTime currentTimeFor(final Description description) {
-            final CurrentTime methodAnnotation = description.getAnnotation(CurrentTime.class);
+        Optional<CurrentDate> currentDateAnnotation() {
+            return findAnnotation(CurrentDate.class);
+        }
+
+        Optional<CurrentTime> currentTimeAnnotation() {
+            return findAnnotation(CurrentTime.class);
+        }
+
+        Optional<CurrentZone> currentZoneAnnotation() {
+            return findAnnotation(CurrentZone.class);
+        }
+
+        private <A extends Annotation> Optional<A> findAnnotation(final Class<A> annotation) {
+            final A methodAnnotation = description.getAnnotation(annotation);
             if (methodAnnotation != null) {
-                final String timeString = methodAnnotation.value();
-                return LocalTime.parse(timeString);
+                return Optional.of(methodAnnotation);
             }
 
-            final CurrentTime classAnnotation = description.getTestClass().getAnnotation(CurrentTime.class);
+            final A classAnnotation = description.getTestClass().getAnnotation(annotation);
             if (classAnnotation != null) {
-                final String timeString = classAnnotation.value();
-                return LocalTime.parse(timeString);
+                return Optional.of(classAnnotation);
             }
 
-            return currentTime.next();
+            return empty();
         }
+
     }
 }

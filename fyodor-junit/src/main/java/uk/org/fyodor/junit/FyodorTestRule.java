@@ -7,12 +7,8 @@ import uk.org.fyodor.generators.Generator;
 import uk.org.fyodor.generators.time.Temporality;
 import uk.org.fyodor.generators.time.Timekeeper;
 
-import java.time.Clock;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 
-import static java.time.ZoneOffset.UTC;
 import static org.junit.rules.RuleChain.outerRule;
 
 public final class FyodorTestRule implements TestRule {
@@ -21,13 +17,12 @@ public final class FyodorTestRule implements TestRule {
 
     public FyodorTestRule() {
         this.delegate = outerRule(new FyodorSeedRule())
-                .around(new FyodorTimekeeperRule(() -> Timekeeper.current().date(), () -> Timekeeper.current().time()));
+                .around(new FyodorTimekeeperRule(() -> Timekeeper.current().zonedDateTime()));
     }
 
-    private FyodorTestRule(final Generator<LocalDate> currentDate,
-                           final Generator<LocalTime> currentTime) {
+    private FyodorTestRule(final Generator<ZonedDateTime> currentDateTime) {
         this.delegate = outerRule(new FyodorSeedRule())
-                .around(new FyodorTimekeeperRule(currentDate, currentTime));
+                .around(new FyodorTimekeeperRule(currentDateTime));
     }
 
     @Override
@@ -44,9 +39,7 @@ public final class FyodorTestRule implements TestRule {
     }
 
     public static FyodorTestRule from(final Clock clock) {
-        return new FyodorTestRule(
-                () -> clock.instant().atZone(UTC).toLocalDate(),
-                () -> clock.instant().atZone(UTC).toLocalTime());
+        return new FyodorTestRule(() -> clock.instant().atZone(clock.getZone()));
     }
 
     public static FyodorTestRule withCurrentDate(final LocalDate currentDate) {
@@ -54,7 +47,13 @@ public final class FyodorTestRule implements TestRule {
     }
 
     public static FyodorTestRule withCurrentDate(final Generator<LocalDate> currentDate) {
-        return new FyodorTestRule(currentDate, () -> Timekeeper.current().time());
+        return new FyodorTestRule(() -> {
+            final LocalDate date = currentDate.next();
+            return Timekeeper.current().zonedDateTime()
+                    .withYear(date.getYear())
+                    .withMonth(date.getMonthValue())
+                    .withDayOfMonth(date.getDayOfMonth());
+        });
     }
 
     public static FyodorTestRule withCurrentTime(final LocalTime currentTime) {
@@ -62,7 +61,14 @@ public final class FyodorTestRule implements TestRule {
     }
 
     public static FyodorTestRule withCurrentTime(final Generator<LocalTime> currentTime) {
-        return new FyodorTestRule(() -> Timekeeper.current().date(), currentTime);
+        return new FyodorTestRule(() -> {
+            final LocalTime time = currentTime.next();
+            return Timekeeper.current().zonedDateTime()
+                    .withHour(time.getHour())
+                    .withMinute(time.getMinute())
+                    .withSecond(time.getSecond())
+                    .withNano(time.getNano());
+        });
     }
 
     public static FyodorTestRule withCurrentDateAndTime(final LocalDateTime currentDateTime) {
@@ -70,9 +76,16 @@ public final class FyodorTestRule implements TestRule {
     }
 
     public static FyodorTestRule withCurrentDateAndTime(final Generator<LocalDateTime> currentDateTime) {
-        return new FyodorTestRule(
-                () -> currentDateTime.next().toLocalDate(),
-                () -> currentDateTime.next().toLocalTime());
+        return new FyodorTestRule(() -> {
+            final LocalDateTime dateTime = currentDateTime.next();
+            return Timekeeper.current().zonedDateTime()
+                    .withYear(dateTime.getYear())
+                    .withMonth(dateTime.getMonthValue())
+                    .withDayOfMonth(dateTime.getDayOfMonth())
+                    .withHour(dateTime.getHour())
+                    .withMinute(dateTime.getMinute())
+                    .withSecond(dateTime.getSecond())
+                    .withNano(dateTime.getNano());
+        });
     }
-
 }

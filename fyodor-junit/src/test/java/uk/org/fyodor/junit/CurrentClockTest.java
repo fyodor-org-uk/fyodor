@@ -33,7 +33,6 @@ public final class CurrentClockTest {
     @Test
     public void noAnnotationsWithDefaultRule() {
         final Clock initialClock = utcClockOf(instant().next());
-
         Timekeeper.from(initialClock);
 
         testRunner.scheduleTest(NoAnnotationsWithDefaultRule.class).run();
@@ -52,14 +51,13 @@ public final class CurrentClockTest {
     }
 
     @Test
-    public void clockConfiguredWithRule() {
+    public void ruleConfiguredWithClock() {
         final Clock initialClock = utcClockOf(localDate().next().atTime(localTime().next()).toInstant(UTC));
-
         Timekeeper.from(initialClock);
 
-        testRunner.scheduleTest(RuleConfiguredWithClock.class).run();
+        testRunner.scheduleTest(NoAnnotationsWithConfiguredRule.class).run();
 
-        assertThat(reporter.reportFor(RuleConfiguredWithClock.class, "first"))
+        assertThat(reporter.reportFor(NoAnnotationsWithConfiguredRule.class, "first"))
                 .didNotFail()
                 .beforeTestStarts(initialClock)
                 .duringTest(utcClockOf(utcInstantOf(1999, 12, 31, 23, 59, 59)))
@@ -69,7 +67,6 @@ public final class CurrentClockTest {
     @Test
     public void annotationsOverrideRuleConfiguredWithClock() {
         final Clock initialClock = utcClockOf(localDate().next().atTime(localTime().next()).toInstant(UTC));
-
         Timekeeper.from(initialClock);
 
         testRunner.scheduleTest(AnnotatedAndRuleConfiguredWithClock.class).run();
@@ -90,7 +87,6 @@ public final class CurrentClockTest {
     @Test
     public void clockConfiguredWithDateAndTimeAnnotations() {
         final Clock initialClock = utcClockOf(instant().next());
-
         Timekeeper.from(initialClock);
 
         testRunner.scheduleTest(TestClassWithAnnotations.class).run();
@@ -160,7 +156,7 @@ public final class CurrentClockTest {
         }
     }
 
-    public static final class RuleConfiguredWithClock {
+    public static final class NoAnnotationsWithConfiguredRule {
 
         @Rule
         public final FyodorTestRule rule = FyodorTestRule.from(

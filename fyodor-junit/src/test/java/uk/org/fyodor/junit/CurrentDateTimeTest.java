@@ -8,7 +8,10 @@ import uk.org.fyodor.generators.time.CurrentDate;
 import uk.org.fyodor.generators.time.CurrentTime;
 import uk.org.fyodor.generators.time.Timekeeper;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static java.time.ZoneOffset.UTC;
 import static org.junit.Assert.assertTrue;
@@ -37,7 +40,6 @@ public final class CurrentDateTimeTest {
     @Test
     public void noAnnotationsWithDefaultRule() {
         final Instant initialDateTime = instant().next();
-
         Timekeeper.from(utcClockOf(initialDateTime));
 
         testRunner
@@ -61,7 +63,6 @@ public final class CurrentDateTimeTest {
     public void timeConfiguredInRule() {
         final LocalDate initialDate = RDG.localDate().next();
         final Instant initialDateTime = utcInstantOf(initialDate.atTime(localTime().next()));
-
         Timekeeper.from(utcClockOf(initialDateTime));
 
         testRunner.scheduleTest(RuleConfiguredWithTime.class).run();
@@ -80,7 +81,6 @@ public final class CurrentDateTimeTest {
         final LocalDate initialDate = RDG.localDate().next();
         final LocalTime initialTime = RDG.localTime().next();
         final Instant initialDateTime = utcInstantOf(initialDate.atTime(initialTime));
-
         Timekeeper.from(utcClockOf(initialDateTime));
 
         testRunner.scheduleTest(RuleConfiguredWithDate.class).run();
@@ -97,7 +97,6 @@ public final class CurrentDateTimeTest {
     @Test
     public void dateAndTimeConfiguredInRule() {
         final Instant initialDateTime = RDG.instant().next();
-
         Timekeeper.from(utcClockOf(initialDateTime));
 
         testRunner.scheduleTest(RuleConfiguredWithDateAndTime.class).run();
@@ -115,9 +114,6 @@ public final class CurrentDateTimeTest {
     @Test
     public void resetsBackToPreviousDateAndTimeAfterEachTestMethod() {
         final Instant now = RDG.instant().next();
-        final Instant anHourAgo = now.minus(Duration.ofHours(1));
-
-        Timekeeper.from(utcClockOf(anHourAgo));
         Timekeeper.from(utcClockOf(now));
 
         testRunner.scheduleTest(DateAndTimeConfiguredInAnnotationsAndRule.class).run();

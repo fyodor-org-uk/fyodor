@@ -5,7 +5,6 @@ import java.util.Stack;
 
 import static java.lang.ThreadLocal.withInitial;
 import static java.time.Clock.systemDefaultZone;
-import static java.time.ZoneOffset.UTC;
 
 public final class Timekeeper {
 
@@ -30,17 +29,17 @@ public final class Timekeeper {
         return new Temporality() {
             @Override
             public LocalDate date() {
-                return instant().atZone(UTC).toLocalDate();
+                return zonedDateTime().toLocalDate();
             }
 
             @Override
             public LocalTime time() {
-                return instant().atZone(UTC).toLocalTime();
+                return zonedDateTime().toLocalTime();
             }
 
             @Override
             public LocalDateTime dateTime() {
-                return instant().atZone(UTC).toLocalDateTime();
+                return zonedDateTime().toLocalDateTime();
             }
 
             @Override
@@ -51,6 +50,16 @@ public final class Timekeeper {
             @Override
             public Clock clock() {
                 return clock;
+            }
+
+            @Override
+            public ZonedDateTime zonedDateTime() {
+                return instant().atZone(zone());
+            }
+
+            @Override
+            public ZoneId zone() {
+                return clock().getZone();
             }
         };
     }

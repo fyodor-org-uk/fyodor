@@ -36,7 +36,7 @@ public final class LocalTimeGeneratorTest {
     }
 
     @Test
-    public void greatestLocalTimeIsEndOfDayIgnorningNanosInTheSecond() {
+    public void greatestLocalTimeIsEndOfDayIgnoringNanosInTheSecond() {
         final Sample<LocalTime> sample = from(localTime()).sample(500_000);
 
         final LocalTime endOfDay = LocalTime.of(23, 59, 59, 0);

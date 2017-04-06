@@ -33,7 +33,6 @@ public final class CurrentDateTest {
     @Test
     public void noAnnotationsWithDefaultRule() {
         final LocalDate initialDate = localDate().next();
-
         Timekeeper.from(utcClockOf(initialDate));
 
         testRunner.scheduleTest(NoAnnotationsWithDefaultRule.class).run();
@@ -54,12 +53,17 @@ public final class CurrentDateTest {
     @Test
     public void dateConfiguredWithRule() {
         final LocalDate initialDate = localDate().next();
-
         Timekeeper.from(utcClockOf(initialDate));
 
-        testRunner.scheduleTest(DateConfiguredWithRule.class).run();
+        testRunner.scheduleTest(NoAnnotationsWithConfiguredRule.class).run();
 
-        assertThat(reporter.reportFor(DateConfiguredWithRule.class, "first"))
+        assertThat(reporter.reportFor(NoAnnotationsWithConfiguredRule.class, "first"))
+                .didNotFail()
+                .beforeTestStarts(initialDate)
+                .duringTest(of(1999, 12, 31))
+                .whenTestHasFinished(initialDate);
+
+        assertThat(reporter.reportFor(NoAnnotationsWithConfiguredRule.class, "second"))
                 .didNotFail()
                 .beforeTestStarts(initialDate)
                 .duringTest(of(1999, 12, 31))
@@ -67,22 +71,19 @@ public final class CurrentDateTest {
     }
 
     @Test
-    public void resetsDateAfterEachTestMethod() {
+    public void annotatedTestMethods() {
         final LocalDate today = localDate().next();
-        final LocalDate yesterday = today.minusDays(1);
-
-        Timekeeper.from(utcClockOf(yesterday));
         Timekeeper.from(utcClockOf(today));
 
-        testRunner.scheduleTest(WithAnnotations.class).run();
+        testRunner.scheduleTest(WithCurrentDateMethodAnnotations.class).run();
 
-        assertThat(reporter.reportFor(WithAnnotations.class, "first"))
+        assertThat(reporter.reportFor(WithCurrentDateMethodAnnotations.class, "first"))
                 .didNotFail()
                 .beforeTestStarts(today)
                 .duringTest(of(2011, 4, 13))
                 .whenTestHasFinished(today);
 
-        assertThat(reporter.reportFor(WithAnnotations.class, "second"))
+        assertThat(reporter.reportFor(WithCurrentDateMethodAnnotations.class, "second"))
                 .didNotFail()
                 .beforeTestStarts(today)
                 .duringTest(of(2015, 9, 18))
@@ -92,7 +93,6 @@ public final class CurrentDateTest {
     @Test
     public void testFailsWhenDateStringCannotBeParsed() {
         final LocalDate initialDate = localDate().next();
-
         Timekeeper.from(utcClockOf(initialDate));
 
         testRunner.scheduleTest(BadDateString.class).run();
@@ -104,7 +104,7 @@ public final class CurrentDateTest {
                 .failedBecauseOf(DateTimeException.class);
     }
 
-    public static final class WithAnnotations {
+    public static final class WithCurrentDateMethodAnnotations {
 
         @Rule
         public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
@@ -155,7 +155,7 @@ public final class CurrentDateTest {
         }
     }
 
-    public static final class DateConfiguredWithRule {
+    public static final class NoAnnotationsWithConfiguredRule {
 
         @Rule
         public final FyodorTestRule rule = FyodorTestRule.withCurrentDate(of(1999, 12, 31));
@@ -165,6 +165,11 @@ public final class CurrentDateTest {
 
         @Test
         public void first() {
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
+        }
+
+        @Test
+        public void second() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
         }
     }
