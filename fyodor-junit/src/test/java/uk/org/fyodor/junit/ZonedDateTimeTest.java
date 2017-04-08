@@ -3,10 +3,10 @@ package uk.org.fyodor.junit;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-import uk.org.fyodor.generators.time.CurrentDate;
-import uk.org.fyodor.generators.time.CurrentTime;
-import uk.org.fyodor.generators.time.CurrentZone;
 import uk.org.fyodor.generators.time.Timekeeper;
+import uk.org.fyodor.testapi.AtDate;
+import uk.org.fyodor.testapi.AtTime;
+import uk.org.fyodor.testapi.AtZone;
 
 import java.time.*;
 
@@ -148,8 +148,8 @@ public final class ZonedDateTimeTest {
         public final TestName testName = new TestName();
 
         @Test
-        @CurrentDate("2017-04-03")
-        @CurrentTime("12:31:56")
+        @AtDate("2017-04-03")
+        @AtTime("12:31:56")
         public void first() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.current().zonedDateTime());
         }
@@ -164,9 +164,9 @@ public final class ZonedDateTimeTest {
         public final TestName testName = new TestName();
 
         @Test
-        @CurrentDate("2016-03-02")
-        @CurrentTime("11:30:55")
-        @CurrentZone("Pacific/Apia")
+        @AtDate("2016-03-02")
+        @AtTime("11:30:55")
+        @AtZone("Pacific/Apia")
         public void first() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.current().zonedDateTime());
         }

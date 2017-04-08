@@ -3,8 +3,8 @@ package uk.org.fyodor.junit;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-import uk.org.fyodor.generators.time.CurrentTime;
 import uk.org.fyodor.generators.time.Timekeeper;
+import uk.org.fyodor.testapi.AtTime;
 
 import java.time.DateTimeException;
 import java.time.LocalTime;
@@ -21,7 +21,7 @@ import static uk.org.fyodor.junit.TestStartedListener.testStarted;
 import static uk.org.fyodor.junit.TimeFactory.Clocks.utcClockOf;
 
 @SuppressWarnings("ConstantConditions")
-public final class CurrentTimeTest {
+public final class AtTimeTest {
 
     private static final Reporter<LocalTime> reporter = reporter();
 
@@ -69,15 +69,15 @@ public final class CurrentTimeTest {
         final LocalTime now = localTime().next();
         Timekeeper.from(utcClockOf(now));
 
-        testRunner.scheduleTest(WithCurrentTimeMethodAnnotations.class).run();
+        testRunner.scheduleTest(AtTimeMethodAnnotation.class).run();
 
-        assertThat(reporter.reportFor(WithCurrentTimeMethodAnnotations.class, "first"))
+        assertThat(reporter.reportFor(AtTimeMethodAnnotation.class, "first"))
                 .didNotFail()
                 .beforeTestStarts(now)
                 .duringTest(of(23, 59, 59))
                 .whenTestHasFinished(now);
 
-        assertThat(reporter.reportFor(WithCurrentTimeMethodAnnotations.class, "second"))
+        assertThat(reporter.reportFor(AtTimeMethodAnnotation.class, "second"))
                 .didNotFail()
                 .beforeTestStarts(now)
                 .duringTest(of(0, 0, 0))
@@ -99,7 +99,7 @@ public final class CurrentTimeTest {
                 .failedBecauseOf(DateTimeException.class);
     }
 
-    public static final class WithCurrentTimeMethodAnnotations {
+    public static final class AtTimeMethodAnnotation {
 
         @Rule
         public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
@@ -108,13 +108,13 @@ public final class CurrentTimeTest {
         public final TestName testName = new TestName();
 
         @Test
-        @CurrentTime("23:59:59")
+        @AtTime("23:59:59")
         public void first() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localTime(now()).next());
         }
 
         @Test
-        @CurrentTime("00:00:00")
+        @AtTime("00:00:00")
         public void second() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localTime(now()).next());
         }
@@ -126,7 +126,7 @@ public final class CurrentTimeTest {
         public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
 
         @Test
-        @CurrentTime("this-is-not-a-time")
+        @AtTime("this-is-not-a-time")
         public void testWithBadTimeString() {
         }
     }

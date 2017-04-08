@@ -3,8 +3,8 @@ package uk.org.fyodor.junit;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-import uk.org.fyodor.generators.time.CurrentDate;
 import uk.org.fyodor.generators.time.Timekeeper;
+import uk.org.fyodor.testapi.AtDate;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -21,7 +21,7 @@ import static uk.org.fyodor.junit.TestStartedListener.testStarted;
 import static uk.org.fyodor.junit.TimeFactory.Clocks.utcClockOf;
 
 @SuppressWarnings("ConstantConditions")
-public final class CurrentDateTest {
+public final class AtDateTest {
 
     private static final Reporter<LocalDate> reporter = reporter();
 
@@ -75,15 +75,15 @@ public final class CurrentDateTest {
         final LocalDate today = localDate().next();
         Timekeeper.from(utcClockOf(today));
 
-        testRunner.scheduleTest(WithCurrentDateMethodAnnotations.class).run();
+        testRunner.scheduleTest(AtDateMethodAnnotation.class).run();
 
-        assertThat(reporter.reportFor(WithCurrentDateMethodAnnotations.class, "first"))
+        assertThat(reporter.reportFor(AtDateMethodAnnotation.class, "first"))
                 .didNotFail()
                 .beforeTestStarts(today)
                 .duringTest(of(2011, 4, 13))
                 .whenTestHasFinished(today);
 
-        assertThat(reporter.reportFor(WithCurrentDateMethodAnnotations.class, "second"))
+        assertThat(reporter.reportFor(AtDateMethodAnnotation.class, "second"))
                 .didNotFail()
                 .beforeTestStarts(today)
                 .duringTest(of(2015, 9, 18))
@@ -104,7 +104,7 @@ public final class CurrentDateTest {
                 .failedBecauseOf(DateTimeException.class);
     }
 
-    public static final class WithCurrentDateMethodAnnotations {
+    public static final class AtDateMethodAnnotation {
 
         @Rule
         public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
@@ -113,13 +113,13 @@ public final class CurrentDateTest {
         public final TestName testName = new TestName();
 
         @Test
-        @CurrentDate("2011-04-13")
+        @AtDate("2011-04-13")
         public void first() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
         }
 
         @Test
-        @CurrentDate("2015-09-18")
+        @AtDate("2015-09-18")
         public void second() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), localDate(today()).next());
         }
@@ -131,7 +131,7 @@ public final class CurrentDateTest {
         public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
 
         @Test
-        @CurrentDate("this-is-not-a-date")
+        @AtDate("this-is-not-a-date")
         public void testWithBadDateString() {
         }
     }
