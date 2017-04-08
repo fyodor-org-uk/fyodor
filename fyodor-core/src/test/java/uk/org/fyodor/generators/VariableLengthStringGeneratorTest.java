@@ -4,13 +4,13 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import org.assertj.core.api.Condition;
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 import uk.org.fyodor.FyodorAssertions;
 import uk.org.fyodor.range.Range;
 
 import static uk.org.fyodor.random.RandomSourceProvider.sourceOfRandomness;
 
-public class VariableLengthStringGeneratorTest extends BaseTestWithRule {
+public class VariableLengthStringGeneratorTest extends BaseTest {
 
     private Multiset<Integer> generated;
     private Generator<String> generator;

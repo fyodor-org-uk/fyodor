@@ -3,9 +3,9 @@ package uk.org.fyodor.generators;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 
-public class PercentageChanceGeneratorTest extends BaseTestWithRule {
+public class PercentageChanceGeneratorTest extends BaseTest {
 
     Multiset<Boolean> results = HashMultiset.create();
 

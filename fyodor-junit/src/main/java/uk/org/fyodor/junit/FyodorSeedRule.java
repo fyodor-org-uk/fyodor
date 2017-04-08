@@ -2,7 +2,7 @@ package uk.org.fyodor.junit;
 
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
-import uk.org.fyodor.random.Seed;
+import uk.org.fyodor.testapi.Seed;
 
 import java.util.Optional;
 

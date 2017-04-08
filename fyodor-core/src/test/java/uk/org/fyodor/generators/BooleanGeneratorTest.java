@@ -1,12 +1,12 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 
-import static uk.org.fyodor.Sampler.from;
 import static org.assertj.core.api.Assertions.assertThat;
+import static uk.org.fyodor.Sampler.from;
 
-public final class BooleanGeneratorTest extends BaseTestWithRule {
+public final class BooleanGeneratorTest extends BaseTest {
 
     @Test
     public void generatesBooleans() {

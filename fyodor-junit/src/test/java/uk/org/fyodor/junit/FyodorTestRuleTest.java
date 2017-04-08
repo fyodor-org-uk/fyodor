@@ -7,10 +7,10 @@ import uk.org.fyodor.generators.Generator;
 import uk.org.fyodor.generators.RDG;
 import uk.org.fyodor.generators.time.Timekeeper;
 import uk.org.fyodor.random.RandomSourceProvider;
-import uk.org.fyodor.random.Seed;
 import uk.org.fyodor.testapi.AtDate;
 import uk.org.fyodor.testapi.AtTime;
 import uk.org.fyodor.testapi.AtZone;
+import uk.org.fyodor.testapi.Seed;
 
 import java.lang.annotation.Annotation;
 import java.time.*;

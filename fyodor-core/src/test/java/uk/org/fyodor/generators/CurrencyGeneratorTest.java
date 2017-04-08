@@ -1,13 +1,13 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 
 import java.util.Currency;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CurrencyGeneratorTest extends BaseTestWithRule {
+public class CurrencyGeneratorTest extends BaseTest {
 
     @Test
     public void generateCurrencies(){

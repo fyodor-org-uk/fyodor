@@ -1,14 +1,14 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 
 import java.net.URI;
 import java.util.regex.Pattern;
 
 import static uk.org.fyodor.FyodorAssertions.assertThat;
 
-public class UriGeneratorTest extends BaseTestWithRule {
+public class UriGeneratorTest extends BaseTest {
 
     Pattern pattern = Pattern.compile("^https?://[\\w\\-.]*[\\.!?\\w]+$");
 

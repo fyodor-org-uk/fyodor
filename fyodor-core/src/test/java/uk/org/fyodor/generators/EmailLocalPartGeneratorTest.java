@@ -1,11 +1,11 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class EmailLocalPartGeneratorTest extends BaseTestWithRule {
+public class EmailLocalPartGeneratorTest extends BaseTest {
 
     EmailLocalPartGenerator generator = new EmailLocalPartGenerator(20);
 
