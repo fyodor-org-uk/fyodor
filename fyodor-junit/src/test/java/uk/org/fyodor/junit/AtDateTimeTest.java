@@ -4,9 +4,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import uk.org.fyodor.generators.RDG;
-import uk.org.fyodor.generators.time.CurrentDate;
-import uk.org.fyodor.generators.time.CurrentTime;
 import uk.org.fyodor.generators.time.Timekeeper;
+import uk.org.fyodor.testapi.AtDate;
+import uk.org.fyodor.testapi.AtTime;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -28,7 +28,7 @@ import static uk.org.fyodor.junit.TimeFactory.Clocks.utcClockOf;
 import static uk.org.fyodor.junit.TimeFactory.Instants.utcInstantOf;
 
 @SuppressWarnings("ConstantConditions")
-public final class CurrentDateTimeTest {
+public final class AtDateTimeTest {
 
     private static final Reporter<Instant> reporter = reporter();
 
@@ -65,9 +65,9 @@ public final class CurrentDateTimeTest {
         final Instant initialDateTime = utcInstantOf(initialDate.atTime(localTime().next()));
         Timekeeper.from(utcClockOf(initialDateTime));
 
-        testRunner.scheduleTest(RuleConfiguredWithTime.class).run();
+        testRunner.scheduleTest(RuleConfiguredAtTime.class).run();
 
-        final Report<Instant> report = reporter.reportFor(RuleConfiguredWithTime.class, "first");
+        final Report<Instant> report = reporter.reportFor(RuleConfiguredAtTime.class, "first");
 
         assertThat(report)
                 .didNotFail()
@@ -150,8 +150,8 @@ public final class CurrentDateTimeTest {
         }
     }
 
-    @CurrentDate("2011-04-13")
-    @CurrentTime("16:02:31")
+    @AtDate("2011-04-13")
+    @AtTime("16:02:31")
     public static final class TestClassWithDateTimeSpecificationOnClass {
 
         @Rule
@@ -173,7 +173,7 @@ public final class CurrentDateTimeTest {
     }
 
 
-    public static final class RuleConfiguredWithTime {
+    public static final class RuleConfiguredAtTime {
 
         @Rule
         public final FyodorTestRule rule = FyodorTestRule.withCurrentTime(LocalTime.of(10, 30, 45));
@@ -215,8 +215,8 @@ public final class CurrentDateTimeTest {
         }
     }
 
-    @CurrentDate("2010-01-01")
-    @CurrentTime("12:00:00")
+    @AtDate("2010-01-01")
+    @AtTime("12:00:00")
     public static final class DateAndTimeConfiguredInAnnotationsAndRule {
 
         @Rule
@@ -231,8 +231,8 @@ public final class CurrentDateTimeTest {
         }
 
         @Test
-        @CurrentDate("2015-06-15")
-        @CurrentTime("17:01:30")
+        @AtDate("2015-06-15")
+        @AtTime("17:01:30")
         public void annotatedMethod() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), instant(now()).next());
         }

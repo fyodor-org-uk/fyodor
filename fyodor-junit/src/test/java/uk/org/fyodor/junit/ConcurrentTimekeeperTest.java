@@ -3,9 +3,9 @@ package uk.org.fyodor.junit;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-import uk.org.fyodor.generators.time.CurrentDate;
-import uk.org.fyodor.generators.time.CurrentTime;
 import uk.org.fyodor.generators.time.Timekeeper;
+import uk.org.fyodor.testapi.AtDate;
+import uk.org.fyodor.testapi.AtTime;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -77,8 +77,8 @@ public final class ConcurrentTimekeeperTest {
         return Clock.fixed(instant, ZoneOffset.UTC);
     }
 
-    @CurrentDate("2050-01-01")
-    @CurrentTime("15:35:45")
+    @AtDate("2050-01-01")
+    @AtTime("15:35:45")
     public static final class ClassLevelAnnotatedOnly {
 
         @Rule
@@ -102,15 +102,15 @@ public final class ConcurrentTimekeeperTest {
         public final TestName testName = new TestName();
 
         @Test
-        @CurrentDate("2013-07-11")
-        @CurrentTime("12:15:25")
+        @AtDate("2013-07-11")
+        @AtTime("12:15:25")
         public void methodLevelAnnotated() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.current().instant());
         }
     }
 
-    @CurrentDate("2050-01-01")
-    @CurrentTime("15:35:45")
+    @AtDate("2050-01-01")
+    @AtTime("15:35:45")
     public static final class ClassLevelAndMethodLevelAnnotated {
 
         @Rule
@@ -125,8 +125,8 @@ public final class ConcurrentTimekeeperTest {
         }
 
         @Test
-        @CurrentDate("2013-07-11")
-        @CurrentTime("10:55:15")
+        @AtDate("2013-07-11")
+        @AtTime("10:55:15")
         public void methodLevelAnnotated() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), instant(now()).next());
         }

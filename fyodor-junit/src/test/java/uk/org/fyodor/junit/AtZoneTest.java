@@ -5,8 +5,8 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import uk.org.fyodor.generators.Generator;
 import uk.org.fyodor.generators.RDG;
-import uk.org.fyodor.generators.time.CurrentZone;
 import uk.org.fyodor.generators.time.Timekeeper;
+import uk.org.fyodor.testapi.AtZone;
 
 import java.time.DateTimeException;
 import java.time.ZoneId;
@@ -24,7 +24,7 @@ import static uk.org.fyodor.junit.TestStartedListener.testStarted;
 import static uk.org.fyodor.junit.TimeFactory.Clocks.clockOf;
 
 @SuppressWarnings("ConstantConditions")
-public final class CurrentZoneTest {
+public final class AtZoneTest {
 
     private static final Reporter<ZoneId> reporter = reporter();
 
@@ -78,15 +78,15 @@ public final class CurrentZoneTest {
         final ZoneId initialZone = zoneId().next();
         Timekeeper.from(clockOf(localDateTime().next().atZone(initialZone)));
 
-        testRunner.scheduleTest(WithCurrentZoneMethodAnnotations.class).run();
+        testRunner.scheduleTest(AtZoneMethodAnnotation.class).run();
 
-        assertThat(reporter.reportFor(WithCurrentZoneMethodAnnotations.class, "first"))
+        assertThat(reporter.reportFor(AtZoneMethodAnnotation.class, "first"))
                 .didNotFail()
                 .beforeTestStarts(initialZone)
                 .duringTest(ZoneId.of("Asia/Shanghai"))
                 .whenTestHasFinished(initialZone);
 
-        assertThat(reporter.reportFor(WithCurrentZoneMethodAnnotations.class, "second"))
+        assertThat(reporter.reportFor(AtZoneMethodAnnotation.class, "second"))
                 .didNotFail()
                 .beforeTestStarts(initialZone)
                 .duringTest(ZoneId.of("Africa/Addis_Ababa"))
@@ -112,7 +112,7 @@ public final class CurrentZoneTest {
         return () -> ZoneId.of(zoneIdGenerator.next());
     }
 
-    public static final class WithCurrentZoneMethodAnnotations {
+    public static final class AtZoneMethodAnnotation {
 
         @Rule
         public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
@@ -121,13 +121,13 @@ public final class CurrentZoneTest {
         public final TestName testName = new TestName();
 
         @Test
-        @CurrentZone("Asia/Shanghai")
+        @AtZone("Asia/Shanghai")
         public void first() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.current().zone());
         }
 
         @Test
-        @CurrentZone("Africa/Addis_Ababa")
+        @AtZone("Africa/Addis_Ababa")
         public void second() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.current().zone());
         }
@@ -139,7 +139,7 @@ public final class CurrentZoneTest {
         public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
 
         @Test
-        @CurrentZone("this-is-not-a-valid-zone-id")
+        @AtZone("this-is-not-a-valid-zone-id")
         public void testWithBadZoneId() {
         }
     }

@@ -5,12 +5,12 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import uk.org.fyodor.generators.Generator;
 import uk.org.fyodor.generators.RDG;
-import uk.org.fyodor.generators.time.CurrentDate;
-import uk.org.fyodor.generators.time.CurrentTime;
-import uk.org.fyodor.generators.time.CurrentZone;
 import uk.org.fyodor.generators.time.Timekeeper;
 import uk.org.fyodor.random.RandomSourceProvider;
 import uk.org.fyodor.random.Seed;
+import uk.org.fyodor.testapi.AtDate;
+import uk.org.fyodor.testapi.AtTime;
+import uk.org.fyodor.testapi.AtZone;
 
 import java.lang.annotation.Annotation;
 import java.time.*;
@@ -486,12 +486,12 @@ public final class FyodorTestRuleTest {
         return annotation;
     }
 
-    private static CurrentDate currentDate(final LocalDate date) {
+    private static AtDate currentDate(final LocalDate date) {
         return currentDate(date.toString());
     }
 
-    private static CurrentDate currentDate(final String date) {
-        return new CurrentDate() {
+    private static AtDate currentDate(final String date) {
+        return new AtDate() {
             @Override
             public String value() {
                 return date;
@@ -499,17 +499,17 @@ public final class FyodorTestRuleTest {
 
             @Override
             public Class<? extends Annotation> annotationType() {
-                return CurrentDate.class;
+                return AtDate.class;
             }
         };
     }
 
-    private static CurrentTime currentTime(final LocalTime time) {
+    private static AtTime currentTime(final LocalTime time) {
         return currentTime(time.toString());
     }
 
-    private static CurrentTime currentTime(final String time) {
-        return new CurrentTime() {
+    private static AtTime currentTime(final String time) {
+        return new AtTime() {
             @Override
             public String value() {
                 return time;
@@ -517,13 +517,13 @@ public final class FyodorTestRuleTest {
 
             @Override
             public Class<? extends Annotation> annotationType() {
-                return CurrentTime.class;
+                return AtTime.class;
             }
         };
     }
 
-    private static CurrentZone currentZone(final ZoneId zone) {
-        return new CurrentZone() {
+    private static AtZone currentZone(final ZoneId zone) {
+        return new AtZone() {
             @Override
             public String value() {
                 return zone.getId();
@@ -531,7 +531,7 @@ public final class FyodorTestRuleTest {
 
             @Override
             public Class<? extends Annotation> annotationType() {
-                return CurrentZone.class;
+                return AtZone.class;
             }
         };
     }
@@ -585,23 +585,23 @@ public final class FyodorTestRuleTest {
     }
 
     @SuppressWarnings("WeakerAccess")
-    @CurrentTime("10:10:10")
+    @AtTime("10:10:10")
     public static final class ClassLevelCurrentTimeAnnotation {
     }
 
     @SuppressWarnings("WeakerAccess")
-    @CurrentDate("2010-01-01")
+    @AtDate("2010-01-01")
     public static final class ClassLevelCurrentDateAnnotation {
     }
 
     @SuppressWarnings("WeakerAccess")
-    @CurrentDate("1999-12-31")
-    @CurrentTime("23:59:59")
+    @AtDate("1999-12-31")
+    @AtTime("23:59:59")
     public static final class ClassLevelCurrentDateAndCurrentTimeAnnotations {
     }
 
     @SuppressWarnings("WeakerAccess")
-    @CurrentZone("America/Los_Angeles")
+    @AtZone("America/Los_Angeles")
     public static final class ClassLevelCurrentZoneAnnotation {
     }
 

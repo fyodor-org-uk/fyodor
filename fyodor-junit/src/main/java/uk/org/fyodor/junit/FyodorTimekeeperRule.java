@@ -3,10 +3,10 @@ package uk.org.fyodor.junit;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import uk.org.fyodor.generators.Generator;
-import uk.org.fyodor.generators.time.CurrentDate;
-import uk.org.fyodor.generators.time.CurrentTime;
-import uk.org.fyodor.generators.time.CurrentZone;
 import uk.org.fyodor.generators.time.Timekeeper;
+import uk.org.fyodor.testapi.AtDate;
+import uk.org.fyodor.testapi.AtTime;
+import uk.org.fyodor.testapi.AtZone;
 
 import java.lang.annotation.Annotation;
 import java.time.*;
@@ -31,15 +31,15 @@ final class FyodorTimekeeperRule extends TestWatcher {
 
         final ZonedDateTime defaultDateTimeAndZone = currentDateTime.next();
 
-        final LocalDate currentDate = fyodorTest.currentDateAnnotation()
+        final LocalDate currentDate = fyodorTest.atDateAnnotation()
                 .map(date -> LocalDate.parse(date.value()))
                 .orElseGet(defaultDateTimeAndZone::toLocalDate);
 
-        final LocalTime currentTime = fyodorTest.currentTimeAnnotation()
+        final LocalTime currentTime = fyodorTest.atTimeAnnotation()
                 .map(time -> LocalTime.parse(time.value()))
                 .orElseGet(defaultDateTimeAndZone::toLocalTime);
 
-        final ZoneId currentZone = fyodorTest.currentZoneAnnotation()
+        final ZoneId currentZone = fyodorTest.atZoneAnnotation()
                 .map(zone -> ZoneId.of(zone.value()))
                 .orElseGet(defaultDateTimeAndZone::getZone);
 
@@ -55,13 +55,13 @@ final class FyodorTimekeeperRule extends TestWatcher {
         }
     }
 
-    private void configureTimekeeper(final Clock currentClock) {
-        Timekeeper.from(currentClock);
+    private void configureTimekeeper(final Clock clock) {
+        Timekeeper.from(clock);
         timekeeperConfigured.set(true);
     }
 
-    private static Clock fixedClockOf(final ZonedDateTime currentDateTimeAndZone) {
-        return fixed(currentDateTimeAndZone.toInstant(), currentDateTimeAndZone.getZone());
+    private static Clock fixedClockOf(final ZonedDateTime zonedDateTime) {
+        return fixed(zonedDateTime.toInstant(), zonedDateTime.getZone());
     }
 
     private static final class FyodorTest {
@@ -72,16 +72,16 @@ final class FyodorTimekeeperRule extends TestWatcher {
             this.description = description;
         }
 
-        Optional<CurrentDate> currentDateAnnotation() {
-            return findAnnotation(CurrentDate.class);
+        Optional<AtDate> atDateAnnotation() {
+            return findAnnotation(AtDate.class);
         }
 
-        Optional<CurrentTime> currentTimeAnnotation() {
-            return findAnnotation(CurrentTime.class);
+        Optional<AtTime> atTimeAnnotation() {
+            return findAnnotation(AtTime.class);
         }
 
-        Optional<CurrentZone> currentZoneAnnotation() {
-            return findAnnotation(CurrentZone.class);
+        Optional<AtZone> atZoneAnnotation() {
+            return findAnnotation(AtZone.class);
         }
 
         private <A extends Annotation> Optional<A> findAnnotation(final Class<A> annotation) {

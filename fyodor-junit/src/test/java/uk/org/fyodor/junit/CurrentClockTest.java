@@ -3,9 +3,9 @@ package uk.org.fyodor.junit;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-import uk.org.fyodor.generators.time.CurrentDate;
-import uk.org.fyodor.generators.time.CurrentTime;
 import uk.org.fyodor.generators.time.Timekeeper;
+import uk.org.fyodor.testapi.AtDate;
+import uk.org.fyodor.testapi.AtTime;
 
 import java.time.Clock;
 import java.time.LocalDate;
@@ -129,8 +129,8 @@ public final class CurrentClockTest {
         }
     }
 
-    @CurrentDate("2014-05-01")
-    @CurrentTime("11:59:59")
+    @AtDate("2014-05-01")
+    @AtTime("11:59:59")
     public static final class TestClassWithAnnotations {
         @Rule
         public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
@@ -139,13 +139,13 @@ public final class CurrentClockTest {
         public final TestName testName = new TestName();
 
         @Test
-        @CurrentDate("2015-11-24")
+        @AtDate("2015-11-24")
         public void methodWithDate() {
             reporter.objectDuringTest(TestClassWithAnnotations.class, testName.getMethodName(), rule.current().clock());
         }
 
         @Test
-        @CurrentTime("12:00:00")
+        @AtTime("12:00:00")
         public void methodWithTime() {
             reporter.objectDuringTest(TestClassWithAnnotations.class, testName.getMethodName(), rule.current().clock());
         }
@@ -171,8 +171,8 @@ public final class CurrentClockTest {
         }
     }
 
-    @CurrentDate("1999-12-31")
-    @CurrentTime("23:59:59")
+    @AtDate("1999-12-31")
+    @AtTime("23:59:59")
     public static final class AnnotatedAndRuleConfiguredWithClock {
 
         @Rule
@@ -188,8 +188,8 @@ public final class CurrentClockTest {
         }
 
         @Test
-        @CurrentDate("2010-01-01")
-        @CurrentTime("12:00:00")
+        @AtDate("2010-01-01")
+        @AtTime("12:00:00")
         public void annotatedMethod() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), rule.current().clock());
         }
