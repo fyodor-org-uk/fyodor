@@ -1,7 +1,7 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 
 import java.util.Random;
 
@@ -12,7 +12,7 @@ import static uk.org.fyodor.Sampler.*;
 import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
 
-public final class DoubleGeneratorTest extends BaseTestWithRule {
+public final class DoubleGeneratorTest extends BaseTest {
 
     @Test
     public void generatesFixedDouble() {

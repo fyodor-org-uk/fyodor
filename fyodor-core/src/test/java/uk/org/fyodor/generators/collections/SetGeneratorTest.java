@@ -1,7 +1,7 @@
 package uk.org.fyodor.generators.collections;
 
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 import uk.org.fyodor.generators.Generator;
 import uk.org.fyodor.generators.RDG;
 
@@ -14,7 +14,7 @@ import static uk.org.fyodor.generators.collections.GeneratorUtils.generatingRand
 import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
 
-public final class SetGeneratorTest extends BaseTestWithRule {
+public final class SetGeneratorTest extends BaseTest {
 
     private static final int MAX_SIZE = 1000;
 

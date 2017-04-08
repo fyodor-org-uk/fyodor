@@ -1,11 +1,11 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Iso3CountryGeneratorTest extends BaseTestWithRule {
+public class Iso3CountryGeneratorTest extends BaseTest {
 
     @Test
     public void getIso3CountryCode(){

@@ -1,20 +1,20 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 
 import java.util.List;
 import java.util.Set;
 
-import static uk.org.fyodor.Sampler.Sample;
-import static uk.org.fyodor.Sampler.from;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
+import static uk.org.fyodor.Sampler.Sample;
+import static uk.org.fyodor.Sampler.from;
 
-public final class ValueGeneratorTest extends BaseTestWithRule {
+public final class ValueGeneratorTest extends BaseTest {
 
     @Test
     public void generatesValuesFromListOfStrings() {

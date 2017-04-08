@@ -3,7 +3,7 @@ package uk.org.fyodor.generators;
 import com.google.common.collect.Iterators;
 import org.assertj.core.api.Condition;
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 import uk.org.fyodor.Sampler;
 
 import java.math.BigDecimal;
@@ -17,7 +17,7 @@ import static uk.org.fyodor.Sampler.largest;
 import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
 
-public final class BigDecimalGeneratorTest extends BaseTestWithRule {
+public final class BigDecimalGeneratorTest extends BaseTest {
 
     @Test
     public void generatesFixedBigDecimalWithZeroScale() {

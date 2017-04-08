@@ -1,11 +1,11 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 
 import java.util.Locale;
 
-public class LocaleGeneratorTest extends BaseTestWithRule {
+public class LocaleGeneratorTest extends BaseTest {
 
     @Test
     public void generateLocales(){

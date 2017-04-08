@@ -1,4 +1,4 @@
-package uk.org.fyodor.random;
+package uk.org.fyodor.testapi;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

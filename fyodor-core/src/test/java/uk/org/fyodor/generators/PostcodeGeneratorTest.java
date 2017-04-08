@@ -1,7 +1,7 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 
 import java.util.regex.Pattern;
 
@@ -13,7 +13,7 @@ and
 https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/359448/4__Bulk_Data_Transfer_-_additional_validation_valid.pdf
 for details about what's valid for postcodes
  */
-public class PostcodeGeneratorTest extends BaseTestWithRule {
+public class PostcodeGeneratorTest extends BaseTest {
 
     Pattern pattern = Pattern.compile("^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$");
 
