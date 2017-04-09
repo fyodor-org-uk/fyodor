@@ -2,7 +2,7 @@ package uk.org.fyodor.generators.characters;
 
 public class NoDoubleQuotesFilter implements CharacterFilter {
 
-    private static CharacterFilter filter = new NoDoubleQuotesFilter();
+    private static final CharacterFilter filter = new NoDoubleQuotesFilter();
 
     private NoDoubleQuotesFilter() {}
 

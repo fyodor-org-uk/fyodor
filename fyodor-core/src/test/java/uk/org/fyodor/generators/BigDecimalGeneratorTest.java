@@ -3,7 +3,7 @@ package uk.org.fyodor.generators;
 import com.google.common.collect.Iterators;
 import org.assertj.core.api.Condition;
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 import uk.org.fyodor.Sampler;
 
 import java.math.BigDecimal;
@@ -17,7 +17,7 @@ import static uk.org.fyodor.Sampler.largest;
 import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
 
-public final class BigDecimalGeneratorTest extends BaseTestWithRule {
+public final class BigDecimalGeneratorTest extends BaseTest {
 
     @Test
     public void generatesFixedBigDecimalWithZeroScale() {
@@ -30,10 +30,10 @@ public final class BigDecimalGeneratorTest extends BaseTestWithRule {
         assertThat(from(RDG.bigDecimal(TEN)).sample(1000).unique())
                 .have(new ValuesBetweenZeroAndTenCondition())
                 .has(new SizeGreaterThanOneCondition());
-        assertThat(from(RDG.bigDecimal(10d)).sample(1000).unique())
+        assertThat(from(RDG.bigDecimal(10D)).sample(1000).unique())
                 .have(new ValuesBetweenZeroAndTenCondition())
                 .has(new SizeGreaterThanOneCondition());
-        assertThat(from(RDG.bigDecimal(10l)).sample(1000).unique())
+        assertThat(from(RDG.bigDecimal(10L)).sample(1000).unique())
                 .have(new ValuesBetweenZeroAndTenCondition())
                 .has(new SizeGreaterThanOneCondition());
     }
@@ -110,9 +110,9 @@ public final class BigDecimalGeneratorTest extends BaseTestWithRule {
         }
     }
 
-    private static class SizeGreaterThanOneCondition extends Condition<Iterable<BigDecimal>> {
+    private static class SizeGreaterThanOneCondition extends Condition<Iterable<? extends BigDecimal>> {
         @Override
-        public boolean matches(Iterable<BigDecimal> value) {
+        public boolean matches(Iterable<? extends BigDecimal> value) {
             return Iterators.size(value.iterator()) > 1;
         }
     }

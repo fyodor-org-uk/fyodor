@@ -1,14 +1,14 @@
 package uk.org.fyodor.generators;
 
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static uk.org.fyodor.Sampler.from;
 import static uk.org.fyodor.range.Range.closed;
 import static uk.org.fyodor.range.Range.fixed;
-import static org.assertj.core.api.Assertions.assertThat;
 
-public class IntegerGeneratorTest extends BaseTestWithRule {
+public class IntegerGeneratorTest extends BaseTest {
 
     @Test
     public void neverReturnsNull() {

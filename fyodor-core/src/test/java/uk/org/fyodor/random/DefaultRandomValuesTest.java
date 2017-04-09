@@ -1,7 +1,7 @@
 package uk.org.fyodor.random;
 
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 import uk.org.fyodor.generators.Generator;
 
 import java.math.BigDecimal;
@@ -10,7 +10,7 @@ import java.util.Random;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.org.fyodor.Sampler.from;
 
-public final class DefaultRandomValuesTest extends BaseTestWithRule {
+public final class DefaultRandomValuesTest extends BaseTest {
 
     private final RandomValues randomValues = new DefaultRandomValues(new Random());
 
@@ -234,38 +234,18 @@ public final class DefaultRandomValuesTest extends BaseTestWithRule {
     }
 
     private static Generator<Long> randomLongs(final RandomValues randomValues, final long lower, final long upper) {
-        return new Generator<Long>() {
-            @Override
-            public Long next() {
-                return randomValues.randomLong(lower, upper);
-            }
-        };
+        return () -> randomValues.randomLong(lower, upper);
     }
 
     private static Generator<Integer> randomIntegers(final RandomValues randomValues, final int lower, final int upper) {
-        return new Generator<Integer>() {
-            @Override
-            public Integer next() {
-                return randomValues.randomInteger(lower, upper);
-            }
-        };
+        return () -> randomValues.randomInteger(lower, upper);
     }
 
     private static Generator<Integer> randomIntegers(final RandomValues randomValues, final int maximum) {
-        return new Generator<Integer>() {
-            @Override
-            public Integer next() {
-                return randomValues.randomInteger(maximum);
-            }
-        };
+        return () -> randomValues.randomInteger(maximum);
     }
 
     private static Generator<Double> randomDoubles(final RandomValues randomValues, final double lower, final double upper) {
-        return new Generator<Double>() {
-            @Override
-            public Double next() {
-                return randomValues.randomDouble(lower, upper);
-            }
-        };
+        return () -> randomValues.randomDouble(lower, upper);
     }
 }

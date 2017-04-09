@@ -4,19 +4,19 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import org.junit.Before;
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
-import uk.org.fyodor.generators.characters.NoDoubleQuotesFilter;
+import uk.org.fyodor.BaseTest;
 import uk.org.fyodor.generators.characters.CharacterFilter;
 import uk.org.fyodor.generators.characters.LettersAndDigitsFilter;
 import uk.org.fyodor.generators.characters.LettersOnlyFilter;
+import uk.org.fyodor.generators.characters.NoDoubleQuotesFilter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.org.fyodor.random.RandomSourceProvider.sourceOfRandomness;
 
-public class StringGeneratorTest extends BaseTestWithRule {
+public class StringGeneratorTest extends BaseTest {
 
-    private Multiset<Character> chars;
     private static final int SIZE_OF_RANDOM_STRING = 50;
+    private Multiset<Character> chars;
 
     @Before
     public void charSet() {

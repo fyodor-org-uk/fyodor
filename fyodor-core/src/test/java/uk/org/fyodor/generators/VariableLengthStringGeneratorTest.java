@@ -4,16 +4,16 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import org.assertj.core.api.Condition;
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 import uk.org.fyodor.FyodorAssertions;
 import uk.org.fyodor.range.Range;
 
 import static uk.org.fyodor.random.RandomSourceProvider.sourceOfRandomness;
 
-public class VariableLengthStringGeneratorTest extends BaseTestWithRule {
+public class VariableLengthStringGeneratorTest extends BaseTest {
 
-    Multiset<Integer> generated;
-    Generator<String> generator;
+    private Multiset<Integer> generated;
+    private Generator<String> generator;
 
     @Test
     public void variableLength() {
@@ -28,9 +28,9 @@ public class VariableLengthStringGeneratorTest extends BaseTestWithRule {
         }
         FyodorAssertions.assertThat(generated.elementSet())
                 .hasSize(maxSize - minSize + 1)
-                .has(new Condition<Iterable<Integer>>() {
+                .has(new Condition<Iterable<? extends Integer>>() {
                     @Override
-                    public boolean matches(Iterable<Integer> value) {
+                    public boolean matches(Iterable<? extends Integer> value) {
                         for (Integer val : value) {
                             if (val < minSize || val > maxSize) {
                                 return false;

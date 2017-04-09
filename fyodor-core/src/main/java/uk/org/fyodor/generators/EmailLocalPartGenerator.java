@@ -5,7 +5,7 @@ import uk.org.fyodor.range.Range;
 
 public class EmailLocalPartGenerator implements Generator<String> {
 
-    Generator<String> generator;
+    private final Generator<String> generator;
 
     public EmailLocalPartGenerator(int length) {
         generator = RDG.string(length, CharacterSetFilter.EmailLocalPart);

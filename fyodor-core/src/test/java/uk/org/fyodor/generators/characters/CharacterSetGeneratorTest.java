@@ -1,18 +1,13 @@
 package uk.org.fyodor.generators.characters;
 
 import org.junit.Test;
-import uk.org.fyodor.BaseTestWithRule;
+import uk.org.fyodor.BaseTest;
 
 import static uk.org.fyodor.FyodorAssertions.assertThat;
 
-public class CharacterSetGeneratorTest extends BaseTestWithRule {
+public class CharacterSetGeneratorTest extends BaseTest {
 
-    CharacterFilter filter = new CharacterFilter() {
-        @Override
-        public boolean includeCharacter(char c) {
-            return 'A' == c || 'B' == c;
-        }
-    };
+    CharacterFilter filter = c -> 'A' == c || 'B' == c;
 
     @Test
     public void onlyValidCharsInArray() {
