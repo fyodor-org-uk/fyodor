@@ -20,7 +20,7 @@ public final class ConcurrentSeedTest {
 
     private final TestRunner<Long> testRunner = new TestRunner<>(
             testStarted(reporter, () -> seed().current()),
-            testFailed(reporter, (failure) -> ((FailedWithSeedException) failure.getException().getCause()).seed()),
+            testFailed(reporter, (failure) -> ((FailedWithSeed) failure.getException()).seed()),
             testFinished(reporter, () -> seed().current()));
 
     @Test

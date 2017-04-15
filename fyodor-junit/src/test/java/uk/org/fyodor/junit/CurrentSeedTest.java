@@ -1,6 +1,5 @@
 package uk.org.fyodor.junit;
 
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -8,6 +7,7 @@ import uk.org.fyodor.testapi.Seed;
 
 import java.util.Random;
 
+import static org.junit.Assert.assertTrue;
 import static uk.org.fyodor.junit.FyodorTestRule.fyodorTestRule;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
@@ -23,7 +23,7 @@ public final class CurrentSeedTest {
 
     private final TestRunner<Long> testRunner = new TestRunner<>(
             testStarted(reporter, () -> seed().current()),
-            testFailed(reporter, (failure) -> ((FailedWithSeedException) failure.getException().getCause()).seed()),
+            testFailed(reporter, (failure) -> ((FailedWithSeed) failure.getException()).seed()),
             testFinished(reporter, () -> seed().current()));
 
     @Test
@@ -55,7 +55,8 @@ public final class CurrentSeedTest {
                 .beforeTestStarts(initialSeed)
                 .duringTest(9876L)
                 .whenTestHasFinished(initialSeed)
-                .whenFailed(9876L);
+                .whenFailed(9876L)
+                .failedBecauseOf(AssertionError.class);
 
         assertThat(reporter.reportFor(TestClassWithSeededTestMethods.class, "greenTest"))
                 .didNotFail()
@@ -70,8 +71,13 @@ public final class CurrentSeedTest {
 
         testRunner.scheduleTestWithObject(NonSeededTestClass.class, initialSeed, seed -> seed().next(seed)).run();
 
-        assertThat(reporter.reportFor(NonSeededTestClass.class, "redTest"))
-                .whenFailed(initialSeed);
+        assertThat(reporter.reportFor(NonSeededTestClass.class, "failingWithAssertionError"))
+                .whenFailed(initialSeed)
+                .failedBecauseOf(AssertionError.class);
+
+        assertThat(reporter.reportFor(NonSeededTestClass.class, "failingWithAssertionErrorButInitCauseCannotBeInvoked"))
+                .whenFailed(initialSeed)
+                .failedBecauseOf(AssertionError.class);
     }
 
     @Test
@@ -84,7 +90,8 @@ public final class CurrentSeedTest {
                 .beforeTestStarts(initialSeed)
                 .duringTest(3891L)
                 .whenTestHasFinished(initialSeed)
-                .whenFailed(3891L);
+                .whenFailed(3891L)
+                .failedBecauseOf(AssertionError.class);
 
         assertThat(reporter.reportFor(SeededTestClassWithSeededTestMethods.class, "greenTest"))
                 .beforeTestStarts(initialSeed)
@@ -104,13 +111,12 @@ public final class CurrentSeedTest {
         @Test
         public void redTest() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
-            Assert.assertTrue(false);
+            assertTrue(false);
         }
 
         @Test
         public void greenTest() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
-            Assert.assertTrue(true);
         }
     }
 
@@ -127,14 +133,13 @@ public final class CurrentSeedTest {
         @Seed(3891)
         public void redTest() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
-            Assert.assertTrue(false);
+            assertTrue(false);
         }
 
         @Test
         @Seed(1357)
         public void greenTest() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
-            Assert.assertTrue(true);
         }
     }
 
@@ -150,14 +155,13 @@ public final class CurrentSeedTest {
         @Seed(9876)
         public void redTest() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
-            Assert.assertTrue(false);
+            assertTrue(false);
         }
 
         @Test
         @Seed(9371)
         public void greenTest() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
-            Assert.assertTrue(true);
         }
     }
 
@@ -170,15 +174,21 @@ public final class CurrentSeedTest {
         public final TestName testName = new TestName();
 
         @Test
-        public void redTest() {
+        public void failingWithAssertionError() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
-            Assert.assertTrue(false);
+            throw new AssertionError("test fails because of an assertion error");
+        }
+
+        @Test
+        public void failingWithAssertionErrorButInitCauseCannotBeInvoked() {
+            reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
+            throw new AssertionError("test fails because of an assertion error but " +
+                    "initCause cannot be invoked on this exception because the initial cause is null", null);
         }
 
         @Test
         public void greenTest() {
             reporter.objectDuringTest(this.getClass(), testName.getMethodName(), seed().current());
-            Assert.assertTrue(true);
         }
     }
 }

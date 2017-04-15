@@ -1,30 +1,52 @@
 package uk.org.fyodor.junit;
 
-import org.junit.rules.TestWatcher;
+import org.junit.rules.TestRule;
 import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
 import uk.org.fyodor.testapi.Seed;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static uk.org.fyodor.random.RandomSourceProvider.seed;
 
-final class FyodorSeedRule extends TestWatcher {
+final class FyodorSeedRule implements TestRule {
 
     @Override
-    protected void failed(final Throwable t, final Description description) {
-        setRootCause(t, new FailedWithSeedException(seed().current()));
+    public Statement apply(final Statement base, final Description description) {
+        return new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+                starting(description);
+                try {
+                    base.evaluate();
+                } catch (final Throwable t) {
+                    failed(t);
+                } finally {
+                    finished(description);
+                }
+            }
+        };
     }
 
-    @Override
-    protected void starting(final Description description) {
-        seedFrom(description)
-                .ifPresent(seed -> seed().next(seed.value()));
+    private static void failed(final Throwable t) throws Throwable {
+        throw new FailedWithSeed(seed().current(), t);
     }
 
-    @Override
-    protected void finished(final Description description) {
-        seedFrom(description)
-                .ifPresent(seed -> seed().previous());
+    private static void starting(final Description description) {
+        seedFrom(description).ifPresent(useSeed());
+    }
+
+    private static void finished(final Description description) {
+        seedFrom(description).ifPresent(revertToPreviousSeed());
+    }
+
+    private static Consumer<Seed> useSeed() {
+        return seed -> seed().next(seed.value());
+    }
+
+    private static Consumer<Seed> revertToPreviousSeed() {
+        return seed -> seed().previous();
     }
 
     private static Optional<Seed> seedFrom(final Description description) {
@@ -34,13 +56,5 @@ final class FyodorSeedRule extends TestWatcher {
         return methodAnnotation != null
                 ? Optional.of(methodAnnotation)
                 : Optional.ofNullable(classAnnotation);
-    }
-
-    private static void setRootCause(final Throwable t, final Throwable cause) {
-        if (t.getCause() == null) {
-            t.initCause(cause);
-        } else {
-            setRootCause(t.getCause(), cause);
-        }
     }
 }

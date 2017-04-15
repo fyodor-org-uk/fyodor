@@ -7,10 +7,7 @@ import uk.org.fyodor.generators.Generator;
 import uk.org.fyodor.generators.RDG;
 import uk.org.fyodor.generators.time.Timekeeper;
 import uk.org.fyodor.random.RandomSourceProvider;
-import uk.org.fyodor.testapi.AtDate;
-import uk.org.fyodor.testapi.AtTime;
-import uk.org.fyodor.testapi.AtZone;
-import uk.org.fyodor.testapi.Seed;
+import uk.org.fyodor.testapi.*;
 
 import java.lang.annotation.Annotation;
 import java.time.*;
@@ -77,34 +74,21 @@ public final class FyodorTestRuleTest {
     }
 
     @Test
-    public void setsCauseOfFailingTest() throws Throwable {
+    public void throwsFailedWithSeedExceptionWhenTestFailsWithException() throws Throwable {
         final long initialSeed = RandomSourceProvider.seed().current();
+
+        final Exception originalException = new NullPointerException();
+        final Exception exceptionCausingTestToFail = new IllegalArgumentException("this is the top-level exception", originalException);
 
         try {
             new FyodorSeedRule()
-                    .apply(failingTest(() -> new Exception("this is the top-level exception with no cause")), test())
+                    .apply(failingTest(() -> exceptionCausingTestToFail), test())
                     .evaluate();
 
-            fail("This test should throw an exception");
-        } catch (final Exception causeOfFailingTest) {
-            final FailedWithSeedException cause = (FailedWithSeedException) causeOfFailingTest.getCause();
-            assertThat(cause.seed()).isEqualTo(initialSeed);
-        }
-    }
-
-    @Test
-    public void setsCauseOfFailingTestWhenFailureAlsoHasCause() throws Throwable {
-        final long initialSeed = RandomSourceProvider.seed().current();
-
-        try {
-            new FyodorSeedRule()
-                    .apply(failingTest(() -> new Exception("this is the top-level exception", new Exception("and this is the cause"))), test())
-                    .evaluate();
-
-            fail("This test should throw an exception");
-        } catch (final Exception causeOfFailingTest) {
-            final FailedWithSeedException cause = (FailedWithSeedException) causeOfFailingTest.getCause().getCause();
-            assertThat(cause.seed()).isEqualTo(initialSeed);
+            fail("This test should have thrown an exception");
+        } catch (final FailedWithSeed exception) {
+            assertThat(exception.seed()).isEqualTo(initialSeed);
+            assertThat(exception).hasCause(exceptionCausingTestToFail);
         }
     }
 
@@ -622,7 +606,5 @@ public final class FyodorTestRuleTest {
         public void evaluate() throws Throwable {
             this.captured = supplierOfT.get();
         }
-
-
     }
 }
