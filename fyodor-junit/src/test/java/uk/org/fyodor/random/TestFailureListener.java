@@ -14,22 +14,11 @@ final class TestFailureListener extends RunListener {
 
     @Override
     public void testFailure(final Failure failure) throws Exception {
-        //noinspection ThrowableResultOfMethodCallIgnored
-        final Throwable rootCause = rootCause(failure.getException());
-        if (rootCause instanceof FailedWithSeedException) {
-            final Description testDescription = failure.getDescription();
-            reporter.seedReportedWhenTestFails(
-                    testDescription.getTestClass(),
-                    testDescription.getMethodName(),
-                    ((FailedWithSeedException) rootCause).seed());
-        }
-    }
-
-    private static Throwable rootCause(final Throwable t) {
-        if (t.getCause() == null) {
-            return t;
-        }
-        return rootCause(t.getCause());
+        final Description testDescription = failure.getDescription();
+        reporter.seedReportedWhenTestFails(
+                testDescription.getTestClass(),
+                testDescription.getMethodName(),
+                ((FailedWithSeed) failure.getException()).seed());
     }
 
     static RunListener testFailed(final Reporter reporter) {
