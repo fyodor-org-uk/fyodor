@@ -6,32 +6,125 @@ import org.junit.runners.model.Statement;
 import uk.org.fyodor.generators.Generator;
 import uk.org.fyodor.generators.time.Temporality;
 import uk.org.fyodor.generators.time.Timekeeper;
+import uk.org.fyodor.testapi.*;
+import uk.org.fyodor.testapi.SeededFyodorTestCallback.SeedController;
+import uk.org.fyodor.testapi.TimekeeperFyodorTestCallback.TimeController;
 
+import java.lang.annotation.Annotation;
 import java.time.*;
+import java.util.Optional;
 
-import static org.junit.rules.RuleChain.outerRule;
+import static uk.org.fyodor.random.RandomSourceProvider.seed;
 
 public final class FyodorTestRule implements TestRule {
 
-    private final TestRule delegate;
+    private final SeededFyodorTestCallback seedCallback;
+    private final TimekeeperFyodorTestCallback timekeeperCallback;
 
     public FyodorTestRule() {
-        this.delegate = outerRule(new FyodorSeedRule())
-                .around(new FyodorTimekeeperRule(() -> Timekeeper.current().zonedDateTime()));
+        this(() -> Timekeeper.current().zonedDateTime());
     }
 
-    private FyodorTestRule(final Generator<ZonedDateTime> currentDateTime) {
-        this.delegate = outerRule(new FyodorSeedRule())
-                .around(new FyodorTimekeeperRule(currentDateTime));
+    private FyodorTestRule(final Generator<ZonedDateTime> currentDateTimeAndZone) {
+        this.seedCallback = new SeededFyodorTestCallback(seedController());
+        this.timekeeperCallback = new TimekeeperFyodorTestCallback(timeController(currentDateTimeAndZone));
     }
 
     @Override
     public Statement apply(final Statement base, final Description description) {
-        return delegate.apply(base, description);
+        return new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+                final FyodorTest test = fyodorTestOf(description);
+
+                try {
+                    seedCallback.beforeTestExecution(test);
+                    timekeeperCallback.beforeTestExecution(test);
+                    base.evaluate();
+                } catch (final Throwable t) {
+                    seedCallback.testFailed(test, t);
+                } finally {
+                    seedCallback.afterTestExecution(test);
+                    timekeeperCallback.afterTestExecution(test);
+                }
+            }
+        };
     }
 
     public Temporality current() {
         return Timekeeper.current();
+    }
+
+    private static FyodorTest fyodorTestOf(final Description description) {
+        return new FyodorTest() {
+            @Override
+            public Annotatable testMethod() {
+                return new Annotatable() {
+                    @Override
+                    public <A extends Annotation> Optional<A> getAnnotation(final Class<A> annotationClass) {
+                        return Optional.ofNullable(description.getAnnotation(annotationClass));
+                    }
+                };
+            }
+
+            @Override
+            public Annotatable testClass() {
+                return new Annotatable() {
+                    @Override
+                    public <A extends Annotation> Optional<A> getAnnotation(final Class<A> annotationClass) {
+                        return Optional.ofNullable(description.getTestClass().getAnnotation(annotationClass));
+                    }
+                };
+            }
+        };
+    }
+
+    private static TimeController timeController(final Generator<ZonedDateTime> currentDateTime) {
+        return new TimeController() {
+            @Override
+            public LocalDate currentDate() {
+                return currentDateTime.next().toLocalDate();
+            }
+
+            @Override
+            public LocalTime currentTime() {
+                return currentDateTime.next().toLocalTime();
+            }
+
+            @Override
+            public ZoneId currentZone() {
+                return currentDateTime.next().getZone();
+            }
+
+            @Override
+            public void setDateTimeAndZone(final ZonedDateTime dateTimeAndZone) {
+                Timekeeper.from(Clock.fixed(dateTimeAndZone.toInstant(), dateTimeAndZone.getZone()));
+            }
+
+            @Override
+            public void revertToPreviousDateTimeAndZone() {
+                Timekeeper.rollback();
+            }
+        };
+    }
+
+    private static SeedController seedController() {
+        return new SeedController() {
+            @Override
+            public long currentSeed() {
+                return seed().current();
+            }
+
+            @Override
+            public void setCurrentSeed(final long currentSeed) {
+                seed().next(currentSeed);
+            }
+
+            @Override
+            public void revertToPreviousSeed() {
+                seed().previous();
+            }
+        };
     }
 
     public static FyodorTestRule fyodorTestRule() {
@@ -88,4 +181,5 @@ public final class FyodorTestRule implements TestRule {
                     .withNano(dateTime.getNano());
         });
     }
+
 }

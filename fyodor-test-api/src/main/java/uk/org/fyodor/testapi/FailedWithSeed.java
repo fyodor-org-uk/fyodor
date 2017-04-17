@@ -1,6 +1,6 @@
-package uk.org.fyodor.junit;
+package uk.org.fyodor.testapi;
 
-final class FailedWithSeed extends Throwable {
+public final class FailedWithSeed extends Throwable {
 
     private final long seed;
 
@@ -9,7 +9,7 @@ final class FailedWithSeed extends Throwable {
         this.seed = seed;
     }
 
-    long seed() {
+    public long seed() {
         return seed;
     }
 }

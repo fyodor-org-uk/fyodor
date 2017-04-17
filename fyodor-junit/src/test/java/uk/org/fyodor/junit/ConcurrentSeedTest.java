@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
+import uk.org.fyodor.testapi.FailedWithSeed;
 import uk.org.fyodor.testapi.Seed;
 
 import static uk.org.fyodor.junit.FyodorTestRule.fyodorTestRule;
