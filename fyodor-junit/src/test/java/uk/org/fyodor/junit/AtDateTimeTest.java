@@ -19,6 +19,7 @@ import static uk.org.fyodor.generators.RDG.instant;
 import static uk.org.fyodor.generators.RDG.localTime;
 import static uk.org.fyodor.generators.time.InstantRange.now;
 import static uk.org.fyodor.generators.time.Timekeeper.current;
+import static uk.org.fyodor.junit.FyodorTestRule.*;
 import static uk.org.fyodor.junit.ReportAssert.assertThat;
 import static uk.org.fyodor.junit.Reporter.reporter;
 import static uk.org.fyodor.junit.TestFailureListener.testFailed;
@@ -134,7 +135,7 @@ public final class AtDateTimeTest {
     public static final class NoAnnotationsWithDefaultRule {
 
         @Rule
-        public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
+        public final FyodorTestRule rule = fyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();
@@ -155,7 +156,7 @@ public final class AtDateTimeTest {
     public static final class TestClassWithDateTimeSpecificationOnClass {
 
         @Rule
-        public final FyodorTestRule rule = FyodorTestRule.fyodorTestRule();
+        public final FyodorTestRule rule = fyodorTestRule();
 
         @Rule
         public final TestName testName = new TestName();
@@ -176,7 +177,7 @@ public final class AtDateTimeTest {
     public static final class RuleConfiguredAtTime {
 
         @Rule
-        public final FyodorTestRule rule = FyodorTestRule.withCurrentTime(LocalTime.of(10, 30, 45));
+        public final FyodorTestRule rule = withCurrentTime(LocalTime.of(10, 30, 45));
 
         @Rule
         public final TestName testName = new TestName();
@@ -190,7 +191,7 @@ public final class AtDateTimeTest {
     public static final class RuleConfiguredWithDate {
 
         @Rule
-        public final FyodorTestRule rule = FyodorTestRule.withCurrentDate(LocalDate.of(1999, 12, 31));
+        public final FyodorTestRule rule = withCurrentDate(LocalDate.of(1999, 12, 31));
 
         @Rule
         public final TestName testName = new TestName();
@@ -204,7 +205,7 @@ public final class AtDateTimeTest {
     public static final class RuleConfiguredWithDateAndTime {
 
         @Rule
-        public final FyodorTestRule rule = FyodorTestRule.withCurrentDateAndTime(LocalDateTime.of(1999, 12, 31, 23, 59, 59));
+        public final FyodorTestRule rule = withCurrentDateAndTime(LocalDateTime.of(1999, 12, 31, 23, 59, 59));
 
         @Rule
         public final TestName testName = new TestName();
@@ -220,7 +221,7 @@ public final class AtDateTimeTest {
     public static final class DateAndTimeConfiguredInAnnotationsAndRule {
 
         @Rule
-        public final FyodorTestRule rule = FyodorTestRule.withCurrentDateAndTime(LocalDateTime.of(1999, 12, 31, 23, 59, 59));
+        public final FyodorTestRule rule = withCurrentDateAndTime(LocalDateTime.of(1999, 12, 31, 23, 59, 59));
 
         @Rule
         public final TestName testName = new TestName();

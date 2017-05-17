@@ -19,12 +19,13 @@ import static org.junit.runner.Description.createTestDescription;
 import static uk.org.fyodor.generators.RDG.*;
 import static uk.org.fyodor.generators.time.Timekeeper.current;
 import static uk.org.fyodor.junit.FyodorTestRule.fyodorTestRule;
+import static uk.org.fyodor.junit.FyodorTestRule.withCurrentDateTimeAndZone;
 import static uk.org.fyodor.junit.TimeFactory.Clocks.utcClockOf;
 import static uk.org.fyodor.junit.TimeFactory.Instants.utcInstantOf;
 
 public final class FyodorTestRuleTest {
 
-    private final CapturingStatement<Instant> capturingTime = new CapturingStatement<>(() -> current().instant());
+    private final CapturingStatement<Instant> capturingInstant = new CapturingStatement<>(() -> current().instant());
     private final CapturingStatement<ZoneId> capturingZone = new CapturingStatement<>(() -> current().zone());
     private final CapturingStatement<Long> capturingSeed = new CapturingStatement<>(() -> RandomSourceProvider.seed().current());
 
@@ -124,10 +125,10 @@ public final class FyodorTestRuleTest {
         Timekeeper.from(utcClockOf(initialDateTime));
 
         FyodorTestRule.withCurrentDateAndTime(localDate().next().atTime(LocalTime.of(10, 11, 12)))
-                .apply(capturingTime, test(annotatedWith(currentDate(LocalDate.of(2000, 1, 1)))))
+                .apply(capturingInstant, test(annotatedWith(currentDate(LocalDate.of(2000, 1, 1)))))
                 .evaluate();
 
-        assertThat(capturingTime.captured())
+        assertThat(capturingInstant.captured())
                 .isEqualTo(utcInstantOf(2000, 1, 1, 10, 11, 12));
 
         assertThat(current().instant())
@@ -141,7 +142,7 @@ public final class FyodorTestRuleTest {
 
         try {
             FyodorTestRule.withCurrentDateAndTime(localDateTime())
-                    .apply(capturingTime, test(annotatedWith(currentDate("this-is-not-a-valid-date-string"))))
+                    .apply(capturingInstant, test(annotatedWith(currentDate("this-is-not-a-valid-date-string"))))
                     .evaluate();
 
             fail("This test should throw an exception because the date string cannot be parsed");
@@ -157,7 +158,7 @@ public final class FyodorTestRuleTest {
 
         try {
             FyodorTestRule.withCurrentDateAndTime(localDateTime())
-                    .apply(capturingTime, test(annotatedWith(currentTime("this-is-not-a-valid-time-string"))))
+                    .apply(capturingInstant, test(annotatedWith(currentTime("this-is-not-a-valid-time-string"))))
                     .evaluate();
 
             fail("This test should throw an exception because the time string cannot be parsed");
@@ -171,10 +172,10 @@ public final class FyodorTestRuleTest {
         final LocalTime initialTime = LocalTime.of(0, 1, 2);
 
         FyodorTestRule.withCurrentDateAndTime(localDate().next().atTime(initialTime))
-                .apply(capturingTime, test(ClassLevelCurrentDateAnnotation.class))
+                .apply(capturingInstant, test(ClassLevelCurrentDateAnnotation.class))
                 .evaluate();
 
-        assertThat(capturingTime.captured())
+        assertThat(capturingInstant.captured())
                 .isEqualTo(utcInstantOf(2010, 1, 1, initialTime));
     }
 
@@ -185,10 +186,10 @@ public final class FyodorTestRuleTest {
         final LocalDate annotatedDate = LocalDate.of(2011, 2, 2);
 
         FyodorTestRule.withCurrentDateAndTime(initialDate.atTime(initialTime))
-                .apply(capturingTime, test(ClassLevelCurrentDateAnnotation.class, annotatedWith(currentDate(annotatedDate))))
+                .apply(capturingInstant, test(ClassLevelCurrentDateAnnotation.class, annotatedWith(currentDate(annotatedDate))))
                 .evaluate();
 
-        assertThat(capturingTime.captured())
+        assertThat(capturingInstant.captured())
                 .isEqualTo(utcInstantOf(annotatedDate, initialTime));
     }
 
@@ -198,10 +199,10 @@ public final class FyodorTestRuleTest {
         final LocalTime initialTime = localTime().next();
 
         FyodorTestRule.withCurrentDateAndTime(initialDate.atTime(initialTime))
-                .apply(capturingTime, test(ClassLevelCurrentTimeAnnotation.class))
+                .apply(capturingInstant, test(ClassLevelCurrentTimeAnnotation.class))
                 .evaluate();
 
-        assertThat(capturingTime.captured())
+        assertThat(capturingInstant.captured())
                 .isEqualTo(utcInstantOf(initialDate, 10, 10, 10));
     }
 
@@ -212,10 +213,10 @@ public final class FyodorTestRuleTest {
         final LocalTime annotatedTime = LocalTime.of(15, 15, 15);
 
         FyodorTestRule.withCurrentDateAndTime(initialDate.atTime(initialTime))
-                .apply(capturingTime, test(ClassLevelCurrentTimeAnnotation.class, annotatedWith(currentTime(annotatedTime))))
+                .apply(capturingInstant, test(ClassLevelCurrentTimeAnnotation.class, annotatedWith(currentTime(annotatedTime))))
                 .evaluate();
 
-        assertThat(capturingTime.captured())
+        assertThat(capturingInstant.captured())
                 .isEqualTo(utcInstantOf(initialDate, annotatedTime));
     }
 
@@ -224,10 +225,10 @@ public final class FyodorTestRuleTest {
         final LocalDate annotatedDate = LocalDate.of(2015, 6, 6);
 
         FyodorTestRule.withCurrentDateAndTime(localDateTime())
-                .apply(capturingTime, test(ClassLevelCurrentTimeAnnotation.class, annotatedWith(currentDate(annotatedDate))))
+                .apply(capturingInstant, test(ClassLevelCurrentTimeAnnotation.class, annotatedWith(currentDate(annotatedDate))))
                 .evaluate();
 
-        assertThat(capturingTime.captured())
+        assertThat(capturingInstant.captured())
                 .isEqualTo(utcInstantOf(annotatedDate, 10, 10, 10));
     }
 
@@ -236,21 +237,45 @@ public final class FyodorTestRuleTest {
         final LocalTime annotatedTime = LocalTime.of(12, 12, 12);
 
         FyodorTestRule.withCurrentDateAndTime(localDateTime())
-                .apply(capturingTime, test(ClassLevelCurrentDateAnnotation.class, annotatedWith(currentTime(annotatedTime))))
+                .apply(capturingInstant, test(ClassLevelCurrentDateAnnotation.class, annotatedWith(currentTime(annotatedTime))))
                 .evaluate();
 
-        assertThat(capturingTime.captured())
+        assertThat(capturingInstant.captured())
                 .isEqualTo(utcInstantOf(2010, 1, 1, annotatedTime));
     }
 
     @Test
     public void classLevelCurrentDateAndCurrentTimeAnnotations() throws Throwable {
         FyodorTestRule.withCurrentDateAndTime(localDateTime())
-                .apply(capturingTime, test(ClassLevelCurrentDateAndCurrentTimeAnnotations.class))
+                .apply(capturingInstant, test(ClassLevelCurrentDateAndCurrentTimeAnnotations.class))
                 .evaluate();
 
-        assertThat(capturingTime.captured())
+        assertThat(capturingInstant.captured())
                 .isEqualTo(utcInstantOf(1999, 12, 31, 23, 59, 59));
+    }
+
+    @Test
+    public void classLevelCurrentZoneAnnotationOverridesZoneInConstructorArgument() throws Throwable {
+        final ZoneId zoneInRule = zoneId().next();
+
+        withCurrentDateTimeAndZone(localDateTime().next().atZone(zoneInRule))
+                .apply(capturingZone, test(ClassLevelCurrentZoneAnnotation.class))
+                .evaluate();
+
+        assertThat(capturingZone.captured())
+                .isEqualTo(ZoneId.of("America/Los_Angeles"));
+    }
+
+    @Test
+    public void methodLevelCurrentZoneAnnotationOverridesClassLevelAnnotation() throws Throwable {
+        final ZoneId methodLevelZone = ZoneId.of("America/Chicago");
+
+        withCurrentDateTimeAndZone(localDateTime().next().atZone(zoneId().next()))
+                .apply(capturingZone, test(ClassLevelCurrentZoneAnnotation.class, annotatedWith(currentZone(methodLevelZone))))
+                .evaluate();
+
+        assertThat(capturingZone.captured())
+                .isEqualTo(methodLevelZone);
     }
 
     @Test
@@ -260,10 +285,10 @@ public final class FyodorTestRuleTest {
         Timekeeper.from(utcClockOf(initialDate.atTime(initialTime)));
 
         FyodorTestRule.withCurrentDate(() -> LocalDate.of(2000, 1, 1))
-                .apply(capturingTime, test())
+                .apply(capturingInstant, test())
                 .evaluate();
 
-        assertThat(capturingTime.captured()).isEqualTo(utcInstantOf(2000, 1, 1, initialTime));
+        assertThat(capturingInstant.captured()).isEqualTo(utcInstantOf(2000, 1, 1, initialTime));
         assertThat(current().instant()).isEqualTo(utcInstantOf(initialDate.atTime(initialTime)));
     }
 
@@ -274,10 +299,10 @@ public final class FyodorTestRuleTest {
         Timekeeper.from(utcClockOf(initialDate.atTime(initialTime)));
 
         FyodorTestRule.withCurrentDate(LocalDate.of(2000, 1, 1))
-                .apply(capturingTime, test())
+                .apply(capturingInstant, test())
                 .evaluate();
 
-        assertThat(capturingTime.captured())
+        assertThat(capturingInstant.captured())
                 .describedAs("The date during rule evaluation should be the supplied current date")
                 .isEqualTo(utcInstantOf(2000, 1, 1, initialTime));
 
@@ -293,10 +318,10 @@ public final class FyodorTestRuleTest {
         Timekeeper.from(utcClockOf(initialDate.atTime(initialTime)));
 
         FyodorTestRule.withCurrentTime(() -> LocalTime.of(3, 4, 5))
-                .apply(capturingTime, test())
+                .apply(capturingInstant, test())
                 .evaluate();
 
-        assertThat(capturingTime.captured())
+        assertThat(capturingInstant.captured())
                 .describedAs("The time during rule evaluation should be the supplied current time")
                 .isEqualTo(utcInstantOf(initialDate, 3, 4, 5));
 
@@ -312,10 +337,10 @@ public final class FyodorTestRuleTest {
         Timekeeper.from(utcClockOf(initialDate.atTime(initialTime)));
 
         FyodorTestRule.withCurrentTime(LocalTime.of(23, 59, 59))
-                .apply(capturingTime, test())
+                .apply(capturingInstant, test())
                 .evaluate();
 
-        assertThat(capturingTime.captured())
+        assertThat(capturingInstant.captured())
                 .describedAs("The time during rule evaluation should be the supplied current time")
                 .isEqualTo(utcInstantOf(initialDate, 23, 59, 59));
 
@@ -331,10 +356,10 @@ public final class FyodorTestRuleTest {
         Timekeeper.from(utcClockOf(initialDate.atTime(initialTime)));
 
         FyodorTestRule.withCurrentDateAndTime(() -> LocalDateTime.of(1999, 12, 31, 23, 59, 59))
-                .apply(capturingTime, test())
+                .apply(capturingInstant, test())
                 .evaluate();
 
-        assertThat(capturingTime.captured())
+        assertThat(capturingInstant.captured())
                 .describedAs("The date and time during rule evaluation should be the supplied current date and time")
                 .isEqualTo(utcInstantOf(1999, 12, 31, 23, 59, 59));
 
@@ -350,10 +375,10 @@ public final class FyodorTestRuleTest {
         Timekeeper.from(utcClockOf(initialDate.atTime(initialTime)));
 
         FyodorTestRule.withCurrentDateAndTime(LocalDateTime.of(1999, 12, 31, 12, 13, 14))
-                .apply(capturingTime, test())
+                .apply(capturingInstant, test())
                 .evaluate();
 
-        assertThat(capturingTime.captured())
+        assertThat(capturingInstant.captured())
                 .describedAs("The date and time during rule evaluation should be the supplied current date and time")
                 .isEqualTo(utcInstantOf(1999, 12, 31, 12, 13, 14));
 
@@ -369,10 +394,10 @@ public final class FyodorTestRuleTest {
         Timekeeper.from(utcClockOf(initialDate.atTime(initialTime)));
 
         FyodorTestRule.from(utcClockOf(LocalDateTime.of(2000, 1, 1, 0, 0, 0)))
-                .apply(capturingTime, test())
+                .apply(capturingInstant, test())
                 .evaluate();
 
-        assertThat(capturingTime.captured())
+        assertThat(capturingInstant.captured())
                 .describedAs("The clock during rule evaluation should be the supplied clock")
                 .isEqualTo(utcInstantOf(2000, 1, 1, 0, 0, 0));
 
@@ -386,10 +411,10 @@ public final class FyodorTestRuleTest {
         final LocalTime time = LocalTime.of(12, 34, 34);
         final FyodorTestRule rule = FyodorTestRule.withCurrentTime(time);
 
-        final CapturingStatement capturingCurrentTime = new CapturingStatement<>(() -> rule.current().time());
-        rule.apply(capturingCurrentTime, test()).evaluate();
+        final CapturingStatement capturingTimeFromRule = new CapturingStatement<>(() -> rule.current().time());
+        rule.apply(capturingTimeFromRule, test()).evaluate();
 
-        assertThat(capturingCurrentTime.captured()).isEqualTo(time);
+        assertThat(capturingTimeFromRule.captured()).isEqualTo(time);
     }
 
     @Test
@@ -397,10 +422,10 @@ public final class FyodorTestRuleTest {
         final LocalDate date = LocalDate.of(1981, 12, 6);
         final FyodorTestRule rule = FyodorTestRule.withCurrentDate(date);
 
-        final CapturingStatement capturingCurrentTime = new CapturingStatement<>(() -> rule.current().date());
-        rule.apply(capturingCurrentTime, test()).evaluate();
+        final CapturingStatement capturingDateFromRule = new CapturingStatement<>(() -> rule.current().date());
+        rule.apply(capturingDateFromRule, test()).evaluate();
 
-        assertThat(capturingCurrentTime.captured()).isEqualTo(date);
+        assertThat(capturingDateFromRule.captured()).isEqualTo(date);
     }
 
     @Test
@@ -408,10 +433,10 @@ public final class FyodorTestRuleTest {
         final LocalDateTime dateTime = LocalDateTime.of(1981, 12, 6, 12, 56, 34);
         final FyodorTestRule rule = FyodorTestRule.withCurrentDateAndTime(dateTime);
 
-        final CapturingStatement capturingCurrentTime = new CapturingStatement<>(() -> rule.current().dateTime());
-        rule.apply(capturingCurrentTime, test()).evaluate();
+        final CapturingStatement capturingDateTimeFromRule = new CapturingStatement<>(() -> rule.current().dateTime());
+        rule.apply(capturingDateTimeFromRule, test()).evaluate();
 
-        assertThat(capturingCurrentTime.captured()).isEqualTo(dateTime);
+        assertThat(capturingDateTimeFromRule.captured()).isEqualTo(dateTime);
     }
 
     @Test
@@ -419,10 +444,10 @@ public final class FyodorTestRuleTest {
         final LocalDateTime dateTime = LocalDateTime.of(1981, 12, 6, 12, 56, 34);
         final FyodorTestRule rule = FyodorTestRule.withCurrentDateAndTime(dateTime);
 
-        final CapturingStatement capturingCurrentTime = new CapturingStatement<>(() -> rule.current().instant());
-        rule.apply(capturingCurrentTime, test()).evaluate();
+        final CapturingStatement capturingInstantFromRule = new CapturingStatement<>(() -> rule.current().instant());
+        rule.apply(capturingInstantFromRule, test()).evaluate();
 
-        assertThat(capturingCurrentTime.captured()).isEqualTo(utcInstantOf(dateTime));
+        assertThat(capturingInstantFromRule.captured()).isEqualTo(utcInstantOf(dateTime));
     }
 
     @Test
@@ -430,10 +455,10 @@ public final class FyodorTestRuleTest {
         final Clock clock = utcClockOf(LocalDateTime.of(1981, 12, 6, 12, 56, 34));
         final FyodorTestRule rule = FyodorTestRule.from(clock);
 
-        final CapturingStatement capturingCurrentTime = new CapturingStatement<>(() -> rule.current().clock());
-        rule.apply(capturingCurrentTime, test()).evaluate();
+        final CapturingStatement capturingClockFromRule = new CapturingStatement<>(() -> rule.current().clock());
+        rule.apply(capturingClockFromRule, test()).evaluate();
 
-        assertThat(capturingCurrentTime.captured()).isEqualTo(clock);
+        assertThat(capturingClockFromRule.captured()).isEqualTo(clock);
     }
 
     private static Generator<ZoneId> zoneId() {
