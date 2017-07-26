@@ -28,21 +28,21 @@ final class TemporalityParameterResolver implements ParameterResolver {
     }};
 
     @Override
-    public boolean supports(final ParameterContext parameterContext,
-                            final ExtensionContext extensionContext) throws ParameterResolutionException {
+    public boolean supportsParameter(final ParameterContext parameterContext,
+                                     final ExtensionContext extensionContext) throws ParameterResolutionException {
         final Parameter parameter = parameterContext.getParameter();
 
         return parameter.getType().equals(Temporality.class)
-                || isSupportedJavaTimeParameterWithCurrentAnnoation(parameter);
+                || isSupportedJavaTimeParameterWithCurrentAnnotation(parameter);
     }
 
     @Override
-    public Object resolve(final ParameterContext parameterContext,
-                          final ExtensionContext extensionContext) throws ParameterResolutionException {
+    public Object resolveParameter(final ParameterContext parameterContext,
+                                   final ExtensionContext extensionContext) throws ParameterResolutionException {
         return parameterSuppliersByType.get(parameterContext.getParameter().getType()).get();
     }
 
-    private static boolean isSupportedJavaTimeParameterWithCurrentAnnoation(final Parameter parameter) {
+    private static boolean isSupportedJavaTimeParameterWithCurrentAnnotation(final Parameter parameter) {
         return parameterSuppliersByType.containsKey(parameter.getType())
                 && parameter.isAnnotationPresent(Current.class);
     }

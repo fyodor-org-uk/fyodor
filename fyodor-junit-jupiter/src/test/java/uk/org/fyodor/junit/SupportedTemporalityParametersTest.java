@@ -88,8 +88,8 @@ final class SupportedTemporalityParametersTest {
                 .isFalse();
     }
 
-    private boolean resolverSupports(final Parameter stringParameter) {
-        return underTest.supports(parameterContextOf(stringParameter), null);
+    private boolean resolverSupports(final Parameter parameter) {
+        return underTest.supportsParameter(parameterContextOf(parameter), null);
     }
 
     private static ParameterContext parameterContextOf(final Parameter parameter) {

@@ -1,6 +1,6 @@
 package uk.org.fyodor.junit;
 
-import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import uk.org.fyodor.testapi.Annotatable;
 import uk.org.fyodor.testapi.FyodorTest;
 
@@ -9,9 +9,9 @@ import java.util.Optional;
 
 final class FyodorTestAdapter implements FyodorTest {
 
-    private final TestExtensionContext context;
+    private final ExtensionContext context;
 
-    private FyodorTestAdapter(final TestExtensionContext context) {
+    private FyodorTestAdapter(final ExtensionContext context) {
         this.context = context;
     }
 
@@ -35,7 +35,7 @@ final class FyodorTestAdapter implements FyodorTest {
         };
     }
 
-    static FyodorTestAdapter fyodorTestOf(final TestExtensionContext testExtensionContext) {
-        return new FyodorTestAdapter(testExtensionContext);
+    static FyodorTestAdapter fyodorTestOf(final ExtensionContext extensionContext) {
+        return new FyodorTestAdapter(extensionContext);
     }
 }

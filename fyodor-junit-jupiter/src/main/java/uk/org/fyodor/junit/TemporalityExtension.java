@@ -2,7 +2,7 @@ package uk.org.fyodor.junit;
 
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
-import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import uk.org.fyodor.generators.time.Timekeeper;
 import uk.org.fyodor.testapi.TimekeeperFyodorTestCallback;
 import uk.org.fyodor.testapi.TimekeeperFyodorTestCallback.TimeController;
@@ -12,20 +12,18 @@ import java.time.*;
 import static uk.org.fyodor.generators.time.Timekeeper.current;
 import static uk.org.fyodor.junit.FyodorTestAdapter.fyodorTestOf;
 
-final class TemporalityExtension implements
-        BeforeTestExecutionCallback,
-        AfterTestExecutionCallback {
+final class TemporalityExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
     private final TimekeeperFyodorTestCallback timekeeperCallback = new TimekeeperFyodorTestCallback(timeController());
 
     @Override
-    public void beforeTestExecution(final TestExtensionContext testExtensionContext) throws Exception {
-        timekeeperCallback.beforeTestExecution(fyodorTestOf(testExtensionContext));
+    public void beforeTestExecution(final ExtensionContext extensionContext) throws Exception {
+        timekeeperCallback.beforeTestExecution(fyodorTestOf(extensionContext));
     }
 
     @Override
-    public void afterTestExecution(final TestExtensionContext testExtensionContext) throws Exception {
-        timekeeperCallback.afterTestExecution(fyodorTestOf(testExtensionContext));
+    public void afterTestExecution(final ExtensionContext extensionContext) throws Exception {
+        timekeeperCallback.afterTestExecution(fyodorTestOf(extensionContext));
     }
 
     private static TimeController timeController() {

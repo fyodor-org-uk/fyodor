@@ -11,14 +11,14 @@ import static uk.org.fyodor.random.RandomSourceProvider.seed;
 final class SeedParameterResolver implements ParameterResolver {
 
     @Override
-    public boolean supports(final ParameterContext parameterContext,
-                            final ExtensionContext extensionContext) throws ParameterResolutionException {
+    public boolean supportsParameter(final ParameterContext parameterContext,
+                                     final ExtensionContext extensionContext) throws ParameterResolutionException {
         return parameterContext.getParameter().getType().equals(CurrentSeed.class);
     }
 
     @Override
-    public Object resolve(final ParameterContext parameterContext,
-                          final ExtensionContext extensionContext) throws ParameterResolutionException {
+    public Object resolveParameter(final ParameterContext parameterContext,
+                                   final ExtensionContext extensionContext) throws ParameterResolutionException {
         return (CurrentSeed) () -> seed().current();
     }
 }
