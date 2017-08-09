@@ -3,6 +3,9 @@ package uk.org.fyodor;
 import uk.org.fyodor.generators.Generator;
 
 import java.util.*;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toList;
 
 public final class Sampler<T> {
 
@@ -59,6 +62,10 @@ public final class Sampler<T> {
             return new HashSet<>(listOfT);
         }
 
+        public <R> Sample<R> map(final Function<T, R> transform) {
+            return new Sample<>(listOfT.stream().map(transform).collect(toList()));
+        }
+
         public List<T> asList() {
             return listOfT;
         }
@@ -69,6 +76,11 @@ public final class Sampler<T> {
         }
 
         @Override
+        public int hashCode() {
+            return listOfT.hashCode();
+        }
+
+        @Override
         public boolean equals(final Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
@@ -76,11 +88,6 @@ public final class Sampler<T> {
             final Sample sample = (Sample) o;
 
             return listOfT.equals(sample.listOfT);
-        }
-
-        @Override
-        public int hashCode() {
-            return listOfT.hashCode();
         }
 
         @Override

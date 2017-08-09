@@ -110,12 +110,7 @@ public final class RandomSourceProviderTest extends BaseTest {
     }
 
     private static Generator<Boolean> randomValuesNextBoolean() {
-        return new Generator<Boolean>() {
-            @Override
-            public Boolean next() {
-                return RandomSourceProvider.sourceOfRandomness().randomBoolean();
-            }
-        };
+        return () -> RandomSourceProvider.sourceOfRandomness().randomBoolean();
     }
 
     private static final class SeedHolder {
@@ -133,11 +128,11 @@ public final class RandomSourceProviderTest extends BaseTest {
             this.seed = seed;
         }
 
-        public void setSampleBefore(final Sample<Boolean> sampleBefore) {
+        void setSampleBefore(final Sample<Boolean> sampleBefore) {
             this.sampleBefore = sampleBefore;
         }
 
-        public void setSampleAfter(final Sample<Boolean> sampleAfter) {
+        void setSampleAfter(final Sample<Boolean> sampleAfter) {
             this.sampleAfter = sampleAfter;
         }
     }

@@ -20,13 +20,6 @@ final class DefaultRandomValues implements RandomValues {
     }
 
     @Override
-    public int randomInteger(final int max) {
-        satisfies(max >= 0, "max cannot be negative");
-
-        return randomInteger(0, max);
-    }
-
-    @Override
     public int randomInteger(final int lower, final int upper) {
         satisfies(lower <= upper, "the upper bound must be equal to or greater than the lower bound");
 
@@ -64,13 +57,17 @@ final class DefaultRandomValues implements RandomValues {
         return i;
     }
 
-    private long randomLong(final long max) {
-        long bits, val;
-        do {
-            bits = (random.nextLong() << 1) >>> 1;
-            val = bits % max;
-        } while (bits - val + (max - 1) < 0L);
-        return val;
+    @Override
+    public double randomDouble(final double lower, final double upper) {
+        satisfies(lower <= upper, "the upper bound must be equal to or greater than the lower bound");
+
+        if (lower == upper) {
+            return lower;
+        }
+
+        final double next = random.nextDouble();
+
+        return next * upper + (1.0 - next) * lower;
     }
 
     @Override
@@ -87,16 +84,29 @@ final class DefaultRandomValues implements RandomValues {
     }
 
     @Override
-    public double randomDouble(final double lower, final double upper) {
-        satisfies(lower <= upper, "the upper bound must be equal to or greater than the lower bound");
+    public byte randomByte(final byte lower, final byte upper) {
+        return (byte) randomInteger(lower, upper);
+    }
 
-        if (lower == upper) {
-            return lower;
-        }
+    @Override
+    public byte[] randomBytes(final int length) {
+        final byte[] bytes = new byte[length];
+        random.nextBytes(bytes);
+        return bytes;
+    }
 
-        final double next = random.nextDouble();
+    @Override
+    public short randomShort(final short lower, final short upper) {
+        return (short) randomInteger(lower, upper);
+    }
 
-        return next * upper + (1.0 - next) * lower;
+    private long randomLong(final long max) {
+        long bits, val;
+        do {
+            bits = (random.nextLong() << 1) >>> 1;
+            val = bits % max;
+        } while (bits - val + (max - 1) < 0L);
+        return val;
     }
 
     private static double scaleAndRoundHalfUp(final double unscaledRandomDouble, final int scale) {
