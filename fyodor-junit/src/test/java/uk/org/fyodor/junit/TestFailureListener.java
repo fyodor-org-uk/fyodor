@@ -21,7 +21,7 @@ final class TestFailureListener<T> extends RunListener {
                 testDescription.getTestClass(),
                 testDescription.getMethodName(),
                 obtainObject.objectDuringFailure(failure),
-                failure.getException());
+                failure.getException().getCause());
     }
 
     static <T> RunListener testFailed(final Reporter<T> reporter, final ObjectDuringFailureSupplier<T> obtainObject) {

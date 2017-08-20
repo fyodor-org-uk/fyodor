@@ -2,15 +2,19 @@ package uk.org.fyodor.random;
 
 public interface RandomValues {
 
-    long randomLong(long lower, long upper);
-
-    int randomInteger(int upper);
+    boolean randomBoolean();
 
     int randomInteger(int lower, int upper);
 
-    boolean randomBoolean();
+    long randomLong(long lower, long upper);
 
     double randomDouble(double lower, double upper);
 
     double randomDouble(double lower, double upper, int scale);
+
+    byte randomByte(byte lower, byte upper);
+
+    byte[] randomBytes(int length);
+
+    short randomShort(short lower, short upper);
 }

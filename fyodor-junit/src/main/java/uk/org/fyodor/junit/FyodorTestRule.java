@@ -1,5 +1,6 @@
 package uk.org.fyodor.junit;
 
+import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -13,16 +14,15 @@ import static org.junit.rules.RuleChain.outerRule;
 
 public final class FyodorTestRule implements TestRule {
 
-    private final TestRule delegate;
+    private final RuleChain delegate;
 
     public FyodorTestRule() {
-        this.delegate = outerRule(new FyodorSeedRule())
-                .around(new FyodorTimekeeperRule(() -> Timekeeper.current().zonedDateTime()));
+        this(() -> Timekeeper.current().zonedDateTime());
     }
 
-    private FyodorTestRule(final Generator<ZonedDateTime> currentDateTime) {
-        this.delegate = outerRule(new FyodorSeedRule())
-                .around(new FyodorTimekeeperRule(currentDateTime));
+    private FyodorTestRule(final Generator<ZonedDateTime> currentDateTimeAndZone) {
+        this.delegate = outerRule(new SeedRule())
+                .around(new TimekeeperRule(currentDateTimeAndZone));
     }
 
     @Override
@@ -49,10 +49,7 @@ public final class FyodorTestRule implements TestRule {
     public static FyodorTestRule withCurrentDate(final Generator<LocalDate> currentDate) {
         return new FyodorTestRule(() -> {
             final LocalDate date = currentDate.next();
-            return Timekeeper.current().zonedDateTime()
-                    .withYear(date.getYear())
-                    .withMonth(date.getMonthValue())
-                    .withDayOfMonth(date.getDayOfMonth());
+            return ZonedDateTime.of(date, Timekeeper.current().time(), Timekeeper.current().zone());
         });
     }
 
@@ -63,11 +60,7 @@ public final class FyodorTestRule implements TestRule {
     public static FyodorTestRule withCurrentTime(final Generator<LocalTime> currentTime) {
         return new FyodorTestRule(() -> {
             final LocalTime time = currentTime.next();
-            return Timekeeper.current().zonedDateTime()
-                    .withHour(time.getHour())
-                    .withMinute(time.getMinute())
-                    .withSecond(time.getSecond())
-                    .withNano(time.getNano());
+            return ZonedDateTime.of(Timekeeper.current().date(), time, Timekeeper.current().zone());
         });
     }
 
@@ -78,14 +71,16 @@ public final class FyodorTestRule implements TestRule {
     public static FyodorTestRule withCurrentDateAndTime(final Generator<LocalDateTime> currentDateTime) {
         return new FyodorTestRule(() -> {
             final LocalDateTime dateTime = currentDateTime.next();
-            return Timekeeper.current().zonedDateTime()
-                    .withYear(dateTime.getYear())
-                    .withMonth(dateTime.getMonthValue())
-                    .withDayOfMonth(dateTime.getDayOfMonth())
-                    .withHour(dateTime.getHour())
-                    .withMinute(dateTime.getMinute())
-                    .withSecond(dateTime.getSecond())
-                    .withNano(dateTime.getNano());
+            return ZonedDateTime.of(dateTime, Timekeeper.current().zone());
         });
     }
+
+    public static FyodorTestRule withCurrentDateTimeAndZone(final ZonedDateTime currentDateTimeAndZone) {
+        return withCurrentDateTimeAndZone(() -> currentDateTimeAndZone);
+    }
+
+    public static FyodorTestRule withCurrentDateTimeAndZone(final Generator<ZonedDateTime> currentDateTimeAndZone) {
+        return new FyodorTestRule(currentDateTimeAndZone);
+    }
+
 }

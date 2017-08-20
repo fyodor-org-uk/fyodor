@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
+import uk.org.fyodor.testapi.FailedWithSeed;
 import uk.org.fyodor.testapi.Seed;
 
 import static uk.org.fyodor.junit.FyodorTestRule.fyodorTestRule;
@@ -20,7 +21,7 @@ public final class ConcurrentSeedTest {
 
     private final TestRunner<Long> testRunner = new TestRunner<>(
             testStarted(reporter, () -> seed().current()),
-            testFailed(reporter, (failure) -> ((FailedWithSeedException) failure.getException().getCause()).seed()),
+            testFailed(reporter, (failure) -> ((FailedWithSeed) failure.getException()).seed()),
             testFinished(reporter, () -> seed().current()));
 
     @Test

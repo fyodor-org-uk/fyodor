@@ -97,24 +97,6 @@ public final class DefaultRandomValuesTest extends BaseTest {
         randomValues.randomInteger(1, 0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void throwsAnExceptionWhenMaxIntegerIsNegative() {
-        randomValues.randomInteger(-1);
-    }
-
-    @Test
-    public void returnsNextRandomInteger() {
-        final int expectedInteger = new Random().nextInt();
-        final Random stubRandom = new Random() {
-            @Override
-            public int nextInt(final int n) {
-                return expectedInteger;
-            }
-        };
-        final int actualInteger = new DefaultRandomValues(stubRandom).randomInteger(Math.abs(new Random().nextInt()));
-        assertThat(actualInteger).isEqualTo(expectedInteger);
-    }
-
     @Test
     public void returnsNextRandomBoolean() {
         final boolean expectedBoolean = new Random().nextBoolean();
@@ -242,7 +224,7 @@ public final class DefaultRandomValuesTest extends BaseTest {
     }
 
     private static Generator<Integer> randomIntegers(final RandomValues randomValues, final int maximum) {
-        return () -> randomValues.randomInteger(maximum);
+        return () -> randomValues.randomInteger(0, maximum);
     }
 
     private static Generator<Double> randomDoubles(final RandomValues randomValues, final double lower, final double upper) {
