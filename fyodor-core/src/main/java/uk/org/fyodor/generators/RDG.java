@@ -19,6 +19,7 @@ import java.util.*;
 import static java.lang.String.format;
 import static java.time.ZoneId.getAvailableZoneIds;
 import static java.util.Arrays.asList;
+import static java.util.UUID.nameUUIDFromBytes;
 import static uk.org.fyodor.generators.Validations.*;
 import static uk.org.fyodor.generators.time.Timekeeper.current;
 import static uk.org.fyodor.random.RandomSourceProvider.sourceOfRandomness;
@@ -126,6 +127,34 @@ public class RDG {
         return BOOLEAN_GENERATOR;
     }
 
+    public static Generator<Byte> byteVal() {
+        return byteVal(closed((int) Byte.MIN_VALUE, (int) Byte.MAX_VALUE));
+    }
+
+    public static Generator<Byte> byteVal(final Range<Integer> range) {
+        ensure(range.lowerBound() >= Byte.MIN_VALUE, format("Lower bound %s must be within the range %s..%s", range.lowerBound(), Byte.MIN_VALUE, Byte.MAX_VALUE));
+        ensure(range.upperBound() <= Byte.MAX_VALUE, format("Upper bound %s must be within the range %s..%s", range.upperBound(), Byte.MIN_VALUE, Byte.MAX_VALUE));
+
+        return () -> sourceOfRandomness()
+                .randomByte(range.lowerBound().byteValue(), range.upperBound().byteValue());
+    }
+
+    public static Generator<byte[]> byteArray() {
+        return () -> sourceOfRandomness().randomBytes(10);
+    }
+
+    public static Generator<Short> shortVal() {
+        return shortVal(closed((int) Short.MIN_VALUE, (int) Short.MAX_VALUE));
+    }
+
+    public static Generator<Short> shortVal(final Range<Integer> range) {
+        ensure(range.lowerBound() >= Short.MIN_VALUE, format("Lower bound %s must be within the range %s..%s", range.lowerBound(), Short.MIN_VALUE, Short.MAX_VALUE));
+        ensure(range.upperBound() <= Short.MAX_VALUE, format("Upper bound %s must be within the range %s..%s", range.upperBound(), Short.MIN_VALUE, Short.MAX_VALUE));
+
+        return () -> sourceOfRandomness()
+                .randomShort(range.lowerBound().shortValue(), range.upperBound().shortValue());
+    }
+
     public static Generator<Integer> integer() {
         return INTEGER_GENERATOR;
     }
@@ -205,6 +234,10 @@ public class RDG {
         ensure(isNotNegative(scale), "scale cannot be negative");
 
         return new BigDecimalGenerator(sourceOfRandomness(), range, scale);
+    }
+
+    public static Generator<UUID> uuid() {
+        return () -> nameUUIDFromBytes(sourceOfRandomness().randomBytes(5));
     }
 
     public static Generator<String> string() {

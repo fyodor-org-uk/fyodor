@@ -14,7 +14,15 @@
         <module>fyodor-jodatime</module>
         <module>fyodor-test-api</module>
         <module>fyodor-junit</module>
+        <module>fyodor-junit-jupiter</module>
     </modules>
+
+    <properties>
+        <junit.version>4.12</junit.version>
+        <junit-jupiter.version>5.0.0-M6</junit-jupiter.version>
+        <junit-platform.version>1.0.0-M6</junit-platform.version>
+        <junit-vintage.version>${junit.version}.0-M6</junit-vintage.version>
+    </properties>
 
     <distributionManagement>
         <snapshotRepository>
@@ -32,19 +40,21 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.11</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit-jupiter.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>3.6.1</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>17.0</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -97,6 +107,29 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-surefire-provider</artifactId>
+                        <version>${junit-platform.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>${junit-jupiter.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.junit.vintage</groupId>
+                        <artifactId>junit-vintage-engine</artifactId>
+                        <version>${junit-vintage.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
             <!--uncomment this plugin when deploying to central-->
             <!--blows all the builds up otherwise-->
             <!--<plugin>-->
