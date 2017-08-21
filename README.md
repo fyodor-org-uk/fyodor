@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/IanEsling/fyodor.svg?branch=master)](https://travis-ci.org/IanEsling/fyodor)
+
 Fyodor
 ======
 
